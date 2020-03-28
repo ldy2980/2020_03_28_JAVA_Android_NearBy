@@ -1,0 +1,2 @@
+rootProject.name='Capstone2020'
+include ':app'
