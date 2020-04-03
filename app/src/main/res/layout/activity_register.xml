@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/register_btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:contentDescription="@string/backButton"
+        android:src="@drawable/ic_icon_back" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="@string/register"
+        android:textColor="@color/darkBlue"
+        android:textSize="50sp" />
+
+    <EditText
+        android:id="@+id/register_userName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="-35dp"
+        android:background="@drawable/text_input"
+        android:fontFamily="@font/bm_hanna"
+        android:hint="@string/userName"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="4dp" />
+
+    <EditText
+        android:id="@+id/register_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="-35dp"
+        android:background="@drawable/text_input"
+        android:fontFamily="@font/bm_hanna"
+        android:hint="@string/email"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="4dp" />
+
+    <EditText
+        android:id="@+id/register_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="-18dp"
+        android:background="@drawable/text_input"
+        android:fontFamily="@font/bm_hanna"
+        android:hint="@string/password"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="4dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_createAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/disabled_round_button"
+        android:enabled="false"
+        android:text="@android:string/ok"
+        android:textColor="@color/grey" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="157dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bm_hanna"
+            android:text="@string/alreadyHaveAccount" />
+
+        <TextView
+            android:id="@+id/goToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="@string/login"
+            android:textColor="@color/cyan"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

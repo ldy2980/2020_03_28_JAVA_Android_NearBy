@@ -13,6 +13,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.skhu.capstone2020.Fragments.ChatsFragment;
 import com.skhu.capstone2020.Fragments.MyLocationFragment;
 import com.skhu.capstone2020.Fragments.SurroundingFragment;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     View drawerView;
     RelativeLayout fragment_container;
     ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu;
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();                          // 현재 유저정보 객체 생성
 
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         drawer_logout.setOnClickListener(new View.OnClickListener() {                               // 로그아웃 버튼 클릭 시 동작
             @Override
             public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, StartActivity.class));
                 finish();
             }

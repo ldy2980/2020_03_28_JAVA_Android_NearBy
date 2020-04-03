@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_activity_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:contentDescription="@string/backButton"
+        android:src="@drawable/ic_icon_back" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="@string/login"
+        android:textColor="@color/darkBlue"
+        android:textSize="50sp" />
+
+    <EditText
+        android:id="@+id/input_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="-33dp"
+        android:background="@drawable/text_input"
+        android:fontFamily="@font/mapo_peacefull"
+        android:hint="@string/email"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="4dp"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="-21dp"
+        android:background="@drawable/text_input"
+        android:fontFamily="@font/mapo_peacefull"
+        android:hint="@string/password"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="4dp"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/goToResetPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="50dp"
+        android:fontFamily="@font/bm_hanna"
+        android:text="@string/forgotPassword"
+        android:textColor="@color/slateBlue"
+        android:textSize="15sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/disabled_round_button"
+        android:enabled="false"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="@string/login"
+        android:textColor="@color/grey" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="210dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bm_hanna"
+            android:text="@string/haveNoAccount" />
+
+        <TextView
+            android:id="@+id/create_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="@string/createAccount"
+            android:textColor="@color/cyan"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
