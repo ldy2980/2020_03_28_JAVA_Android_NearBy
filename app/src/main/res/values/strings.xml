@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Activity</string>
-    <string name="mapbox_access_token">pk.eyJ1IjoiY2xhbmsiLCJhIjoiY2s4NWgxNGVqMDB5YjNmbzA2MGZ6d2c1biJ9.fIPiGvTjjkiG9ueA3k1i0A</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoiY2xhbmsiLCJhIjoiY2s4bHNzcTBxMDRuNDNncG4zdzB3eW1pNyJ9.97YjwyOf7JiByL47sfeypA</string>
     <string name="getStart">시작하기</string>
     <string name="googleAccount">Google 계정</string>
     <string name="menu">메뉴</string>
