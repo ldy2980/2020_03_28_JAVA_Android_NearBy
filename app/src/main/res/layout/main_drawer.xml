@@ -24,35 +24,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
         android:background="@color/white"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/drawer_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="54dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables,UselessParent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_profile"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="2dp"
-                android:fontFamily="@font/utoimage_light"
-                android:text="@string/profile"
-                android:textColor="@color/black"
-                android:textSize="17sp" />
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/drawer_friends"
@@ -67,7 +41,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_friends"
+                android:src="@drawable/ic_friends2"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -138,7 +112,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dp"
-            android:layout_marginHorizontal="34dp"
+            android:layout_marginHorizontal="33dp"
             android:layout_marginTop="30dp"
             android:background="@color/grey" />
 
@@ -146,7 +120,7 @@
             android:id="@+id/drawer_logout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="35dp"
+            android:layout_marginStart="37dp"
             android:layout_marginTop="25dp"
             android:layout_weight="1"
             android:orientation="horizontal"
@@ -155,17 +129,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
                 android:fontFamily="@font/jsdongkang_regular"
+                android:layout_marginTop="0.8dp"
                 android:text="@string/logout"
-                android:textColor="@color/grey"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/slateGrey"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="8dp"
                 android:src="@drawable/ic_logout_button"
                 tools:ignore="ContentDescription" />
         </LinearLayout>

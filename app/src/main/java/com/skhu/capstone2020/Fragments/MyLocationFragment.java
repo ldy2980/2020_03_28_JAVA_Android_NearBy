@@ -46,7 +46,7 @@ public class MyLocationFragment extends Fragment {
                         .target(new LatLng(37.6016319, 126.9251506))
                         .zoom(16)
                         .build();
-                mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1500);
+                mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1200);
                 mapboxMap.setStyle(new Style.Builder().fromUri("asset://local_style.json"), new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
@@ -64,6 +64,12 @@ public class MyLocationFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
     }
 
     @Override

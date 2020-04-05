@@ -13,19 +13,24 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.skhu.capstone2020.Fragments.ChatsFragment;
 import com.skhu.capstone2020.Fragments.MyLocationFragment;
 import com.skhu.capstone2020.Fragments.SurroundingFragment;
+import com.skhu.capstone2020.Model.Token;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
-    LinearLayout drawer_logout;
+    LinearLayout drawer_logout, drawer_friends;
     View drawerView;
     RelativeLayout fragment_container;
     ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu;
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();                          // 현재 유저정보 객체 생성
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();                          // 현재 유저정보 객체 생성
 
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        updateToken();
 
         fragment_container = findViewById(R.id.fragment_container);
 
@@ -47,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 drawerLayout.openDrawer(drawerView);
+            }
+        });
+
+        drawer_friends = findViewById(R.id.drawer_friends);
+        drawer_friends.setOnClickListener(new View.OnClickListener() {                              // 친구 목록 화면으로 이동
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, FriendsActivity.class));
+                drawerLayout.closeDrawer(drawerView);
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_scale_out);
             }
         });
 
@@ -136,4 +153,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void updateToken() {                                                                     // 토큰 값 DB에 저장
+        FirebaseInstanceId
+                .getInstance()
+                .getInstanceId()
+                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        Token token = new Token(instanceIdResult.getToken());
+                        FirebaseFirestore
+                                .getInstance()
+                                .collection("Tokens")
+                                .document(currentUser.getUid())
+                                .set(token);
+                    }
+                });
+    }
 }

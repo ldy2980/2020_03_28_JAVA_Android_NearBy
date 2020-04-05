@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/friend_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/user_image_background"
+        android:padding="9.5dp"
+        android:src="@drawable/default_user_photo"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/friend_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="19.5dp"
+        android:layout_toEndOf="@id/friend_photo"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="유저 이름"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/friend_status_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/friend_name"
+        android:layout_marginStart="16.5dp"
+        android:layout_marginTop="3.5dp"
+        android:layout_toEndOf="@id/friend_photo"
+        android:fontFamily="@font/bm_hanna"
+        android:text="상태 메시지"
+        android:textSize="12sp" />
+
+</RelativeLayout>

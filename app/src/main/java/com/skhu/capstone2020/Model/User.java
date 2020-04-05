@@ -7,6 +7,7 @@ public class User implements Serializable {
     private String name;
     private String email;
     private String imageUrl;
+    private String statusMessage;
     private boolean allowNotification = true;
     private boolean allowFriendRequest = true;
     private boolean allowShareLocation = true;
@@ -51,6 +52,14 @@ public class User implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
     }
 
     public boolean isAllowNotification() {
