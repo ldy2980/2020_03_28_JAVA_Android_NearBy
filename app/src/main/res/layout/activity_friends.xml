@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:elevation="2dp"
+        android:elevation="4dp"
         android:padding="19dp">
 
         <ImageView
@@ -37,9 +37,7 @@
         android:id="@+id/friends_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/friends_toolbar">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_below="@+id/friends_toolbar" />
 
     <ImageView
         android:id="@+id/btn_addFriend"
@@ -47,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="34dp"
         android:layout_marginBottom="49dp"
         android:background="@drawable/btn_add_friend_background"
         android:elevation="4dp"

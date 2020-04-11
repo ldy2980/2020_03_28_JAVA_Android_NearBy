@@ -8,18 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skhu.capstone2020.Adapter.FriendsListAdapter;
-import com.skhu.capstone2020.Model.User;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class FriendsActivity extends AppCompatActivity {
     ImageView friends_back;
 
     RecyclerView friends_recycler;
-    FriendsListAdapter adapter;
-    List<User> friendsList;
+
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +35,6 @@ public class FriendsActivity extends AppCompatActivity {
         friends_recycler = findViewById(R.id.friends_recycler);
         friends_recycler.setHasFixedSize(true);
         friends_recycler.setLayoutManager(new LinearLayoutManager(this));
-
-        friendsList = new ArrayList<>();
-        adapter = new FriendsListAdapter(friendsList, this);
-        friends_recycler.setAdapter(adapter);
     }
 
     @Override
