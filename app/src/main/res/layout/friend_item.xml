@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="12.5dp"
+        android:layout_marginTop="13.5dp"
         android:layout_toEndOf="@id/friend_photo"
         android:fontFamily="@font/mapo_peacefull"
         android:text="유저 이름"
