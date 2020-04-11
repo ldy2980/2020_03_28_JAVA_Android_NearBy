@@ -51,7 +51,7 @@
         android:layout_marginBottom="49dp"
         android:background="@drawable/btn_add_friend_background"
         android:elevation="4dp"
-        android:padding="16dp"
+        android:padding="17dp"
         android:src="@drawable/ic_add"
         tools:ignore="ContentDescription" />
 

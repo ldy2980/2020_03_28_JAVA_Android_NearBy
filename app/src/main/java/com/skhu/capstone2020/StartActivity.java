@@ -34,6 +34,7 @@ import com.gun0912.tedpermission.TedPermission;
 import com.skhu.capstone2020.Custom.CustomProgressDialog;
 import com.skhu.capstone2020.Model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -166,10 +167,10 @@ public class StartActivity extends AppCompatActivity {
                                                             firebaseUser.getDisplayName(),
                                                             firebaseUser.getEmail(),
                                                             Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
+                                                    user.setFriendIdList(new ArrayList<String>());
                                                     setUserInfoToServer(user, firebaseUser.getUid());                   // DB에 해당 계정에 대한 정보가 저장되어있지 않으면 새로 저장
 
                                                     Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                                                    intent.putExtra("currentUser", user);
                                                     dialog.dismiss();
                                                     startActivity(intent);
                                                     finish();

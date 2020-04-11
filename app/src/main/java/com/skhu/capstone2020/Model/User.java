@@ -1,6 +1,7 @@
 package com.skhu.capstone2020.Model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
     private String id;
@@ -8,6 +9,7 @@ public class User implements Serializable {
     private String email;
     private String imageUrl;
     private String statusMessage;
+    private List<String> friendIdList;
     private boolean allowNotification = true;
     private boolean allowFriendRequest = true;
     private boolean allowShareLocation = true;
@@ -60,6 +62,14 @@ public class User implements Serializable {
 
     public void setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
+    }
+
+    public List<String> getFriendIdList() {
+        return friendIdList;
+    }
+
+    public void setFriendIdList(List<String> friendIdList) {
+        this.friendIdList = friendIdList;
     }
 
     public boolean isAllowNotification() {

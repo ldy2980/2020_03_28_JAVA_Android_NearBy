@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.skhu.capstone2020.Custom.CustomProgressDialog;
 import com.skhu.capstone2020.Model.User;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -115,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                             assert firebaseUser != null;
                             if (auth.getCurrentUser() != null) {
                                 User user = new User(firebaseUser.getUid(), name, email, "default");
+                                user.setFriendIdList(new ArrayList<String>());
                                 setUserInfoToServer(user, firebaseUser.getUid());
                                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                 dialog.dismiss();
