@@ -44,7 +44,7 @@ public class MyLocationFragment extends Fragment {
             public void onMapReady(@NonNull final MapboxMap mapboxMap) {
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(37.6016319, 126.9251506))
-                        .zoom(16)
+                        .zoom(15)
                         .build();
                 mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1200);
                 mapboxMap.setStyle(new Style.Builder().fromUri("asset://local_style.json"), new Style.OnStyleLoaded() {

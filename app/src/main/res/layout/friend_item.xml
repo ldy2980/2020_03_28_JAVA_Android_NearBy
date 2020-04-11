@@ -8,9 +8,9 @@
         android:id="@+id/friend_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/user_image_background"
         android:padding="9.5dp"
         android:src="@drawable/default_user_photo"
@@ -21,12 +21,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="19.5dp"
+        android:layout_marginTop="12.5dp"
         android:layout_toEndOf="@id/friend_photo"
         android:fontFamily="@font/mapo_peacefull"
         android:text="유저 이름"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/friend_status_message"

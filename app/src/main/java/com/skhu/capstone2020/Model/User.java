@@ -19,6 +19,14 @@ public class User implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    public User(String id, String name, String email, String imageUrl, String statusMessage) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.imageUrl = imageUrl;
+        this.statusMessage = statusMessage;
+    }
+
     public String getId() {
         return id;
     }

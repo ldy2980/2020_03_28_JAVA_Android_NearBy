@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="4dp"
-        android:padding="19dp">
+        android:padding="21dp">
 
         <ImageView
             android:id="@+id/friends_back"
@@ -33,11 +33,27 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/friends_recycler"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/friends_toolbar" />
+        android:layout_below="@+id/friends_toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/friends_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:visibility="invisible"/>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/friends_spinKitView"
+            style="@style/SpinKitView.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/cyan" />
+
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/btn_addFriend"
