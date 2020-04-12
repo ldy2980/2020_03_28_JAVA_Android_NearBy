@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ProfileActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/profile_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toolbar_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="@string/profileSetting"
+            android:textColor="@color/darkBlue"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/profile_image_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/edit_profile_image"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:background="@drawable/profile_image_background"
+            android:contentDescription="@string/profileImage"
+            android:padding="9dp"
+            android:src="@drawable/default_user_photo" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/user_image_edit"
+            android:contentDescription="@string/editIcon"
+            android:padding="8dp"
+            android:src="@drawable/ic_edit" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/profile_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_image_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/jsdongkang_regular"
+        android:text="유저 이름"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/profile_userEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_userName"
+        android:layout_centerHorizontal="true"
+        android:text="이메일 주소"
+        android:textSize="12sp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/user_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_userEmail"
+        android:layout_marginHorizontal="33dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/white"
+        app:cardCornerRadius="17dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/user_friends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="0"
+                    android:textColor="@color/slateGrey"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_friends"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="@font/mapo_peacefull"
+                    android:text="@string/friends"
+                    android:textColor="@color/eastBay"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="25dp"
+                android:background="@color/snow" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/user_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="0"
+                    android:textColor="@color/slateGrey"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_group"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="@font/mapo_peacefull"
+                    android:text="참여 그룹"
+                    android:textColor="@color/eastBay"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="25dp"
+                android:background="@color/snow" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/user_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="0"
+                    android:textColor="@color/slateGrey"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_notification"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="@font/mapo_peacefull"
+                    android:text="@string/notification"
+                    android:textColor="@color/eastBay"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profile_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_logout"
+        android:layout_below="@id/user_info"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginBottom="56dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/setting_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/bm_hanna"
+                    android:text="@string/allowPush"
+                    android:textColor="@color/darkBlue"
+                    android:textSize="18sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <Switch
+                    android:id="@+id/switch_push"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="3dp"
+                    android:checked="true"
+                    android:switchMinWidth="15dp"
+                    android:thumb="@drawable/switch_thumb"
+                    android:thumbTextPadding="15dp"
+                    android:track="@drawable/switch_track_selector" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="11dp"
+                android:background="@color/snow" />
+
+            <RelativeLayout
+                android:id="@+id/setting_container2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/bm_hanna"
+                    android:text="@string/allowRequest"
+                    android:textColor="@color/darkBlue"
+                    android:textSize="18sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <Switch
+                    android:id="@+id/switch_friendRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="3dp"
+                    android:checked="true"
+                    android:switchMinWidth="15dp"
+                    android:thumb="@drawable/switch_thumb"
+                    android:thumbTextPadding="15dp"
+                    android:track="@drawable/switch_track_selector" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="11dp"
+                android:background="@color/snow" />
+
+            <RelativeLayout
+                android:id="@+id/setting_container3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/bm_hanna"
+                    android:text="@string/allowLocation"
+                    android:textColor="@color/darkBlue"
+                    android:textSize="18sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <Switch
+                    android:id="@+id/switch_shareLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="3dp"
+                    android:checked="true"
+                    android:switchMinWidth="15dp"
+                    android:thumb="@drawable/switch_thumb"
+                    android:thumbTextPadding="15dp"
+                    android:track="@drawable/switch_track_selector" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="11dp"
+                android:background="@color/snow" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/logout_button"
+        android:paddingTop="15.5dp"
+        android:text="@string/logout"
+        android:textAlignment="center"
+        android:textColor="@color/pickledBlueWood" />
+
+</RelativeLayout>

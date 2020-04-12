@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="4dp"
-        android:padding="21dp">
+        android:padding="20dp">
 
         <ImageView
             android:id="@+id/friends_back"

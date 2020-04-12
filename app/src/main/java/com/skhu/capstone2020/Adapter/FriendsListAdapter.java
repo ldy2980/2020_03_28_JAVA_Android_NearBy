@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.skhu.capstone2020.Model.User;
 import com.skhu.capstone2020.R;
 
@@ -41,8 +43,13 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             User user = friendList.get(position);
             holder.friend_name.setText(user.getName());
             holder.friend_status_message.setText(user.getStatusMessage());
-            if (!(user.getImageUrl().equals("default")))
-                Glide.with(mContext).load(user.getImageUrl()).into(holder.friend_photo);
+            if (!(user.getImageUrl().equals("default"))) {
+                holder.friend_photo.setPadding(0, 0, 0, 0);
+                Glide.with(mContext)
+                        .load(user.getImageUrl())
+                        .apply(new RequestOptions().transform(new RoundedCorners(45)))
+                        .into(holder.friend_photo);
+            }
         }
     }
 

@@ -8,9 +8,12 @@
     <color name="snow">#F7F7FA</color>
     <color name="ice">#F0F3F4</color>
     <color name="grey">#c8c8c8</color>
+    <color name="eastBay">#454F63</color>
     <color name="slateGrey">#78849E</color>
     <color name="lightGrey">#FAFAFA</color>
     <color name="cyan">#3ACCE1</color>
+    <color name="sage">#87BCBF</color>
     <color name="darkBlue">#2A2E43</color>
+    <color name="pickledBlueWood">#334856</color>
     <color name="slateBlue">#665EFF</color>
 </resources>

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,20 +17,26 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.skhu.capstone2020.Fragments.ChatsFragment;
 import com.skhu.capstone2020.Fragments.MyLocationFragment;
 import com.skhu.capstone2020.Fragments.SurroundingFragment;
 import com.skhu.capstone2020.Model.Token;
+import com.skhu.capstone2020.Model.User;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
-    LinearLayout drawer_logout, drawer_friends;
-    View drawerView;
+    LinearLayout drawer_logout, drawer_friends, drawer_setting;
     RelativeLayout fragment_container;
+    View drawerView;
     ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu;
+
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();                          // 현재 유저정보 객체 생성
 
     private FragmentManager fragmentManager;
@@ -40,9 +47,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        updateToken();
-
         fragment_container = findViewById(R.id.fragment_container);
+
+        updateToken();
+        updateFriendsInfo();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerView = findViewById(R.id.drawer_view);
@@ -67,13 +75,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        drawer_setting = findViewById(R.id.drawer_setting);
+        drawer_setting.setOnClickListener(new View.OnClickListener() {                              // 설정 화면으로 이동
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                drawerLayout.closeDrawer(drawerView);
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_scale_out);
+            }
+        });
+
         drawer_logout = findViewById(R.id.drawer_logout);
-        drawer_logout.setOnClickListener(new View.OnClickListener() {                               // 로그아웃 버튼 클릭 시 동작
+        drawer_logout.setOnClickListener(new View.OnClickListener() {                               // 로그아웃 버튼 클릭 시
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, StartActivity.class));
-                finish();
+                ActivityCompat.finishAffinity(MainActivity.this);
             }
         });
 
@@ -153,6 +171,34 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void updateFriendsInfo() {
+        final CollectionReference friendColRef = FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUser.getUid())
+                .collection("Friends");
+        final CollectionReference userColRef = FirebaseFirestore.getInstance().collection("Users");
+
+        friendColRef.get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            String userId = snapshot.toObject(User.class).getId();
+                            userColRef.document(userId)
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            User user = documentSnapshot.toObject(User.class);
+                                            if (user != null)
+                                                friendColRef.document(user.getId()).set(user);
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
 
     public void updateToken() {                                                                     // 토큰 값 DB에 저장
         FirebaseInstanceId

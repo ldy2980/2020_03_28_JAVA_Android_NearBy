@@ -20,4 +20,10 @@
     <string name="userName">이름</string>
     <string name="alreadyHaveAccount">이미 계정이 있으신가요?</string>
     <string name="findPassword">비밀번호 찾기</string>
+    <string name="profileSetting">내 정보 설정</string>
+    <string name="profileImage">프로필이미지</string>
+    <string name="editIcon">이미지수정 아이콘</string>
+    <string name="allowPush">푸시 알림</string>
+    <string name="allowRequest">친구추가 허용</string>
+    <string name="allowLocation">위치 공유</string>
 </resources>
