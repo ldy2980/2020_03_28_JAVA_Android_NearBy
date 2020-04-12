@@ -17,5 +17,5 @@ public interface FCMApiService {
     )
 
     @POST("fcm/send")
-    Call<Response> sendNotification(@Body Sender body);
+    Call<Response> sendRequestNotification(@Body Sender body);
 }

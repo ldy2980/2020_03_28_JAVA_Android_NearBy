@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/friend_request_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FriendRequestActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/friend_request_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_icon_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="친구 추가"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/friend_request_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="11dp"
+            android:enabled="false"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="@string/ok"
+            android:textColor="@color/grey"
+            android:textSize="18sp"
+            tools:ignore="RelativeOverlap" />
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/input_friend_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="@string/email"
+        android:backgroundTint="@color/black"
+        android:fontFamily="@font/jsdongkang_regular"
+        android:hint="@string/email"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:textSize="16sp">
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/grey_round_background"
+        android:fontFamily="@font/jsdongkang_regular"
+        android:padding="17dp"
+        android:text="친구로 추가할 유저의 이메일주소를 입력하세요."
+        android:textColor="@color/slateGrey"
+        android:textSize="13sp" />
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.skhu.capstone2020;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import com.skhu.capstone2020.Model.User;
 import java.util.List;
 
 public class FriendsActivity extends AppCompatActivity {
-    ImageView friends_back;
+    ImageView friends_back, btn_addFriend;
 
     SpinKitView friends_spinKitView;
     RecyclerView friends_recycler;
@@ -41,6 +42,15 @@ public class FriendsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 finish();
                 overridePendingTransition(R.anim.anim_scale_in, R.anim.anim_slide_out_right);
+            }
+        });
+
+        btn_addFriend = findViewById(R.id.btn_addFriend);
+        btn_addFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(FriendsActivity.this, FriendRequestActivity.class));
+                overridePendingTransition(0, 0);
             }
         });
 

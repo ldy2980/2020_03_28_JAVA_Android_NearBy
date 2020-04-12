@@ -80,6 +80,14 @@
                 android:text="@string/notification"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/drawer_new_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_new"
+                android:visibility="invisible"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <LinearLayout
@@ -129,12 +137,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/jsdongkang_regular"
                 android:layout_marginTop="0.8dp"
+                android:fontFamily="@font/jsdongkang_regular"
                 android:text="@string/logout"
+                android:textColor="@color/slateGrey"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/slateGrey"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"

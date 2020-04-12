@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout drawer_logout, drawer_friends, drawer_setting;
     RelativeLayout fragment_container;
     View drawerView;
-    ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu;
+    ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu, new_sign, drawer_new_sign;
 
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();                          // 현재 유저정보 객체 생성
 
@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         updateToken();
         updateFriendsInfo();
+
+        new_sign = findViewById(R.id.new_sign);
+        drawer_new_sign = findViewById(R.id.drawer_new_sign);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerView = findViewById(R.id.drawer_view);
