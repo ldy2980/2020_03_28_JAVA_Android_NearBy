@@ -21,13 +21,25 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.skhu.capstone2020.Custom.CustomProgressDialog;
+import com.skhu.capstone2020.Model.Data;
+import com.skhu.capstone2020.Model.Response;
+import com.skhu.capstone2020.Model.Sender;
+import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Model.User;
+import com.skhu.capstone2020.REST_API.Client;
+import com.skhu.capstone2020.REST_API.FCMApiService;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class FriendRequestActivity extends AppCompatActivity {
     LinearLayout root_view;
@@ -37,12 +49,30 @@ public class FriendRequestActivity extends AppCompatActivity {
 
     CustomProgressDialog dialog;
 
-    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    User currentUser;
+    FCMApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_request);
+
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMApiService.class);
+
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .whereEqualTo("id", firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            currentUser = snapshot.toObject(User.class);                            // 현재 유저정보 객체 할당
+                            return;
+                        }
+                    }
+                });
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null)
@@ -132,7 +162,7 @@ public class FriendRequestActivity extends AppCompatActivity {
             }
             FirebaseFirestore.getInstance()
                     .collection("Users")
-                    .document(currentUser.getUid())
+                    .document(currentUser.getId())
                     .collection("Friends")
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -148,16 +178,60 @@ public class FriendRequestActivity extends AppCompatActivity {
                                     return;
                                 }
                             }
-                            sendRequest(email);
+                            getTargetUser(email);
                         }
                     });
         }
     }
 
-    public void sendRequest(String email) {
-        dialog.dismiss();
-        Snackbar.make(root_view, "OK.", Snackbar.LENGTH_LONG)
-                .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
-                .show();
+    public void getTargetUser(String email) {
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            User targetUser = snapshot.toObject(User.class);
+                            sendRequest(targetUser);
+                        }
+                    }
+                });
+    }
+
+    public void sendRequest(final User targetUser) {
+        FirebaseFirestore.getInstance()
+                .collection("Tokens")
+                .document(targetUser.getId())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Token token = documentSnapshot.toObject(Token.class);
+                        if (token != null) {
+                            Data data = new Data(currentUser.getId(), currentUser.getName(), targetUser.getId());
+                            Sender sender = new Sender(data, token.getToken());
+
+                            apiService.sendRequestNotification(sender)
+                                    .enqueue(new Callback<Response>() {
+                                        @Override
+                                        public void onResponse(@NotNull Call<Response> call, @NotNull retrofit2.Response<Response> response) {
+                                            dialog.dismiss();
+                                            Snackbar.make(root_view, "친구 요청 전송 완료.", Snackbar.LENGTH_LONG)
+                                                    .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
+                                                    .show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NotNull Call<Response> call, @NotNull Throwable t) {
+                                            Snackbar.make(root_view, "전송 실패.", Snackbar.LENGTH_LONG)
+                                                    .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
+                                                    .show();
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 }
