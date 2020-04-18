@@ -222,7 +222,9 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.show();
         storageReference = FirebaseStorage.getInstance().getReference("profileImages");
         if (imageUri != null) {
-            final StorageReference fileReference = storageReference.child(firebaseUser.getUid()).child(System.currentTimeMillis()
+/*            final StorageReference fileReference = storageReference.child(firebaseUser.getUid()).child(System.currentTimeMillis()
+                    + "." + getFileExtension(imageUri));*/
+            final StorageReference fileReference = storageReference.child(firebaseUser.getUid()).child(firebaseUser.getUid()
                     + "." + getFileExtension(imageUri));
 
             uploadTask = fileReference.putFile(imageUri);

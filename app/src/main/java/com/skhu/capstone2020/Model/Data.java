@@ -3,14 +3,16 @@ package com.skhu.capstone2020.Model;
 public class Data {
     private String userId;
     private String userName;
+    private String userImage;
     private String receiverId;
 
     public Data() {
     }
 
-    public Data(String userId, String userName, String receiverId) {
+    public Data(String userId, String userName, String userImage, String receiverId) {
         this.userId = userId;
         this.userName = userName;
+        this.userImage = userImage;
         this.receiverId = receiverId;
     }
 
@@ -28,6 +30,14 @@ public class Data {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 
     public String getReceiverId() {

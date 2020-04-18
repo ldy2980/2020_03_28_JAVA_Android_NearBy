@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 
@@ -16,9 +17,14 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.skhu.capstone2020.Model.RequestNotification;
 import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Notification.OreoNotification;
 import com.skhu.capstone2020.NotificationActivity;
+import com.skhu.capstone2020.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -51,15 +57,37 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     public void sendRequestNotification(RemoteMessage remoteMessage) {
         String userId = remoteMessage.getData().get("userId");
         String userName = remoteMessage.getData().get("userName");
+        String userImage = remoteMessage.getData().get("userImage");
         String title = "알림";
         String body = "새 친구 요청이 있습니다.";
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("a hh:mm:ss");
+        String currentTime = format.format(date);
         Intent intent = new Intent(this, NotificationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
+        remoteViews.setTextViewText(R.id.notification_time, currentTime);
+
         OreoNotification oreoNotification = new OreoNotification(this);
         Notification.Builder builder = oreoNotification.getRequestNotificaton(title, body, pendingIntent, defaultSound);
+        builder.setContent(remoteViews);
         oreoNotification.getManager().notify(0, builder.build());
+
+        SimpleDateFormat requestFormat = new SimpleDateFormat("MM/dd a hh:mm");
+        String requestTime = requestFormat.format(date);
+        RequestNotification requestNotification = new RequestNotification(userId, userName, userImage, requestTime);
+        addRequest(requestNotification);
+    }
+
+    public void addRequest(RequestNotification requestNotification) {
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUser.getUid())
+                .collection("Requests")
+                .document(requestNotification.getUserId())
+                .set(requestNotification);
     }
 
     public void updateToken(Token token) {

@@ -184,7 +184,7 @@ public class FriendRequestActivity extends AppCompatActivity {
         }
     }
 
-    public void getTargetUser(String email) {
+    public void getTargetUser(String email) {                                                       // 해당 이메일을 가진 유저 정보 가져오기
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .whereEqualTo("email", email)
@@ -192,15 +192,17 @@ public class FriendRequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                            User targetUser = snapshot.toObject(User.class);
-                            sendRequest(targetUser);
+                        if (queryDocumentSnapshots.size() != 0) {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                User targetUser = snapshot.toObject(User.class);
+                                sendRequest(targetUser);
+                            }
                         }
                     }
                 });
     }
 
-    public void sendRequest(final User targetUser) {
+    public void sendRequest(final User targetUser) {                                                // 요청 전송
         FirebaseFirestore.getInstance()
                 .collection("Tokens")
                 .document(targetUser.getId())
@@ -210,7 +212,7 @@ public class FriendRequestActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Token token = documentSnapshot.toObject(Token.class);
                         if (token != null) {
-                            Data data = new Data(currentUser.getId(), currentUser.getName(), targetUser.getId());
+                            Data data = new Data(currentUser.getId(), currentUser.getName(), currentUser.getImageUrl(), targetUser.getId());
                             Sender sender = new Sender(data, token.getToken());
 
                             apiService.sendRequestNotification(sender)
