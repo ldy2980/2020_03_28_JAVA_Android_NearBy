@@ -1,7 +1,6 @@
 package com.skhu.capstone2020.Model;
 
-public class RequestNotification {
-    private String userId;
+public class RequestNotification extends Notification {
     private String userName;
     private String userImageUrl;
     private String time;
@@ -10,18 +9,10 @@ public class RequestNotification {
     }
 
     public RequestNotification(String userId, String userName, String userImageUrl, String time) {
-        this.userId = userId;
+        super(userId, 0);
         this.userName = userName;
         this.userImageUrl = userImageUrl;
         this.time = time;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getUserName() {

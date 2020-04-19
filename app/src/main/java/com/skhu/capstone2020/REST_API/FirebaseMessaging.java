@@ -78,15 +78,15 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         SimpleDateFormat requestFormat = new SimpleDateFormat("MM/dd a hh:mm");
         String requestTime = requestFormat.format(date);
         RequestNotification requestNotification = new RequestNotification(userId, userName, userImage, requestTime);
-        addRequest(requestNotification);
+        addRequestNotification(requestNotification);
     }
 
-    public void addRequest(RequestNotification requestNotification) {
+    public void addRequestNotification(RequestNotification requestNotification) {
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .document(currentUser.getUid())
-                .collection("Requests")
-                .document(requestNotification.getUserId())
+                .collection("Notifications")
+                .document(requestNotification.getId())
                 .set(requestNotification);
     }
 

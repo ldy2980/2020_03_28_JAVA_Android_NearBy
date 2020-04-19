@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,7 +20,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -27,12 +30,13 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.skhu.capstone2020.Fragments.ChatsFragment;
 import com.skhu.capstone2020.Fragments.MyLocationFragment;
 import com.skhu.capstone2020.Fragments.SurroundingFragment;
+import com.skhu.capstone2020.Model.Notification;
 import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Model.User;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
-    LinearLayout drawer_logout, drawer_friends, drawer_setting;
+    LinearLayout drawer_logout, drawer_friends, drawer_setting, drawer_notification;
     RelativeLayout fragment_container;
     View drawerView;
     ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu, new_sign, drawer_new_sign;
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         new_sign = findViewById(R.id.new_sign);
         drawer_new_sign = findViewById(R.id.drawer_new_sign);
+        checkNotifications();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerView = findViewById(R.id.drawer_view);
@@ -73,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, FriendsActivity.class));
+                drawerLayout.closeDrawer(drawerView);
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_scale_out);
+            }
+        });
+
+        drawer_notification = findViewById(R.id.drawer_notification);
+        drawer_notification.setOnClickListener(new View.OnClickListener() {                         // 알림 화면으로 이동
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
                 drawerLayout.closeDrawer(drawerView);
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_scale_out);
             }
@@ -198,6 +213,30 @@ public class MainActivity extends AppCompatActivity {
                                                 friendColRef.document(user.getId()).set(user);
                                         }
                                     });
+                        }
+                    }
+                });
+    }
+
+    public void checkNotifications() {                                                              // 미확인된 알림이 있을 때 메인화면에 표시
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUser.getUid())
+                .collection("Notifications")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0) {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                Notification notification = snapshot.toObject(Notification.class);
+                                if (!(notification.isSeen())) {
+                                    new_sign.setVisibility(View.VISIBLE);
+                                    drawer_new_sign.setVisibility(View.VISIBLE);
+                                    return;
+                                }
+                            }
+                            new_sign.setVisibility(View.INVISIBLE);
+                            drawer_new_sign.setVisibility(View.INVISIBLE);
                         }
                     }
                 });

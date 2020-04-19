@@ -1,93 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/friend_request_icon"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="7dp"
-        android:src="@drawable/ic_add_friend"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_toEndOf="@+id/friend_request_icon"
-        android:fontFamily="@font/bm_hanna"
-        android:text="@string/friendRequest"
-        android:textColor="@color/bermudaGrey"
-        android:textSize="12sp"
-        tools:ignore="RelativeOverlap" />
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/request_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="13dp"
-        android:fontFamily="@font/bm_hanna"
-        android:text="MM/dd a hh시 mm분"
-        android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/friend_request_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="7dp"
+            android:src="@drawable/ic_add_friend"
+            tools:ignore="ContentDescription" />
 
-    <ImageView
-        android:id="@+id/request_user_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/friend_request_icon"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginBottom="13dp"
-        android:background="@drawable/request_user_image_background"
-        android:padding="8dp"
-        android:src="@drawable/default_user_photo"
-        tools:ignore="ContentDescription" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/friend_request_icon"
+            android:fontFamily="@font/bm_hanna"
+            android:text="@string/friendRequest"
+            android:textColor="@color/bermudaGrey"
+            android:textSize="12sp"
+            tools:ignore="RelativeOverlap" />
 
-    <TextView
-        android:id="@+id/request_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/friend_request_icon"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
-        android:layout_toEndOf="@id/request_user_image"
-        android:fontFamily="@font/mapo_peacefull"
-        android:text="유저 이름"
-        android:textColor="@color/black"
-        android:textSize="17sp" />
+        <TextView
+            android:id="@+id/request_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/bm_hanna"
+            android:text="MM/dd a hh시 mm분"
+            android:textSize="12sp" />
 
-    <ImageButton
-        android:id="@+id/request_refuse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/friend_request_icon"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="11dp"
-        android:layout_toStartOf="@id/request_approve"
-        android:background="@drawable/round_button_east_bay"
-        android:padding="11dp"
-        android:src="@drawable/ic_cancel"
-        tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/request_user_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/friend_request_icon"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginBottom="13dp"
+            android:background="@drawable/request_user_image_background"
+            android:padding="8dp"
+            android:src="@drawable/default_user_photo"
+            tools:ignore="ContentDescription" />
 
-    <ImageButton
-        android:id="@+id/request_approve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/friend_request_icon"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="14dp"
-        android:background="@drawable/round_button_sage"
-        android:padding="11dp"
-        android:src="@drawable/ic_check"
-        tools:ignore="ContentDescription" />
+        <TextView
+            android:id="@+id/request_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/friend_request_icon"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="26dp"
+            android:layout_toEndOf="@id/request_user_image"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="유저 이름"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
 
-</RelativeLayout>
+        <!--
+            <ImageButton
+                android:id="@+id/request_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/friend_request_icon"
+                android:layout_marginTop="22dp"
+                android:layout_marginEnd="11dp"
+                android:layout_toStartOf="@id/request_approve"
+                android:background="@drawable/round_button_east_bay"
+                android:padding="11dp"
+                android:src="@drawable/ic_cancel"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/request_approve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/friend_request_icon"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="22dp"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/round_button_sage"
+                android:padding="11dp"
+                android:src="@drawable/ic_check"
+                tools:ignore="ContentDescription" />
+        -->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/notification_seen"
+        android:layout_width="match_parent"
+        android:layout_height="102dp"
+        android:background="#BFFFFFFF"
+        android:orientation="vertical"
+        android:visibility="invisible" />
+
+</FrameLayout>

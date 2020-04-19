@@ -202,6 +202,12 @@ public class ProfileActivity extends AppCompatActivity {
                             switch_push.setChecked(userOptions.isAllowNotification());
                             switch_friendRequest.setChecked(userOptions.isAllowFriendRequest());
                             switch_sharedLocation.setChecked(userOptions.isAllowShareLocation());
+                        } else {
+                            UserOptions initOption = new UserOptions();
+                            FirebaseFirestore.getInstance()
+                                    .collection("UserOptions")
+                                    .document(firebaseUser.getUid())
+                                    .set(initOption);
                         }
                     }
                 });
