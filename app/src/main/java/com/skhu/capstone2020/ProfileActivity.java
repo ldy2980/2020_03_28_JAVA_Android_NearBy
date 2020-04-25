@@ -1,13 +1,19 @@
 package com.skhu.capstone2020;
 
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -21,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
@@ -43,9 +50,10 @@ import com.skhu.capstone2020.Model.UserOptions;
 import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
-    FrameLayout profile_image_container;
-    TextView btn_logout, profile_userName, profile_userEmail;
-    ImageView profile_image, profile_back;
+    FrameLayout profile_image_container, status_message_container;
+    TextView btn_logout, profile_userName, profile_userEmail, status_message_textView;
+    ImageView profile_image, profile_back, status_message_imageView;
+    EditText edit_statusMessage;
     Switch switch_push, switch_friendRequest, switch_sharedLocation;
 
     public static int REQUEST_TAKE_ALBUM = 1;
@@ -69,6 +77,56 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 settingImage();
+            }
+        });
+
+        status_message_container = findViewById(R.id.status_message_container);
+        status_message_textView = findViewById(R.id.status_message_text_view);
+        status_message_imageView = findViewById(R.id.status_message_image_view);
+        edit_statusMessage = findViewById(R.id.edit_status_message);
+
+        status_message_container.setOnClickListener(new View.OnClickListener() {                    // 상태메세지 수정 활성화
+            @Override
+            public void onClick(View view) {
+                status_message_textView.setVisibility(View.INVISIBLE);
+                status_message_textView.setEnabled(false);
+                status_message_imageView.setImageResource(R.drawable.ic_cancel_black);
+                status_message_imageView.setOnClickListener(new View.OnClickListener() {            // 수정 취소
+                    @Override
+                    public void onClick(View view) {
+                        InputMethodManager immHide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        if (immHide != null)
+                            immHide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                        edit_statusMessage.setEnabled(false);
+                        edit_statusMessage.setVisibility(View.GONE);
+                        status_message_imageView.setImageResource(R.drawable.ic_edit);
+                        status_message_textView.setVisibility(View.VISIBLE);
+                        status_message_textView.setEnabled(true);
+                    }
+                });
+
+                edit_statusMessage.setEnabled(true);
+                edit_statusMessage.setVisibility(View.VISIBLE);
+                edit_statusMessage.requestFocus();
+                edit_statusMessage.setText(status_message_textView.getText());
+                edit_statusMessage.setSelection(edit_statusMessage.getText().length());
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null)
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+            }
+        });
+
+        edit_statusMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {        // 키보드 엔터키 재정의
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager immHide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    if (immHide != null)
+                        immHide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    String statusMessage = edit_statusMessage.getText().toString();
+                    editStatusMessage(statusMessage);
+                }
+                return true;
             }
         });
 
@@ -139,6 +197,25 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    public void editStatusMessage(String statusMessage) {                                           // 변경된 상태메세지 DB에 업데이트
+        status_message_textView.setText(statusMessage);
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(firebaseUser.getUid())
+                .update("statusMessage", statusMessage)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        edit_statusMessage.setEnabled(false);
+                        edit_statusMessage.setVisibility(View.GONE);
+                        status_message_textView.setEnabled(true);
+                        status_message_textView.setVisibility(View.VISIBLE);
+                        status_message_imageView.setImageResource(R.drawable.ic_edit);
+                        status_message_imageView.setOnClickListener(null);
+                    }
+                });
+    }
+
     CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -181,11 +258,14 @@ public class ProfileActivity extends AppCompatActivity {
                         assert currentUser != null;
                         profile_userName.setText(currentUser.getName());
                         profile_userEmail.setText(currentUser.getEmail());
+                        status_message_textView.setText(currentUser.getStatusMessage());
                         if (!(currentUser.getImageUrl().equals("default"))) {                       // 유저 프로필이미지 설정
                             profile_image.setPadding(0, 0, 0, 0);
                             Glide.with(ProfileActivity.this)
                                     .load(currentUser.getImageUrl())
-                                    .apply(new RequestOptions().transform(new RoundedCorners(52)))
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                    .apply(new RequestOptions().transform(new RoundedCorners(48)))
                                     .into(profile_image);
                         }
                     }

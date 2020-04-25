@@ -47,7 +47,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
                 holder.friend_photo.setPadding(0, 0, 0, 0);
                 Glide.with(mContext)
                         .load(user.getImageUrl())
-                        .apply(new RequestOptions().transform(new RoundedCorners(45)))
+                        .apply(new RequestOptions().transform(new RoundedCorners(40)))
                         .into(holder.friend_photo);
             }
         }

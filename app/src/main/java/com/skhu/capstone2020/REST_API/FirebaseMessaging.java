@@ -58,6 +58,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String userId = remoteMessage.getData().get("userId");
         String userName = remoteMessage.getData().get("userName");
         String userImage = remoteMessage.getData().get("userImage");
+        String userStatusMessage = remoteMessage.getData().get("userStatusMessage");
         String title = "알림";
         String body = "새 친구 요청이 있습니다.";
         Date date = new Date();
@@ -69,6 +70,22 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
         remoteViews.setTextViewText(R.id.notification_time, currentTime);
+/*        Glide.with(getApplicationContext())
+                .asBitmap()
+                .load(userImage)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).submit();*/
 
         OreoNotification oreoNotification = new OreoNotification(this);
         Notification.Builder builder = oreoNotification.getRequestNotificaton(title, body, pendingIntent, defaultSound);
@@ -77,7 +94,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
         SimpleDateFormat requestFormat = new SimpleDateFormat("MM/dd a hh:mm");
         String requestTime = requestFormat.format(date);
-        RequestNotification requestNotification = new RequestNotification(userId, userName, userImage, requestTime);
+        RequestNotification requestNotification = new RequestNotification(userId, userName, userImage, userStatusMessage, requestTime);
         addRequestNotification(requestNotification);
     }
 

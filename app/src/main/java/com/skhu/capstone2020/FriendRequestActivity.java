@@ -212,7 +212,7 @@ public class FriendRequestActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Token token = documentSnapshot.toObject(Token.class);
                         if (token != null) {
-                            Data data = new Data(currentUser.getId(), currentUser.getName(), currentUser.getImageUrl(), targetUser.getId());
+                            Data data = new Data(currentUser.getId(), currentUser.getName(), currentUser.getImageUrl(), currentUser.getStatusMessage(), targetUser.getId());
                             Sender sender = new Sender(data, token.getToken());
 
                             apiService.sendRequestNotification(sender)

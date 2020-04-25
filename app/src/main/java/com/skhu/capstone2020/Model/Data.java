@@ -4,15 +4,17 @@ public class Data {
     private String userId;
     private String userName;
     private String userImage;
+    private String userStatusMessage;
     private String receiverId;
 
     public Data() {
     }
 
-    public Data(String userId, String userName, String userImage, String receiverId) {
+    public Data(String userId, String userName, String userImage, String userStatusMessage, String receiverId) {
         this.userId = userId;
         this.userName = userName;
         this.userImage = userImage;
+        this.userStatusMessage = userStatusMessage;
         this.receiverId = receiverId;
     }
 
@@ -38,6 +40,14 @@ public class Data {
 
     public void setUserImage(String userImage) {
         this.userImage = userImage;
+    }
+
+    public String getUserStatusMessage() {
+        return userStatusMessage;
+    }
+
+    public void setUserStatusMessage(String userStatusMessage) {
+        this.userStatusMessage = userStatusMessage;
     }
 
     public String getReceiverId() {
