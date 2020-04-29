@@ -197,6 +197,9 @@ public class FriendRequestActivity extends AppCompatActivity {
                                 User targetUser = snapshot.toObject(User.class);
                                 sendRequest(targetUser);
                             }
+                        } else {
+                            dialog.dismiss();
+                            finish();
                         }
                     }
                 });
@@ -220,13 +223,15 @@ public class FriendRequestActivity extends AppCompatActivity {
                                         @Override
                                         public void onResponse(@NotNull Call<Response> call, @NotNull retrofit2.Response<Response> response) {
                                             dialog.dismiss();
-                                            Snackbar.make(root_view, "친구 요청 전송 완료.", Snackbar.LENGTH_LONG)
+/*                                            Snackbar.make(root_view, "요청 전송 완료.", Snackbar.LENGTH_LONG)
                                                     .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
-                                                    .show();
+                                                    .show();*/
+                                            finish();
                                         }
 
                                         @Override
                                         public void onFailure(@NotNull Call<Response> call, @NotNull Throwable t) {
+                                            dialog.dismiss();
                                             Snackbar.make(root_view, "전송 실패.", Snackbar.LENGTH_LONG)
                                                     .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
                                                     .show();

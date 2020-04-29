@@ -73,7 +73,7 @@
                     android:layout_gravity="bottom|end"
                     android:background="@drawable/user_image_edit"
                     android:contentDescription="@string/editIcon"
-                    android:padding="8dp"
+                    android:padding="6dp"
                     android:src="@drawable/ic_edit" />
 
             </FrameLayout>

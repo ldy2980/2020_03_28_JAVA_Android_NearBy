@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,8 +28,13 @@ import timber.log.Timber;
 
 public class MyLocationFragment extends Fragment {
     private MapView mapView;
+    private RelativeLayout fragment_container;
 
     public MyLocationFragment() {
+    }
+
+    public MyLocationFragment(RelativeLayout fragment_container) {
+        this.fragment_container = fragment_container;
     }
 
     @Nullable

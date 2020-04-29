@@ -3,7 +3,6 @@ package com.skhu.capstone2020;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -159,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.btn_surrounding:
                     if (hasFocus) {
+/*                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) fragment_container.getLayoutParams();
+                        params.topMargin = 100;
+                        params.bottomMargin = 80;
+                        fragment_container.setLayoutParams(params);*/
                         transaction.replace(R.id.fragment_container, new SurroundingFragment()).commitAllowingStateLoss();
                         btn_surrounding.setImageResource(R.drawable.ic_surrounding_black);
                     } else {
@@ -168,9 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.btn_myLocation:
                     if (hasFocus) {
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) fragment_container.getLayoutParams();
+/*                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) fragment_container.getLayoutParams();
                         params.topMargin = 0;
-                        fragment_container.setLayoutParams(params);
+                        params.bottomMargin = 0;
+                        fragment_container.setLayoutParams(params);*/
                         transaction.replace(R.id.fragment_container, new MyLocationFragment()).commitAllowingStateLoss();
                         btn_myLocation.setImageResource(R.drawable.ic_location_black);
                     } else {

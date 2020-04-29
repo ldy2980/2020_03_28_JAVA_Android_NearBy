@@ -7,9 +7,11 @@
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/surroundingPlace_recycler"
+        android:id="@+id/surrounding_place_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="65dp"
+        android:layout_marginBottom="65dp"
         android:background="@color/white"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

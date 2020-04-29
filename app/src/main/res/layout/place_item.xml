@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/place_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="장소 ID" />
+
+    <TextView
+        android:id="@+id/place_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="장소 이름" />
+
+    <TextView
+        android:id="@+id/place_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="카테고리" />
+
+    <TextView
+        android:id="@+id/place_group_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="그룹핑 카테고리" />
+
+    <TextView
+        android:id="@+id/place_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전화번호" />
+
+    <TextView
+        android:id="@+id/place_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="상세정보 URL" />
+
+    <TextView
+        android:id="@+id/place_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="도로명 주소" />
+
+    <TextView
+        android:id="@+id/place_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="거리" />
+
+    <TextView
+        android:id="@+id/place_x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x좌표" />
+
+    <TextView
+        android:id="@+id/place_y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:text="y좌표" />
+</LinearLayout>

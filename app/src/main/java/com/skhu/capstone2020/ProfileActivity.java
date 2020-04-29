@@ -28,8 +28,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -131,6 +129,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         profile_image = findViewById(R.id.edit_profile_image);
+        profile_image.setClipToOutline(true);
         profile_back = findViewById(R.id.profile_back);
         profile_back.setOnClickListener(new View.OnClickListener() {                                // 이전 화면으로 이동
             @Override
@@ -265,7 +264,6 @@ public class ProfileActivity extends AppCompatActivity {
                                     .load(currentUser.getImageUrl())
                                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                                     .skipMemoryCache(true)
-                                    .apply(new RequestOptions().transform(new RoundedCorners(48)))
                                     .into(profile_image);
                         }
                     }
