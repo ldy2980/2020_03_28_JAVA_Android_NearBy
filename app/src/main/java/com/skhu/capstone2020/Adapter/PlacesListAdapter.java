@@ -34,16 +34,20 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (placeList.size() != 0) {
             Place place = placeList.get(position);
-            holder.place_id.setText(place.getPlaceId());
             holder.place_name.setText(place.getPlaceName());
             holder.place_category.setText(place.getCategory());
             holder.place_group_category.setText(place.getGroupCategory());
-            holder.place_phone_number.setText(place.getPhone());
-            holder.place_url.setText(place.getUrl());
             holder.place_address.setText(place.getAddress());
-            holder.place_distance.setText(place.getDistance());
-            holder.place_x.setText(place.getX());
-            holder.place_y.setText(place.getY());
+
+            if (!place.getPhone().isEmpty()) {
+                holder.place_digit.setVisibility(View.VISIBLE);
+                holder.place_digit.setText(place.getPhone());
+            } /*else {
+                holder.place_digit.setVisibility(View.INVISIBLE);
+            }*/
+
+            String distance = place.getDistance() + "m";
+            holder.place_distance.setText(distance);
         }
     }
 
@@ -53,20 +57,16 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView place_id, place_name, place_category, place_group_category, place_phone_number, place_url, place_address, place_distance, place_x, place_y;
+        TextView place_name, place_category, place_group_category, place_digit, place_address, place_distance;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            place_id = itemView.findViewById(R.id.place_id);
             place_name = itemView.findViewById(R.id.place_name);
             place_category = itemView.findViewById(R.id.place_category);
             place_group_category = itemView.findViewById(R.id.place_group_category);
-            place_phone_number = itemView.findViewById(R.id.place_phone_number);
-            place_url = itemView.findViewById(R.id.place_url);
             place_address = itemView.findViewById(R.id.place_address);
             place_distance = itemView.findViewById(R.id.place_distance);
-            place_x = itemView.findViewById(R.id.place_x);
-            place_y = itemView.findViewById(R.id.place_y);
+            place_digit = itemView.findViewById(R.id.place_digit);
         }
     }
 }

@@ -67,20 +67,20 @@ public class SurroundingFragment extends Fragment {
 
     private void getPlaces() {
         lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
+
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            TedPermission.with(getContext())                                                            // 앱 접근 권한 설정
+            TedPermission.with(getContext())                                                        // 앱 접근 권한 설정
                     .setPermissionListener(permissionlistener)
                     .setDeniedMessage("앱 사용을 위해 접근 권한이 필요합니다.\n\n[설정]에서 권한을 허용해주세요.")
                     .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                     .check();
         } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            //Toast.makeText(getContext(), location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_LONG).show();
 
             if (location != null) {
                 api = Client.getClient(KakaoLocalApi.base).create(KakaoLocalApi.class);
-                api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), "FD6", 200)
+                api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), "FD6", 200, "accuracy")
                         .enqueue(new Callback<PlaceResponse>() {
                             @Override
                             public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
