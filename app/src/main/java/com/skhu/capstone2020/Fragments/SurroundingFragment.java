@@ -60,12 +60,12 @@ public class SurroundingFragment extends Fragment {
         surrounding_place_recycler.setHasFixedSize(true);
         surrounding_place_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        getPlaces();
+        setList();
 
         return view;
     }
 
-    private void getPlaces() {
+    private void setList() {
         lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -79,30 +79,34 @@ public class SurroundingFragment extends Fragment {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if (location != null) {
-                api = Client.getClient(KakaoLocalApi.base).create(KakaoLocalApi.class);
-                api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), "FD6", 200, "accuracy")
-                        .enqueue(new Callback<PlaceResponse>() {
-                            @Override
-                            public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
-                                if (!(response.isSuccessful())) {
-                                    Toast.makeText(getContext(), Integer.toString(response.code()), Toast.LENGTH_LONG).show();
-                                    return;
-                                }
-
-                                placeResponse = response.body();
-                                if (placeResponse != null) {
-                                    adapter = new PlacesListAdapter(placeResponse.getPlaceList(), getContext());
-                                    surrounding_place_recycler.setAdapter(adapter);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
-                                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
+                getPlaces(location);
             }
         }
+    }
+
+    private void getPlaces(Location location) {
+        api = Client.getClient(KakaoLocalApi.base).create(KakaoLocalApi.class);
+        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), "FD6", 200, "accuracy")
+                .enqueue(new Callback<PlaceResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
+                        if (!(response.isSuccessful())) {
+                            Toast.makeText(getContext(), Integer.toString(response.code()), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        placeResponse = response.body();
+                        if (placeResponse != null) {
+                            adapter = new PlacesListAdapter(placeResponse.getPlaceList(), getContext());
+                            surrounding_place_recycler.setAdapter(adapter);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
+                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private PermissionListener permissionlistener = new PermissionListener() {
