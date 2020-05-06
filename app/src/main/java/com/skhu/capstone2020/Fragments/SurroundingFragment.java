@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,9 +25,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.skhu.capstone2020.Adapter.PlacesListAdapter;
+import com.skhu.capstone2020.Model.Place;
 import com.skhu.capstone2020.Model.PlaceResponse;
 import com.skhu.capstone2020.R;
 import com.skhu.capstone2020.REST_API.Client;
@@ -47,10 +50,14 @@ import retrofit2.Response;
 
 public class SurroundingFragment extends Fragment {
     private RecyclerView surrounding_place_recycler;
+    private SpinKitView surrounding_spinKitview;
+
     private PlaceResponse placeResponse;
+    private PlacesListAdapter adapter;
+    private List<Place> placeList;
+
     private KakaoLocalApi api;
     private LocationManager lm;
-    private PlacesListAdapter adapter;
 
     private WebView webView;
     private WebSettings mWebSettings;
@@ -72,6 +79,8 @@ public class SurroundingFragment extends Fragment {
         surrounding_place_recycler = view.findViewById(R.id.surrounding_place_recycler);
         surrounding_place_recycler.setHasFixedSize(true);
         surrounding_place_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        surrounding_spinKitview = view.findViewById(R.id.surrounding_spinKitView);
 
         webView = view.findViewById(R.id.webView);
 
@@ -97,21 +106,29 @@ public class SurroundingFragment extends Fragment {
                 // 자바스크립트 기본 메소드로 html 소스를 통째로 지정해서 인자로 넘김
                 view.postDelayed(new Runnable() {
                     @Override
-                    public void run() {
+                    public synchronized void run() {
+                        Log.d("Test", "run 호출");
                         view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
                     }
-                }, 100);
+                }, 300);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                view.loadUrl(request.getUrl().toString());
+                return true;
             }
         });
 
-        webView.loadUrl("https://place.map.kakao.com/14931853"); // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
-
         setList();
+
+        //webView.loadUrl("https://place.map.kakao.com/14931853"); // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
 
         return view;
     }
 
     private void setList() {
+        Log.d("Test", "setList 호출");
         lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -125,12 +142,19 @@ public class SurroundingFragment extends Fragment {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if (location != null) {
+                Log.d("Test", "GPS location");
                 getPlaces(location);
+            } else {
+                Log.d("Test", "Network location");
+                Location networkLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (networkLocation != null)
+                    getPlaces(networkLocation);
             }
         }
     }
 
     private void getPlaces(Location location) {
+        Log.d("Test", "getPlaces 호출");
         api = Client.getClient(KakaoLocalApi.base).create(KakaoLocalApi.class);
         api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), "FD6", 200, "accuracy")
                 .enqueue(new Callback<PlaceResponse>() {
@@ -143,8 +167,13 @@ public class SurroundingFragment extends Fragment {
 
                         placeResponse = response.body();
                         if (placeResponse != null) {
-                            adapter = new PlacesListAdapter(placeResponse.getPlaceList(), getContext());
+                            placeList = placeResponse.getPlaceList();
+
+                            adapter = new PlacesListAdapter(placeList, getContext());
                             surrounding_place_recycler.setAdapter(adapter);
+
+                            surrounding_place_recycler.setVisibility(View.VISIBLE);
+                            surrounding_spinKitview.setVisibility(View.INVISIBLE);
                         }
                     }
 
@@ -155,26 +184,26 @@ public class SurroundingFragment extends Fragment {
                 });
     }
 
-    private void getImageUrls(String sourceUrl) {                                                                   // 이미지 URL 크롤링
-
-    }
-
     public class MyJavascriptInterface {
         @JavascriptInterface
-        public void getHtml(String html) {
+        public synchronized void getHtml(String html) {
+            Log.d("Test", "getHtml 호출");
             //위 자바스크립트가 호출되면 여기로 html이 반환됨
             source = html;
             Document document = Jsoup.parse(html);
             Elements elements = document.select(".details_present").select("a");            // 이미지 URL이 있는 태그 선택
-/*            Log.d("WebView Test", "getHtml: " + source);
-            Log.d("WebView Test", "Count: " + elements.size() + elements.toString());*/
+            //Log.d("Test", "getHtml: " + source);
+            Log.d("Test", "Count: " + elements.size());
 
-            if (elements.size() != 0)
+            if (elements.size() != 0) {
                 for (Element element : elements) {
                     String url = element.attr("style");
                     String parsedUrl = "https:" + url.substring(23, url.length() - 19);
-                    Log.d("WebView Test", "URL: " + parsedUrl);
+                    Log.d("Test", "URL: " + parsedUrl);
                 }
+            } else {
+                Log.d("Test", "No data, " + elements.size());
+            }
         }
     }
 
