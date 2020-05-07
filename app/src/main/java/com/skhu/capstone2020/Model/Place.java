@@ -15,6 +15,9 @@ public class Place {
     @SerializedName("category_group_name")
     private String groupCategory;
 
+    @SerializedName("category_group_code")
+    private String categoryCode;
+
     @SerializedName("phone")
     private String phone;
 
@@ -36,11 +39,12 @@ public class Place {
     public Place() {
     }
 
-    public Place(String placeId, String placeName, String category, String groupCategory, String phone, String url, String address, String distance, String x, String y) {
+    public Place(String placeId, String placeName, String category, String groupCategory, String categoryCode, String phone, String url, String address, String distance, String x, String y) {
         this.placeId = placeId;
         this.placeName = placeName;
         this.category = category;
         this.groupCategory = groupCategory;
+        this.categoryCode = categoryCode;
         this.phone = phone;
         this.url = url;
         this.address = address;
@@ -79,6 +83,14 @@ public class Place {
 
     public void setGroupCategory(String groupCategory) {
         this.groupCategory = groupCategory;
+    }
+
+    public String getCategoryCode() {
+        return categoryCode;
+    }
+
+    public void setCategoryCode(String categoryCode) {
+        this.categoryCode = categoryCode;
     }
 
     public String getPhone() {

@@ -1,10 +1,11 @@
-package com.skhu.capstone2020.REST_API;
+package com.skhu.capstone2020;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.skhu.capstone2020.Model.RequestNotification;
 import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Notification.OreoNotification;
-import com.skhu.capstone2020.NotificationActivity;
-import com.skhu.capstone2020.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +31,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
+        updateToken(new Token(s));
         FirebaseInstanceId.getInstance()
                 .getInstanceId()
                 .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
@@ -46,6 +46,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        Log.d("Test", "onMessageReceived");
         super.onMessageReceived(remoteMessage);
         String receiverId = remoteMessage.getData().get("receiverId");
 
@@ -55,6 +56,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     }
 
     public void sendRequestNotification(RemoteMessage remoteMessage) {
+        Log.d("Test", "sendRequestNotification");
         String userId = remoteMessage.getData().get("userId");
         String userName = remoteMessage.getData().get("userName");
         String userImage = remoteMessage.getData().get("userImage");

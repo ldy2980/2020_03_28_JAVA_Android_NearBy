@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".PlaceDetailActivity"></activity>
         <activity
             android:name=".NotificationActivity"
             android:screenOrientation="portrait"
@@ -64,13 +65,10 @@
             tools:ignore="LockedOrientationActivity" />
 
         <service
-            android:name=".REST_API.FirebaseMessaging"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="InnerclassSeparator">
+            android:name=".FirebaseMessaging"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
     </application>

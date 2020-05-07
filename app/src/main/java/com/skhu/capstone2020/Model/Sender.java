@@ -1,13 +1,18 @@
 package com.skhu.capstone2020.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Sender {
+    @SerializedName("data")
     private Data data;
+
+    @SerializedName("to")
     private String to;
 
     public Sender() {
     }
 
-    public Sender(Data data, String to) {
+    public Sender(String to, Data data) {
         this.data = data;
         this.to = to;
     }

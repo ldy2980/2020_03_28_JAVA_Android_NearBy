@@ -1,6 +1,7 @@
 package com.skhu.capstone2020.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skhu.capstone2020.Model.Place;
+import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
 
 import java.util.List;
@@ -40,31 +43,56 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
             holder.place_group_category.setText(place.getGroupCategory());
             holder.place_address.setText(place.getAddress());
 
-/*            holder.place_main_image.setPadding(0, 0, 0, 0);
-            holder.place_main_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Glide.with(context)
-                    .load("https://img1.daumcdn.net/thumb/T800x0.q70/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flocalfiy%2FA58CF258E0C24D2395CBD4E3777B51A8")
-                    .error(R.drawable.ic_default_place_image)
-                    .into(holder.place_main_image);*/
-
-            if (!place.getPhone().isEmpty()) {
-                holder.place_digit.setVisibility(View.VISIBLE);
-                holder.place_digit.setText(place.getPhone());
-            }
-
             String distance = place.getDistance() + "m";
             holder.place_distance.setText(distance);
+
+            switch (place.getCategoryCode()) {
+                case "FD6":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_restaurant);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_restaurant_background));
+                    break;
+                case "MT1":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_market);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_market_background));
+                    break;
+                case "CE7":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_cafe);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_cafe_background));
+                    break;
+                case "PM9":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_pharmacy);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_pharmacy_background));
+                    break;
+                case "BK9":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_bank);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_bank_background));
+                    break;
+                case "SW8":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_subway_station);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_subway_station));
+                    break;
+                case "HP8":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_hospital);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_hospital_background));
+                    break;
+                default:
+                    holder.place_category_icon.setVisibility(View.INVISIBLE);
+                    break;
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return placeList.size();
+        if (placeList.size() != 0)
+            return placeList.size();
+        else
+            return 0;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView place_name, place_category, place_group_category, place_digit, place_address, place_distance;
-        ImageView place_main_image;
+        ImageView place_category_icon;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,9 +102,17 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
             place_address = itemView.findViewById(R.id.place_address);
             place_distance = itemView.findViewById(R.id.place_distance);
             place_digit = itemView.findViewById(R.id.place_digit);
+            place_category_icon = itemView.findViewById(R.id.place_category_icon);
+            itemView.setOnClickListener(this);
+        }
 
-            place_main_image = itemView.findViewById(R.id.place_main_image);
-            place_main_image.setClipToOutline(true);
+        @Override
+        public void onClick(View view) {                                                            // 상세 정보 페이지 화면으로 이동
+            Place place = placeList.get(getAdapterPosition());
+            Intent intent = new Intent(view.getContext(), PlaceDetailActivity.class);
+            intent.putExtra("url", place.getUrl());
+            intent.putExtra("placeName", place.getPlaceName());
+            view.getContext().startActivity(intent);
         }
     }
 }

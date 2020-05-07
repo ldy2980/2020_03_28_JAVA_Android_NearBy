@@ -12,10 +12,10 @@ public interface FCMApiService {
     @Headers(
             {
                     "Content_Type:application/json",
-                    "Authorization:key=AAAAUHJLUjI:APA91bEIJDGjnqhPGi3vP5e6DWM7uXul5YZn205mkVcUzSr9__7mfHKR1_CyD9Q_jOGQ89-vDCcTfyFSh-1VM4qsfa8ZVRRwFPoVzaELih4HEd-E0f3M5N8ZNm4Z58v1_VTDt-TfXNQy"
+                    "Authorization: key=AAAAUHJLUjI:APA91bGmdhNz-JMZWbwB9-iSFBrUujz8i61w9l2YGxQUyURUsLer6DweAVMiYrtA2G3PhsND-Hh9bzyO6Hzr6a7ve9b1ftGq9x7U3cUv7cBDW72mEComIkh3IxSbS3A2R7mEi1y2TSd-"
             }
     )
 
-    @POST("fcm/send")
+    @POST("/fcm/send")
     Call<Response> sendRequestNotification(@Body Sender body);
 }

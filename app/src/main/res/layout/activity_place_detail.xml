@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PlaceDetailActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/placeDetail_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/placeDetail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toolbar_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/placeDetail_name"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/mapo_peacefull"
+            android:singleLine="true"
+            android:text="장소 상세 정보"
+            android:textAlignment="center"
+            android:textColor="@color/darkBlue"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <WebView
+        android:id="@+id/placeDetail_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

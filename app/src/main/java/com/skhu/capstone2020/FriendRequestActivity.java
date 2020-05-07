@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -58,7 +59,7 @@ public class FriendRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_request);
 
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMApiService.class);
+        apiService = Client.getClient("https://fcm.googleapis.com").create(FCMApiService.class);
 
         FirebaseFirestore.getInstance()
                 .collection("Users")
@@ -148,6 +149,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     }
 
     public void checkEmail(final String email) {
+        Log.d("Test", "checkEmail");
         dialog = new CustomProgressDialog(FriendRequestActivity.this);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
         dialog.setCancelable(false);
@@ -185,6 +187,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     }
 
     public void getTargetUser(String email) {                                                       // 해당 이메일을 가진 유저 정보 가져오기
+        Log.d("Test", "getTargetUser");
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .whereEqualTo("email", email)
@@ -206,6 +209,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     }
 
     public void sendRequest(final User targetUser) {                                                // 요청 전송
+        Log.d("Test", "sendRequest");
         FirebaseFirestore.getInstance()
                 .collection("Tokens")
                 .document(targetUser.getId())
@@ -216,17 +220,17 @@ public class FriendRequestActivity extends AppCompatActivity {
                         Token token = documentSnapshot.toObject(Token.class);
                         if (token != null) {
                             Data data = new Data(currentUser.getId(), currentUser.getName(), currentUser.getImageUrl(), currentUser.getStatusMessage(), targetUser.getId());
-                            Sender sender = new Sender(data, token.getToken());
+                            Sender sender = new Sender(token.getToken(), data);
 
                             apiService.sendRequestNotification(sender)
                                     .enqueue(new Callback<Response>() {
                                         @Override
                                         public void onResponse(@NotNull Call<Response> call, @NotNull retrofit2.Response<Response> response) {
+                                            Log.d("Test", "onResponse");
                                             dialog.dismiss();
-/*                                            Snackbar.make(root_view, "요청 전송 완료.", Snackbar.LENGTH_LONG)
+                                            Snackbar.make(root_view, "요청 전송 완료.", Snackbar.LENGTH_LONG)
                                                     .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
-                                                    .show();*/
-                                            finish();
+                                                    .show();
                                         }
 
                                         @Override

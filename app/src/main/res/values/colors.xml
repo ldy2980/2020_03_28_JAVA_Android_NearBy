@@ -15,7 +15,11 @@
     <color name="cyan">#3ACCE1</color>
     <color name="sage">#87BCBF</color>
     <color name="darkBlue">#2A2E43</color>
+    <color name="dodgerBlue">#3497FD</color>
     <color name="pickledBlueWood">#334856</color>
     <color name="slateBlue">#665EFF</color>
     <color name="mediumOrchid">#C840E9</color>
+    <color name="rust">#c55b2c </color>
+    <color name="green">#289c28</color>
+    <color name="yellow">#ffd700</color>
 </resources>

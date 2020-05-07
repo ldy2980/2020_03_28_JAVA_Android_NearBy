@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="13dp"
         android:layout_marginBottom="13dp"
         app:cardCornerRadius="15dp"
         app:cardElevation="5dp">
@@ -19,51 +19,65 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/place_main_image"
-                android:layout_width="match_parent"
-                android:layout_height="145dp"
-                android:background="@drawable/place_main_image_background"
-                android:padding="20dp"
-                android:src="@drawable/ic_default_place_image"
-                tools:ignore="ContentDescription" />
+            <!--            <ImageView
+                            android:id="@+id/place_main_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="145dp"
+                            android:background="@drawable/place_main_image_background"
+                            android:padding="20dp"
+                            android:src="@drawable/ic_default_place_image"
+                            tools:ignore="ContentDescription" />-->
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/place_name_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/place_main_image"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/place_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginTop="23dp"
                     android:fontFamily="@font/mapo_peacefull"
+                    android:singleLine="true"
                     android:text="장소 이름"
                     android:textColor="@color/black"
                     android:textSize="19sp" />
 
                 <TextView
                     android:id="@+id/place_address"
-                    android:layout_width="wrap_content"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_below="@id/place_name"
+                    android:layout_marginStart="18dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="7dp"
                     android:fontFamily="@font/mapo_peacefull"
+                    android:singleLine="true"
                     android:text="도로명 주소"
                     android:textSize="14sp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/place_category_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/category_restaurant_background"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_category_restaurant"
+                    tools:ignore="ContentDescription" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/place_sub_text_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/place_name_container"
+                android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
                 <TextView

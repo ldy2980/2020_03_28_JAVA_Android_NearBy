@@ -10,11 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -36,11 +31,10 @@ import com.skhu.capstone2020.REST_API.Client;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
 import org.jetbrains.annotations.NotNull;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,18 +44,15 @@ import retrofit2.Response;
 
 public class SurroundingFragment extends Fragment {
     private RecyclerView surrounding_place_recycler;
-    private SpinKitView surrounding_spinKitview;
+    private SpinKitView surrounding_spinKitView;
 
     private PlaceResponse placeResponse;
     private PlacesListAdapter adapter;
-    private List<Place> placeList;
+    private List<Place> placeList = new ArrayList<>();
+    private String[] categories = {"FD6", "MT1", "CE7", "PM9", "BK9", "SW8", "HP8"};
 
     private KakaoLocalApi api;
     private LocationManager lm;
-
-    private WebView webView;
-    private WebSettings mWebSettings;
-    private String source;
 
     private RelativeLayout fragment_container;
 
@@ -80,55 +71,18 @@ public class SurroundingFragment extends Fragment {
         surrounding_place_recycler.setHasFixedSize(true);
         surrounding_place_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        surrounding_spinKitview = view.findViewById(R.id.surrounding_spinKitView);
+        adapter = new PlacesListAdapter(placeList, getContext());
+        surrounding_place_recycler.setAdapter(adapter);
 
-        webView = view.findViewById(R.id.webView);
-
-        webView.setWebViewClient(new WebViewClient()); // 클릭시 새창 안뜨게
-        mWebSettings = webView.getSettings(); //세부 세팅 등록
-        mWebSettings.setJavaScriptEnabled(true); // 웹페이지 자바스크립트 허용 여부
-        mWebSettings.setSupportMultipleWindows(false); // 새창 띄우기 허용 여부
-        mWebSettings.setJavaScriptCanOpenWindowsAutomatically(false); // 자바스크립트 새창 띄우기(멀티뷰) 허용 여부
-        mWebSettings.setLoadWithOverviewMode(true); // 메타태그 허용 여부
-        mWebSettings.setUseWideViewPort(true); // 화면 사이즈 맞추기 허용 여부
-        mWebSettings.setSupportZoom(false); // 화면 줌 허용 여부
-        mWebSettings.setBuiltInZoomControls(false); // 화면 확대 축소 허용 여부
-        mWebSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN); // 컨텐츠 사이즈 맞추기
-        mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); // 브라우저 캐시 허용 여부
-        mWebSettings.setDomStorageEnabled(true); // 로컬저장소 허용 여부
-        webView.addJavascriptInterface(new MyJavascriptInterface(), "Android");
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(final WebView view, String url) {
-                super.onPageFinished(view, url);
-                // 자바스크립트 인터페이스로 연결되어 있는 getHTML를 실행
-                // 자바스크립트 기본 메소드로 html 소스를 통째로 지정해서 인자로 넘김
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public synchronized void run() {
-                        Log.d("Test", "run 호출");
-                        view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
-                    }
-                }, 300);
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.getUrl().toString());
-                return true;
-            }
-        });
+        surrounding_spinKitView = view.findViewById(R.id.surrounding_spinKitView);
 
         setList();
-
-        //webView.loadUrl("https://place.map.kakao.com/14931853"); // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
 
         return view;
     }
 
     private void setList() {
-        Log.d("Test", "setList 호출");
+        Log.d("Test", "setList");
         lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -143,20 +97,25 @@ public class SurroundingFragment extends Fragment {
 
             if (location != null) {
                 Log.d("Test", "GPS location");
-                getPlaces(location);
+                for (String category : categories) {
+                    getPlaces(location, category);
+                }
             } else {
                 Log.d("Test", "Network location");
                 Location networkLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (networkLocation != null)
-                    getPlaces(networkLocation);
+                    for (String category : categories) {
+                        getPlaces(networkLocation, category);
+                    }
             }
         }
+        setVisible();
     }
 
-    private void getPlaces(Location location) {
-        Log.d("Test", "getPlaces 호출");
+    private void getPlaces(Location location, String category) {
+        Log.d("Test", "getPlaces");
         api = Client.getClient(KakaoLocalApi.base).create(KakaoLocalApi.class);
-        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), "FD6", 200, "accuracy")
+        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), category, 400, "accuracy")
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
@@ -167,13 +126,14 @@ public class SurroundingFragment extends Fragment {
 
                         placeResponse = response.body();
                         if (placeResponse != null) {
-                            placeList = placeResponse.getPlaceList();
-
-                            adapter = new PlacesListAdapter(placeList, getContext());
-                            surrounding_place_recycler.setAdapter(adapter);
-
-                            surrounding_place_recycler.setVisibility(View.VISIBLE);
-                            surrounding_spinKitview.setVisibility(View.INVISIBLE);
+                            placeList.addAll(placeResponse.getPlaceList());
+                            Collections.sort(placeList, new Comparator<Place>() {                                       // 거리순 정렬
+                                @Override
+                                public int compare(Place p1, Place p2) {
+                                    return p1.getDistance().compareTo(p2.getDistance());
+                                }
+                            });
+                            adapter.notifyDataSetChanged();
                         }
                     }
 
@@ -184,27 +144,10 @@ public class SurroundingFragment extends Fragment {
                 });
     }
 
-    public class MyJavascriptInterface {
-        @JavascriptInterface
-        public synchronized void getHtml(String html) {
-            Log.d("Test", "getHtml 호출");
-            //위 자바스크립트가 호출되면 여기로 html이 반환됨
-            source = html;
-            Document document = Jsoup.parse(html);
-            Elements elements = document.select(".details_present").select("a");            // 이미지 URL이 있는 태그 선택
-            //Log.d("Test", "getHtml: " + source);
-            Log.d("Test", "Count: " + elements.size());
-
-            if (elements.size() != 0) {
-                for (Element element : elements) {
-                    String url = element.attr("style");
-                    String parsedUrl = "https:" + url.substring(23, url.length() - 19);
-                    Log.d("Test", "URL: " + parsedUrl);
-                }
-            } else {
-                Log.d("Test", "No data, " + elements.size());
-            }
-        }
+    private void setVisible() {                                                              // 리사이클러뷰 Visibility 설정
+        Log.d("Test", "setRecyclerAdapter");
+        surrounding_place_recycler.setVisibility(View.VISIBLE);
+        surrounding_spinKitView.setVisibility(View.INVISIBLE);
     }
 
     private PermissionListener permissionlistener = new PermissionListener() {
