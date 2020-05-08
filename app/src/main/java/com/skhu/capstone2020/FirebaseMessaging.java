@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 
@@ -31,6 +30,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
+        Log.d("Test", "onNewToken");
         updateToken(new Token(s));
         FirebaseInstanceId.getInstance()
                 .getInstanceId()
@@ -46,9 +46,10 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        Log.d("Test", "onMessageReceived");
         super.onMessageReceived(remoteMessage);
+        Log.d("Test", "onMessageReceived");
         String receiverId = remoteMessage.getData().get("receiverId");
+        Log.d("Test", "getData(): " + receiverId);
 
         if (currentUser != null && receiverId != null && receiverId.equals(currentUser.getUid())) {
             sendRequestNotification(remoteMessage);
@@ -63,35 +64,17 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String userStatusMessage = remoteMessage.getData().get("userStatusMessage");
         String title = "알림";
         String body = "새 친구 요청이 있습니다.";
+
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("a hh:mm:ss");
         String currentTime = format.format(date);
+
         Intent intent = new Intent(this, NotificationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
-        remoteViews.setTextViewText(R.id.notification_time, currentTime);
-/*        Glide.with(getApplicationContext())
-                .asBitmap()
-                .load(userImage)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .listener(new RequestListener<Bitmap>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).submit();*/
-
         OreoNotification oreoNotification = new OreoNotification(this);
-        Notification.Builder builder = oreoNotification.getRequestNotificaton(title, body, pendingIntent, defaultSound);
-        builder.setContent(remoteViews);
+        Notification.Builder builder = oreoNotification.getRequestNotification(title, body, pendingIntent, defaultSound);
         oreoNotification.getManager().notify(0, builder.build());
 
         SimpleDateFormat requestFormat = new SimpleDateFormat("MM/dd a hh:mm");
@@ -101,6 +84,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     }
 
     public void addRequestNotification(RequestNotification requestNotification) {
+        Log.d("Test", "addRequestNotification");
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .document(currentUser.getUid())

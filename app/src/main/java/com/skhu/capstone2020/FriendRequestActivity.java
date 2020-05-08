@@ -28,19 +28,19 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.skhu.capstone2020.Custom.CustomProgressDialog;
 import com.skhu.capstone2020.Model.Data;
-import com.skhu.capstone2020.Model.Response;
 import com.skhu.capstone2020.Model.Sender;
 import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Model.User;
-import com.skhu.capstone2020.REST_API.Client;
 import com.skhu.capstone2020.REST_API.FCMApiService;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FriendRequestActivity extends AppCompatActivity {
     LinearLayout root_view;
@@ -53,13 +53,12 @@ public class FriendRequestActivity extends AppCompatActivity {
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     User currentUser;
     FCMApiService apiService;
+    Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_request);
-
-        apiService = Client.getClient("https://fcm.googleapis.com").create(FCMApiService.class);
 
         FirebaseFirestore.getInstance()
                 .collection("Users")
@@ -195,12 +194,14 @@ public class FriendRequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.d("Test", "Found a user");
                         if (queryDocumentSnapshots.size() != 0) {
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                                 User targetUser = snapshot.toObject(User.class);
                                 sendRequest(targetUser);
                             }
                         } else {
+                            Log.d("Test", "Can't find user");
                             dialog.dismiss();
                             finish();
                         }
@@ -210,6 +211,11 @@ public class FriendRequestActivity extends AppCompatActivity {
 
     public void sendRequest(final User targetUser) {                                                // 요청 전송
         Log.d("Test", "sendRequest");
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(FCMApiService.class);
         FirebaseFirestore.getInstance()
                 .collection("Tokens")
                 .document(targetUser.getId())
@@ -219,14 +225,16 @@ public class FriendRequestActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Token token = documentSnapshot.toObject(Token.class);
                         if (token != null) {
+                            Log.d("Test", "Found token");
                             Data data = new Data(currentUser.getId(), currentUser.getName(), currentUser.getImageUrl(), currentUser.getStatusMessage(), targetUser.getId());
-                            Sender sender = new Sender(token.getToken(), data);
+                            Sender sender = new Sender(data, token.getToken());
 
                             apiService.sendRequestNotification(sender)
-                                    .enqueue(new Callback<Response>() {
+                                    .enqueue(new Callback<ResponseBody>() {
                                         @Override
-                                        public void onResponse(@NotNull Call<Response> call, @NotNull retrofit2.Response<Response> response) {
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                             Log.d("Test", "onResponse");
+                                            Log.d("Test", "Response: " + response.message() + ", " + response.code());
                                             dialog.dismiss();
                                             Snackbar.make(root_view, "요청 전송 완료.", Snackbar.LENGTH_LONG)
                                                     .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
@@ -234,8 +242,7 @@ public class FriendRequestActivity extends AppCompatActivity {
                                         }
 
                                         @Override
-                                        public void onFailure(@NotNull Call<Response> call, @NotNull Throwable t) {
-                                            dialog.dismiss();
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
                                             Snackbar.make(root_view, "전송 실패.", Snackbar.LENGTH_LONG)
                                                     .setBackgroundTint(ContextCompat.getColor(FriendRequestActivity.this, R.color.darkBlue))
                                                     .show();

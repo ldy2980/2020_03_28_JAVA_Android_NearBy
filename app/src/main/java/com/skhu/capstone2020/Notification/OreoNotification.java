@@ -45,8 +45,8 @@ public class OreoNotification extends ContextWrapper {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    public Notification.Builder getRequestNotificaton(String title, String body,
-                                                      PendingIntent pendingIntent, Uri soundUri) {
+    public Notification.Builder getRequestNotification(String title, String body,
+                                                       PendingIntent pendingIntent, Uri soundUri) {
 
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(pendingIntent)

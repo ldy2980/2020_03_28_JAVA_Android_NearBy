@@ -1,8 +1,8 @@
 package com.skhu.capstone2020.REST_API;
 
-import com.skhu.capstone2020.Model.Response;
 import com.skhu.capstone2020.Model.Sender;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -11,11 +11,11 @@ import retrofit2.http.POST;
 public interface FCMApiService {
     @Headers(
             {
-                    "Content_Type:application/json",
-                    "Authorization: key=AAAAUHJLUjI:APA91bGmdhNz-JMZWbwB9-iSFBrUujz8i61w9l2YGxQUyURUsLer6DweAVMiYrtA2G3PhsND-Hh9bzyO6Hzr6a7ve9b1ftGq9x7U3cUv7cBDW72mEComIkh3IxSbS3A2R7mEi1y2TSd-"
+                    "Authorization: key=AAAAUHJLUjI:APA91bGlabfHxfrb7WpN4P8a_cy8275s4f6zzzovRJHmkY0dvvRADxSkZKL_wIvwyIzOz4U4eWikxSpHK_PgvEg7Y_jWz-bpZNDXi3cVu-zJ_Vs6TrY5TZAZxYJFch6Z7ZpqJKkBGQLy",
+                    "Content_Type:application/json"
             }
     )
 
     @POST("/fcm/send")
-    Call<Response> sendRequestNotification(@Body Sender body);
+    Call<ResponseBody> sendRequestNotification(@Body Sender body);
 }

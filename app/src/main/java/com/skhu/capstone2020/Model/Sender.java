@@ -7,14 +7,14 @@ public class Sender {
     private Data data;
 
     @SerializedName("to")
-    private String to;
+    private String token;
 
     public Sender() {
     }
 
-    public Sender(String to, Data data) {
+    public Sender(Data data, String token) {
         this.data = data;
-        this.to = to;
+        this.token = token;
     }
 
     public Data getData() {
@@ -25,11 +25,11 @@ public class Sender {
         this.data = data;
     }
 
-    public String getTo() {
-        return to;
+    public String getToken() {
+        return token;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

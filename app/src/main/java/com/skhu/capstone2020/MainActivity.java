@@ -2,6 +2,7 @@ package com.skhu.capstone2020;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateToken() {                                                                     // 토큰 값 DB에 저장
+        Log.d("Test", "updateToken");
         FirebaseInstanceId
                 .getInstance()
                 .getInstanceId()

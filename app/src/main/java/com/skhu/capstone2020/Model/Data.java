@@ -1,10 +1,21 @@
 package com.skhu.capstone2020.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Data {
+    @SerializedName("userId")
     private String userId;
+
+    @SerializedName("userName")
     private String userName;
+
+    @SerializedName("userImage")
     private String userImage;
+
+    @SerializedName("userStatusMessage")
     private String userStatusMessage;
+
+    @SerializedName("receiverId")
     private String receiverId;
 
     public Data() {
