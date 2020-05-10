@@ -27,7 +27,6 @@ import com.skhu.capstone2020.Adapter.PlacesListAdapter;
 import com.skhu.capstone2020.Model.Place;
 import com.skhu.capstone2020.Model.PlaceResponse;
 import com.skhu.capstone2020.R;
-import com.skhu.capstone2020.REST_API.Client;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +40,8 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SurroundingFragment extends Fragment {
     private RecyclerView surrounding_place_recycler;
@@ -49,8 +50,9 @@ public class SurroundingFragment extends Fragment {
     private PlaceResponse placeResponse;
     private PlacesListAdapter adapter;
     private List<Place> placeList = new ArrayList<>();
-    private String[] categories = {"FD6", "MT1", "CE7", "PM9", "BK9", "SW8", "HP8"};
+    private String[] categories = {"FD6", "CS2", "MT1", "CE7", "PM9", "BK9", "SW8", "HP8", "CT1"};
 
+    private Retrofit retrofit;
     private KakaoLocalApi api;
     private LocationManager lm;
 
@@ -114,7 +116,11 @@ public class SurroundingFragment extends Fragment {
 
     private void getPlaces(Location location, String category) {
         Log.d("Test", "getPlaces");
-        api = Client.getClient(KakaoLocalApi.base).create(KakaoLocalApi.class);
+        retrofit = new Retrofit.Builder()
+                .baseUrl(KakaoLocalApi.base)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(KakaoLocalApi.class);
         api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), category, 400, "accuracy")
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override

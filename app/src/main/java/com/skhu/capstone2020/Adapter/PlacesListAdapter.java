@@ -51,6 +51,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
                     holder.place_category_icon.setImageResource(R.drawable.ic_category_restaurant);
                     holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_restaurant_background));
                     break;
+                case "CS2":
                 case "MT1":
                     holder.place_category_icon.setImageResource(R.drawable.ic_category_market);
                     holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_market_background));
@@ -74,6 +75,10 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
                 case "HP8":
                     holder.place_category_icon.setImageResource(R.drawable.ic_category_hospital);
                     holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_hospital_background));
+                    break;
+                case "CT1":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_culture);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_culture_background));
                     break;
                 default:
                     holder.place_category_icon.setVisibility(View.INVISIBLE);

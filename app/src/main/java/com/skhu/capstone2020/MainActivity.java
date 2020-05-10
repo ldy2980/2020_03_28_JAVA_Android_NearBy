@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.skhu.capstone2020.Fragments.ChatsFragment;
+import com.skhu.capstone2020.Fragments.GroupsFragment;
 import com.skhu.capstone2020.Fragments.MyLocationFragment;
 import com.skhu.capstone2020.Fragments.SurroundingFragment;
 import com.skhu.capstone2020.Model.Notification;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout drawer_logout, drawer_friends, drawer_setting, drawer_notification;
     RelativeLayout fragment_container;
     View drawerView;
-    ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu, new_sign, drawer_new_sign;
+    ImageView btn_surrounding, btn_myLocation, btn_chats, drawerMenu, new_sign, drawer_new_sign, btn_search;
 
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();                          // 현재 유저정보 객체 생성
 
@@ -70,6 +70,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 drawerLayout.openDrawer(drawerView);
+            }
+        });
+
+        btn_search = findViewById(R.id.btn_search);                                                 // 장소 검색 화면으로 이동
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SearchPlaceActivity.class));
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_scale_out);
             }
         });
 
@@ -115,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         btn_surrounding = findViewById(R.id.btn_surrounding);
         btn_myLocation = findViewById(R.id.btn_myLocation);
-        btn_chats = findViewById(R.id.btn_chats);
+        btn_chats = findViewById(R.id.btn_groups);
 
         btn_surrounding.setFocusableInTouchMode(true);
         btn_myLocation.setFocusableInTouchMode(true);
@@ -183,9 +192,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
-                case R.id.btn_chats:
+                case R.id.btn_groups:
                     if (hasFocus) {
-                        transaction.replace(R.id.fragment_container, new ChatsFragment()).commitAllowingStateLoss();
+                        transaction.replace(R.id.fragment_container, new GroupsFragment()).commitAllowingStateLoss();
                         btn_chats.setImageResource(R.drawable.ic_chat_black);
                     } else {
                         btn_chats.setImageResource(R.drawable.ic_chat_white);
