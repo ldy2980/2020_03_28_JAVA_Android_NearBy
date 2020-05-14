@@ -29,4 +29,5 @@
     <string name="allowLocation">위치 공유</string>
     <string name="seenAll">모두 읽음</string>
     <string name="friendRequest">친구 요청</string>
+    <string name="searchPlace">장소 검색</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.skhu.capstone2020.REST_API;
 
+import com.skhu.capstone2020.Model.AddressResponse;
 import com.skhu.capstone2020.Model.PlaceResponse;
 
 import retrofit2.Call;
@@ -14,4 +15,7 @@ public interface KakaoLocalApi {
     @GET("v2/local/search/category.json")
     Call<PlaceResponse> getPlaces(@Header("Authorization") String key, @Query("x") String x, @Query("y") String y,
                                   @Query("category_group_code") String groupCode, @Query("radius") int radius, @Query("sort") String sort);
+
+    @GET("v2/local/geo/coord2address.json")
+    Call<AddressResponse> getAddress(@Header("Authorization") String key, @Query("x") String longitude, @Query("y") String latitude);
 }

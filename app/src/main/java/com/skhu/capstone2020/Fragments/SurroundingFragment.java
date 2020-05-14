@@ -121,7 +121,7 @@ public class SurroundingFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(KakaoLocalApi.class);
-        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), category, 400, "accuracy")
+        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), category, 300, "accuracy")
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {

@@ -16,7 +16,6 @@ public class GroupsFragment extends Fragment {
     private LinearLayout fragment_container;
 
     public GroupsFragment() {
-
     }
 
     public GroupsFragment(LinearLayout container) {
@@ -30,7 +29,5 @@ public class GroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_groups, container, false);
 
         return view;
-
-
     }
 }

@@ -2,9 +2,259 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/place_search_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/white"
     tools:context=".SearchPlaceActivity">
+
+    <FrameLayout
+        android:id="@+id/place_search_input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkBlue">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="UselessParent">
+
+            <EditText
+                android:id="@+id/place_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-10dp"
+                android:autofillHints="검색"
+                android:background="@drawable/text_input"
+                android:fontFamily="@font/mapo_peacefull"
+                android:hint="검색"
+                android:inputType="text"
+                android:paddingStart="45dp"
+                android:paddingEnd="1dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/slateGrey"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="99dp"
+                android:background="@color/ghostWhite" />
+
+            <ImageView
+                android:id="@+id/btn_place_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="34.5dp"
+                android:layout_marginEnd="51dp"
+                android:src="@drawable/ic_search_eastbay"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <GridLayout
+        android:id="@+id/grid_container"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_below="@id/place_search_input_container"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="2"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:background="@color/dodgerBlue"
+            android:drawableTop="@drawable/ic_category_all_small"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/bm_hanna"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="35dp"
+            android:text="전체"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription,RtlCompat" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:background="@color/royalBlue"
+            android:drawableTop="@drawable/ic_category_cafe_small"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/bm_hanna"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="35dp"
+            android:text="카페"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription,RtlCompat" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:background="@color/slateBlue"
+            android:drawableTop="@drawable/ic_category_restaurant_small"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/bm_hanna"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="35dp"
+            android:text="음식점"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription,RtlCompat" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:background="@color/azureRadiance"
+            android:drawableTop="@drawable/ic_category_culture_small"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/bm_hanna"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="35dp"
+            android:text="문화시설"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription,RtlCompat" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:background="@color/vividBlue"
+            android:drawableTop="@drawable/ic_category_market_small"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/bm_hanna"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="35dp"
+            android:text="마켓"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription,RtlCompat" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:background="@color/lightBlue"
+            android:drawableTop="@drawable/ic_category_pub_small"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/bm_hanna"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="35dp"
+            android:text="펍"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription,RtlCompat" />
+
+    </GridLayout>
+
+    <RelativeLayout
+        android:id="@+id/place_search_my_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/grid_container"
+        android:background="@color/snow"
+        android:visibility="gone">
+
+        <CheckBox
+            android:id="@+id/place_search_check_my_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:buttonTint="@color/darkBlue"
+            android:fontFamily="@font/bm_hanna"
+            android:text="내 위치에서 검색"
+            android:textColor="@color/darkBlue"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/place_search_show_my_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/bm_hanna"
+            android:text="현재 위치 표시"
+            android:textColor="@color/darkBlue"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/place_search_toggle_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/place_search_my_location"
+        android:background="@color/ice">
+
+        <ImageView
+            android:id="@+id/place_search_toggle_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_arrow_down"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/place_search_toggle_container">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_not_found"
+            tools:ignore="ContentDescription" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/place_search_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+    </FrameLayout>
 
 </RelativeLayout>

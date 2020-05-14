@@ -3,6 +3,7 @@ package com.skhu.capstone2020.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,6 +28,10 @@ import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.Marker;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -40,12 +45,21 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
+import com.skhu.capstone2020.Model.Place;
+import com.skhu.capstone2020.Model.PlaceResponse;
+import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
+import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 import static android.os.Looper.getMainLooper;
@@ -55,6 +69,8 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
     private Location currentLocation;
 
     private LocationManager locationManager;
+    private Retrofit retrofit;
+    private KakaoLocalApi api;
 
     private CameraPosition cameraPosition;
     private MapView mapView;
@@ -66,6 +82,10 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
 
     private static final long DEFAULT_INTERVAL_IN_MILLISECONDS = 5000L;
     private static final long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
+
+    private String[] categories = {"FD6", "CS2", "MT1", "CE7", "PM9", "BK9", "SW8", "HP8", "CT1"};
+    //private String[] categories = {"FD6", "MT1", "CE7", "SW8", "CT1", "AT4"};
+    private PlaceResponse placeResponse;
 
     public MyLocationFragment() {
     }
@@ -86,6 +106,9 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
             Toast.makeText(getContext(), "Permissions not granted", Toast.LENGTH_LONG).show();
         } else {
             currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (currentLocation == null) {
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
         }
 
         mapView = view.findViewById(R.id.mapView);
@@ -95,6 +118,9 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
             public void onMapReady(@NonNull final MapboxMap mapboxMap) {
                 fragmentMapBoxMap = mapboxMap;
                 if (currentLocation != null) {
+                    for (String code : categories) {
+                        setNearByPlaceMarkers(mapboxMap, currentLocation, code);
+                    }
                     cameraPosition = new CameraPosition.Builder()
                             .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                             .zoom(16)
@@ -113,6 +139,26 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                         UiSettings uiSettings = mapboxMap.getUiSettings();
                         uiSettings.setCompassMargins(50, 350, 50, 50);
                         enableLocationComponent(style);
+                    }
+                });
+
+                mapboxMap.setOnInfoWindowClickListener(new MapboxMap.OnInfoWindowClickListener() {
+                    @Override
+                    public boolean onInfoWindowClick(@NonNull Marker marker) {
+                        Log.d("Test", "onInfoWindowClick, " + marker.getTitle());
+                        if (placeResponse.getPlaceList() != null)
+                            for (Place place : placeResponse.getPlaceList()) {
+                                Log.d("Test", "placeResponse.getPlaceList is not null");
+                                if (place.getPlaceName().trim().equals(marker.getTitle().trim()) ||
+                                        place.getAddress().trim().equals(marker.getSnippet().trim())) {
+                                    Log.d("Test", "matched");
+                                    Intent intent = new Intent(getContext(), PlaceDetailActivity.class);
+                                    intent.putExtra("url", place.getUrl());
+                                    intent.putExtra("placeName", place.getPlaceName());
+                                    startActivity(intent);
+                                }
+                            }
+                        return true;
                     }
                 });
             }
@@ -173,12 +219,10 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
-
     }
 
     private static class LocationChangeListeningActivityLocationCallback
             implements LocationEngineCallback<LocationEngineResult> {
-
         private final WeakReference<MyLocationFragment> activityWeakReference;
 
         LocationChangeListeningActivityLocationCallback(MyLocationFragment locationFragment) {
@@ -217,6 +261,105 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                         Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void setNearByPlaceMarkers(MapboxMap mapboxMap, Location location, String code) {
+        Log.d("Test", "setNearByPlaceMarkers");
+        IconFactory iconFactory = IconFactory.getInstance(Objects.requireNonNull(getContext()));
+        Icon markerRestaurant = iconFactory.fromResource(R.drawable.marker_restaurant_small);
+        Icon markerMarket = iconFactory.fromResource(R.drawable.marker_market_small);
+        Icon markerBank = iconFactory.fromResource(R.drawable.marker_bank_small);
+        Icon markerCafe = iconFactory.fromResource(R.drawable.marker_cafe_small);
+        Icon markerHospital = iconFactory.fromResource(R.drawable.marker_hospital_small);
+        Icon markerPharmacy = iconFactory.fromResource(R.drawable.marker_pharmacy_small);
+        Icon markerSubWay = iconFactory.fromResource(R.drawable.marker_subway_small);
+        Icon markerCulture = iconFactory.fromResource(R.drawable.marker_culture_small);
+        retrofit = new Retrofit.Builder()
+                .baseUrl(KakaoLocalApi.base)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(KakaoLocalApi.class);
+        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), code, 300, "accuracy")
+                .enqueue(new Callback<PlaceResponse>() {
+                    @Override
+                    public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+                        Log.d("Test", "onResponse");
+                        if (!(response.isSuccessful())) {
+                            Toast.makeText(getContext(), Integer.toString(response.code()), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        placeResponse = response.body();
+                        if (placeResponse != null) {
+                            for (Place place : placeResponse.getPlaceList()) {
+                                switch (place.getCategoryCode()) {
+                                    case "FD6":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerRestaurant)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "CS2":
+                                    case "MT1":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerMarket)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "BK9":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerBank)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "CE7":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerCafe)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "HP8":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerHospital)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "PM9":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerPharmacy)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "SW8":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerSubWay)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        continue;
+                                    case "AT4":
+                                    case "CT1":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerCulture)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PlaceResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override

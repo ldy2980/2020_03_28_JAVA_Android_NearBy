@@ -22,6 +22,7 @@
         <activity
             android:name=".SearchPlaceActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/searchPlaceTheme"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".PlaceDetailActivity"

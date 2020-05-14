@@ -42,6 +42,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
             holder.place_category.setText(place.getCategory());
             holder.place_group_category.setText(place.getGroupCategory());
             holder.place_address.setText(place.getAddress());
+            holder.place_digit.setText((place.getPhone()));
 
             String distance = place.getDistance() + "m";
             holder.place_distance.setText(distance);

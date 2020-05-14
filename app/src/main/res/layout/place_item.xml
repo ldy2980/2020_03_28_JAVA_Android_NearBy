@@ -51,12 +51,24 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/place_name"
                     android:layout_marginStart="18dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="3dp"
                     android:layout_marginBottom="7dp"
                     android:fontFamily="@font/mapo_peacefull"
                     android:singleLine="true"
                     android:text="도로명 주소"
+                    android:textColor="@color/eastBay"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/place_digit"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/place_address"
+                    android:layout_marginStart="19dp"
+                    android:fontFamily="@font/bm_hanna"
+                    android:singleLine="true"
+                    android:text="전화번호"
+                    android:textSize="13sp" />
 
                 <ImageView
                     android:id="@+id/place_category_icon"
@@ -112,26 +124,6 @@
                     android:textColor="@color/white"
                     android:textSize="11sp"
                     android:textStyle="bold"
-                    tools:ignore="SmallSp" />
-
-                <TextView
-                    android:id="@+id/place_digit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/place_sub_text_background"
-                    android:fontFamily="@font/bm_hanna"
-                    android:paddingHorizontal="11dp"
-                    android:paddingVertical="6dp"
-                    android:singleLine="true"
-                    android:text="연락처"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:visibility="invisible"
                     tools:ignore="SmallSp" />
 
             </LinearLayout>

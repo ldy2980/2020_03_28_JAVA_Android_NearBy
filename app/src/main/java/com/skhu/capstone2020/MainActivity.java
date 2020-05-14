@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, SearchPlaceActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_scale_out);
+                overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
             }
         });
 
