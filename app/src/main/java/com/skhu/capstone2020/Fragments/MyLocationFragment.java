@@ -52,6 +52,7 @@ import com.skhu.capstone2020.R;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -86,6 +87,7 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
     private String[] categories = {"FD6", "CS2", "MT1", "CE7", "PM9", "BK9", "SW8", "HP8", "CT1"};
     //private String[] categories = {"FD6", "MT1", "CE7", "SW8", "CT1", "AT4"};
     private PlaceResponse placeResponse;
+    private List<Place> placeList = new ArrayList<>();
 
     public MyLocationFragment() {
     }
@@ -146,8 +148,8 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                     @Override
                     public boolean onInfoWindowClick(@NonNull Marker marker) {
                         Log.d("Test", "onInfoWindowClick, " + marker.getTitle());
-                        if (placeResponse.getPlaceList() != null)
-                            for (Place place : placeResponse.getPlaceList()) {
+                        if (placeList.size() != 0)
+                            for (Place place : placeList) {
                                 Log.d("Test", "placeResponse.getPlaceList is not null");
                                 if (place.getPlaceName().trim().equals(marker.getTitle().trim()) ||
                                         place.getAddress().trim().equals(marker.getSnippet().trim())) {
@@ -290,7 +292,8 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                         }
                         placeResponse = response.body();
                         if (placeResponse != null) {
-                            for (Place place : placeResponse.getPlaceList()) {
+                            placeList.addAll(placeResponse.getPlaceList());
+                            for (Place place : placeList) {
                                 switch (place.getCategoryCode()) {
                                     case "FD6":
                                         mapboxMap.addMarker(new MarkerOptions()
