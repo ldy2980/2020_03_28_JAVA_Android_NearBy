@@ -2,6 +2,7 @@ package com.skhu.capstone2020.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,15 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
             holder.place_name.setText(place.getPlaceName());
             holder.place_category.setText(place.getCategory());
             holder.place_group_category.setText(place.getGroupCategory());
-            holder.place_address.setText(place.getAddress());
             holder.place_digit.setText((place.getPhone()));
+            holder.place_address.setText(place.getAddress());
 
-            String distance = place.getDistance() + "m";
-            holder.place_distance.setText(distance);
+            if (place.getDistance().trim().length() == 0) {
+                holder.place_distance.setVisibility(View.INVISIBLE);
+            } else {
+                String distance = place.getDistance() + "m";
+                holder.place_distance.setText(distance);
+            }
 
             switch (place.getCategoryCode()) {
                 case "FD6":
@@ -80,6 +85,10 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
                 case "CT1":
                     holder.place_category_icon.setImageResource(R.drawable.ic_category_culture);
                     holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_culture_background));
+                    break;
+                case "AD5":
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_accommodation);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_accommodation_background));
                     break;
                 default:
                     holder.place_category_icon.setVisibility(View.INVISIBLE);

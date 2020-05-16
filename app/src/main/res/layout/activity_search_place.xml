@@ -29,29 +29,34 @@
                 android:background="@drawable/text_input"
                 android:fontFamily="@font/mapo_peacefull"
                 android:hint="검색"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:paddingStart="45dp"
                 android:paddingEnd="1dp"
                 android:paddingBottom="8dp"
+                android:singleLine="true"
                 android:textColor="@color/slateGrey"
                 android:textSize="17sp" />
 
             <View
                 android:layout_width="1dp"
-                android:layout_height="25dp"
+                android:layout_height="27dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="33dp"
                 android:layout_marginEnd="99dp"
-                android:background="@color/ghostWhite" />
+                android:background="@color/ice" />
 
             <ImageView
                 android:id="@+id/btn_place_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="34.5dp"
-                android:layout_marginEnd="51dp"
-                android:src="@drawable/ic_search_eastbay"
+                android:layout_marginVertical="20dp"
+                android:layout_marginEnd="28dp"
+                android:clickable="false"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="14dp"
+                android:src="@drawable/ic_search_ice"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
@@ -69,6 +74,7 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/place_category_all"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
@@ -88,6 +94,7 @@
             tools:ignore="ContentDescription,RtlCompat" />
 
         <TextView
+            android:id="@+id/place_category_cafe"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
@@ -107,6 +114,7 @@
             tools:ignore="ContentDescription,RtlCompat" />
 
         <TextView
+            android:id="@+id/place_category_restaurant_pub"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
@@ -118,7 +126,7 @@
             android:fontFamily="@font/bm_hanna"
             android:paddingHorizontal="35dp"
             android:paddingVertical="35dp"
-            android:text="음식점"
+            android:text="음식점/펍"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="13sp"
@@ -126,6 +134,7 @@
             tools:ignore="ContentDescription,RtlCompat" />
 
         <TextView
+            android:id="@+id/place_category_culture"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
@@ -145,6 +154,7 @@
             tools:ignore="ContentDescription,RtlCompat" />
 
         <TextView
+            android:id="@+id/place_category_market"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
@@ -164,18 +174,19 @@
             tools:ignore="ContentDescription,RtlCompat" />
 
         <TextView
+            android:id="@+id/place_category_accommodation"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:background="@color/lightBlue"
-            android:drawableTop="@drawable/ic_category_pub_small"
+            android:drawableTop="@drawable/ic_category_accommodation_small"
             android:drawablePadding="6dp"
             android:fontFamily="@font/bm_hanna"
             android:paddingHorizontal="35dp"
             android:paddingVertical="35dp"
-            android:text="펍"
+            android:text="숙박"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="13sp"
@@ -243,10 +254,12 @@
         android:layout_below="@id/place_search_toggle_container">
 
         <ImageView
+            android:id="@+id/place_search_no_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_not_found"
+            android:visibility="visible"
             tools:ignore="ContentDescription" />
 
         <androidx.recyclerview.widget.RecyclerView

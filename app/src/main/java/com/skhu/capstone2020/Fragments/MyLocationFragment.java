@@ -84,7 +84,7 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
     private static final long DEFAULT_INTERVAL_IN_MILLISECONDS = 5000L;
     private static final long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
 
-    private String[] categories = {"FD6", "CS2", "MT1", "CE7", "PM9", "BK9", "SW8", "HP8", "CT1"};
+    private String[] categories = {"FD6", "CS2", "MT1", "CE7", "BK9", "SW8", "AD5", "CT1"};
     //private String[] categories = {"FD6", "MT1", "CE7", "SW8", "CT1", "AT4"};
     private PlaceResponse placeResponse;
     private List<Place> placeList = new ArrayList<>();
@@ -276,12 +276,13 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
         Icon markerPharmacy = iconFactory.fromResource(R.drawable.marker_pharmacy_small);
         Icon markerSubWay = iconFactory.fromResource(R.drawable.marker_subway_small);
         Icon markerCulture = iconFactory.fromResource(R.drawable.marker_culture_small);
+        Icon markerAccommodation = iconFactory.fromResource(R.drawable.marker_accommodation_small);
         retrofit = new Retrofit.Builder()
                 .baseUrl(KakaoLocalApi.base)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(KakaoLocalApi.class);
-        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), code, 300, "accuracy")
+        api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), code, KakaoLocalApi.radius, "accuracy")
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
                     public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
@@ -350,6 +351,13 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                                         mapboxMap.addMarker(new MarkerOptions()
                                                 .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
                                                 .icon(markerCulture)
+                                                .setTitle(place.getPlaceName().trim()))
+                                                .setSnippet(place.getAddress());
+                                        break;
+                                    case "AD5":
+                                        mapboxMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(Double.parseDouble(place.getY()), Double.parseDouble(place.getX())))
+                                                .icon(markerAccommodation)
                                                 .setTitle(place.getPlaceName().trim()))
                                                 .setSnippet(place.getAddress());
                                         break;

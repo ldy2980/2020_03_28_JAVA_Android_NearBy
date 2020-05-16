@@ -24,8 +24,11 @@ public class Place {
     @SerializedName("place_url")
     private String url;
 
-    @SerializedName("road_address_name")
+    @SerializedName("address_name")
     private String address;
+
+    @SerializedName("road_address_name")
+    private String roadAddress;
 
     @SerializedName("distance")
     private String distance;
@@ -39,7 +42,7 @@ public class Place {
     public Place() {
     }
 
-    public Place(String placeId, String placeName, String category, String groupCategory, String categoryCode, String phone, String url, String address, String distance, String x, String y) {
+    public Place(String placeId, String placeName, String category, String groupCategory, String categoryCode, String phone, String url, String address, String roadAddress, String distance, String x, String y) {
         this.placeId = placeId;
         this.placeName = placeName;
         this.category = category;
@@ -48,6 +51,7 @@ public class Place {
         this.phone = phone;
         this.url = url;
         this.address = address;
+        this.roadAddress = roadAddress;
         this.distance = distance;
         this.x = x;
         this.y = y;
@@ -115,6 +119,14 @@ public class Place {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getRoadAddress() {
+        return roadAddress;
+    }
+
+    public void setRoadAddress(String roadAddress) {
+        this.roadAddress = roadAddress;
     }
 
     public String getDistance() {
