@@ -51,6 +51,8 @@ import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -285,7 +287,7 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
         api.getPlaces(KakaoLocalApi.key, Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), code, KakaoLocalApi.radius, "accuracy")
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
-                    public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
                         Log.d("Test", "onResponse");
                         if (!(response.isSuccessful())) {
                             Toast.makeText(getContext(), Integer.toString(response.code()), Toast.LENGTH_LONG).show();
@@ -367,7 +369,7 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                     }
 
                     @Override
-                    public void onFailure(Call<PlaceResponse> call, Throwable t) {
+                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
                         Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });

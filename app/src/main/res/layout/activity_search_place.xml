@@ -253,14 +253,32 @@
         android:layout_height="match_parent"
         android:layout_below="@id/place_search_toggle_container">
 
-        <ImageView
-            android:id="@+id/place_search_no_result"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_not_found"
-            android:visibility="visible"
-            tools:ignore="ContentDescription" />
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/place_search_no_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_not_found"
+                android:visibility="visible"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/place_search_no_result_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/place_search_no_result"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/bm_hanna"
+                android:text="검색결과 없음"
+                android:textColor="@color/ice"
+                android:textSize="18sp"
+                android:visibility="visible" />
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/place_search_recycler"

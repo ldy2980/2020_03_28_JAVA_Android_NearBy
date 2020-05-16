@@ -36,9 +36,9 @@ import com.skhu.capstone2020.Model.Place;
 import com.skhu.capstone2020.Model.PlaceResponse;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,7 +52,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
     private RelativeLayout place_search_my_location;
     private FrameLayout place_search_input_container;
     private ImageView place_search_toggle_btn, btn_place_search, place_search_no_result;
-    private TextView place_search_show_my_location;
+    private TextView place_search_show_my_location, place_search_no_result_text;
     private TextView place_category_all, place_category_cafe, place_category_restaurant_pub, place_category_culture, place_category_market, place_category_accommodation;
     private CheckBox place_search_check_my_location;
     private EditText place_search_input;
@@ -80,6 +80,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_place);
 
         place_search_no_result = findViewById(R.id.place_search_no_result);
+        place_search_no_result_text = findViewById(R.id.place_search_no_result_text);
 
         place_category_all = findViewById(R.id.place_category_all);
         place_category_cafe = findViewById(R.id.place_category_cafe);
@@ -113,10 +114,19 @@ public class SearchPlaceActivity extends AppCompatActivity {
                     if (immHide != null)
                         immHide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     placeList.clear();
-                    getPlaceListByKeyword(place_search_input.getText().toString());
                     keyword = place_search_input.getText().toString();
                     place_search_input.setText("");
                     place_search_input.clearFocus();
+
+                    if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
+                        for (String categoryCode : categoryCodeList) {
+                            getPlaceListByKeywordAndCategory(keyword, categoryCode);                // 카테고리로 필터링했을 경우
+                        }
+                    } else if (categoryCodeList.size() == 0 && place_search_check_my_location.isChecked()) {
+                        getPlaceListByKeywordAndLocation(keyword, currentLocation);                 // 현재 위치에서 검색할 경우
+                    } else {
+                        getPlaceListByKeyword(keyword);                                             // 키워드만 입력했을 경우
+                    }
                 }
             }
         });
@@ -156,7 +166,14 @@ public class SearchPlaceActivity extends AppCompatActivity {
                     place_search_input.setText("");
                     place_search_input.clearFocus();
 
-                    getPlaceListByKeyword(place_search_input.getText().toString());
+                    if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
+                        for (String categoryCode : categoryCodeList)
+                            getPlaceListByKeywordAndCategory(keyword, categoryCode);                // 카테고리로 필터링했을 경우
+                    } else if (categoryCodeList.size() == 0 && place_search_check_my_location.isChecked()) {
+                        getPlaceListByKeywordAndLocation(keyword, currentLocation);                 // 현재 위치에서 검색할 경우
+                    } else {
+                        getPlaceListByKeyword(keyword);                                             // 키워드만 입력했을 경우
+                    }
                 }
                 return true;
             }
@@ -186,7 +203,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
         place_search_recycler = findViewById(R.id.place_search_recycler);
         place_search_recycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PlacesListAdapter(placeList, SearchPlaceActivity.this);
-        place_search_recycler.setAdapter(adapter);
+        place_search_recycler.setAdapter(adapter);                                                  // 리사이클러뷰와 어댑터 연결
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -283,7 +300,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
         api.getPlacesByKeyword(KakaoLocalApi.key, keyword)
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
-                    public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
                         Log.d("Test", "onResponse in getPlaceListByKeyword");
                         if (!(response.isSuccessful())) {
                             Toast.makeText(SearchPlaceActivity.this, response.code() + ", " + response.message(), Toast.LENGTH_LONG).show();
@@ -292,17 +309,102 @@ public class SearchPlaceActivity extends AppCompatActivity {
                         placeResponse = response.body();
                         if (placeResponse != null) {
                             Log.d("Test", "placeResponse is not null" + ", " + placeResponse.getPlaceList().size());
-                            if (placeResponse.getPlaceList().size() != 0) {
+                            if (placeResponse.getPlaceList().size() != 0) {                         // 검색 결과가 있을 때만 리사이클러뷰에 표시
                                 placeList.addAll(placeResponse.getPlaceList());
                                 adapter.notifyDataSetChanged();
-                                place_search_recycler.setVisibility(View.VISIBLE);
                                 place_search_no_result.setVisibility(View.INVISIBLE);
+                                place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_recycler.setVisibility(View.VISIBLE);
+                            } else {
+                                place_search_no_result.setVisibility(View.VISIBLE);                 // 검색 결과가 없을 경우 "결과 없음" 표시
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                place_search_recycler.setVisibility(View.INVISIBLE);
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<PlaceResponse> call, Throwable t) {
+                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
+                        Toast.makeText(SearchPlaceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void getPlaceListByKeywordAndCategory(String keyword, String categoryCode) {            // 장소 목록 가져오기(키워드, 카테고리)
+        Log.d("Test", "getPlaceListKeywordAndCategory");
+        retrofit = new Retrofit.Builder()
+                .baseUrl(KakaoLocalApi.base)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(KakaoLocalApi.class);
+        api.getPlacesByKeywordAndCategory(KakaoLocalApi.key, keyword, categoryCode)
+                .enqueue(new Callback<PlaceResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
+                        Log.d("Test", "onResponse in getPlaceListKeywordAndCategory");
+                        if (!(response.isSuccessful())) {
+                            Toast.makeText(SearchPlaceActivity.this, response.code() + ", " + response.message(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        placeResponse = response.body();
+                        if (placeResponse != null) {
+                            if (placeResponse.getPlaceList().size() != 0) {                         // 검색 결과가 있을 때만 리사이클러뷰에 표시
+                                placeList.addAll(placeResponse.getPlaceList());
+                                adapter.notifyDataSetChanged();
+                                place_search_no_result.setVisibility(View.INVISIBLE);
+                                place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_recycler.setVisibility(View.VISIBLE);
+                            } else {
+                                place_search_no_result.setVisibility(View.VISIBLE);                 // 검색 결과가 없을 경우 "결과 없음" 표시
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                place_search_recycler.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
+                        Log.d("Test", "onFailure in getPlaceListByKeywordAndCategory");
+                        Toast.makeText(SearchPlaceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void getPlaceListByKeywordAndLocation(String keyword, Location currentLocation) {       // 장소 목록 가져오기(키워드, 현재 위치)
+        Log.d("Test", "getPlaceListByKeywordAndLocation");
+        retrofit = new Retrofit.Builder()
+                .baseUrl(KakaoLocalApi.base)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(KakaoLocalApi.class);
+        api.getPlacesByKeywordAndLocation(KakaoLocalApi.key, keyword, currentLocation.getLongitude(), currentLocation.getLatitude(), KakaoLocalApi.radius)
+                .enqueue(new Callback<PlaceResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
+                        Log.d("Test", "onResponse in getPlaceListByKeywordAndLocation" + ", " + response.message());
+                        if (!(response.isSuccessful())) {
+                            Toast.makeText(SearchPlaceActivity.this, response.code() + ", " + response.message(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        placeResponse = response.body();
+                        if (placeResponse != null) {
+                            if (placeResponse.getPlaceList().size() != 0) {                         // 검색 결과가 있을 때만 리사이클러뷰에 표시
+                                placeList.addAll(placeResponse.getPlaceList());
+                                adapter.notifyDataSetChanged();
+                                place_search_no_result.setVisibility(View.INVISIBLE);
+                                place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_recycler.setVisibility(View.VISIBLE);
+                            } else {
+                                place_search_no_result.setVisibility(View.VISIBLE);                 // 검색 결과가 없을 경우 "결과 없음" 표시
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                place_search_recycler.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
+                        Log.d("Test", "onFailure in getPlaceByKeywordAndLocation");
                         Toast.makeText(SearchPlaceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -319,7 +421,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
         api.getAddress(KakaoLocalApi.key, currentLocation.getLongitude(), currentLocation.getLatitude())
                 .enqueue(new Callback<AddressResponse>() {
                     @Override
-                    public void onResponse(Call<AddressResponse> call, Response<AddressResponse> response) {
+                    public void onResponse(@NotNull Call<AddressResponse> call, @NotNull Response<AddressResponse> response) {
                         Log.d("Test", "onResponse in getAddress" + ", " + response.message());
                         if (!(response.isSuccessful())) {
                             Toast.makeText(SearchPlaceActivity.this, response.code() + ", " + response.message(), Toast.LENGTH_LONG).show();
@@ -339,8 +441,8 @@ public class SearchPlaceActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<AddressResponse> call, Throwable t) {
-                        Log.d("Test", "onFailure in SearchPlaceActivity");
+                    public void onFailure(@NotNull Call<AddressResponse> call, @NotNull Throwable t) {
+                        Log.d("Test", "onFailure in getAddress");
                         Toast.makeText(SearchPlaceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
