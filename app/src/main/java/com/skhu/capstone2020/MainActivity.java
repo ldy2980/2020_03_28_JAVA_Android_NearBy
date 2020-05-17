@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //startActivity(new Intent(MainActivity.this, MapViewActivity.class));
                 startActivity(new Intent(MainActivity.this, SearchPlaceActivity.class));
                 overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
             }
