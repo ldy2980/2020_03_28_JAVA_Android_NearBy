@@ -1,7 +1,7 @@
 package com.skhu.capstone2020.REST_API;
 
-import com.skhu.capstone2020.Model.AddressResponse;
-import com.skhu.capstone2020.Model.PlaceResponse;
+import com.skhu.capstone2020.Model.AddressResponse.AddressResponse;
+import com.skhu.capstone2020.Model.PlaceResponse.PlaceResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -21,16 +21,16 @@ public interface KakaoLocalApi {
     Call<AddressResponse> getAddress(@Header("Authorization") String key, @Query("x") double longitude, @Query("y") double latitude);
 
     @GET("v2/local/search/keyword.json")
-    Call<PlaceResponse> getPlacesByKeyword(@Header("Authorization") String key, @Query("query") String query);
+    Call<PlaceResponse> getPlacesByKeyword(@Header("Authorization") String key, @Query("query") String query, @Query("page") int page);
 
     @GET("v2/local/search/keyword.json")
-    Call<PlaceResponse> getPlacesByKeywordAndCategory(@Header("Authorization") String key, @Query("query") String query, @Query("category_group_code") String groupCode);
+    Call<PlaceResponse> getPlacesByKeywordAndCategory(@Header("Authorization") String key, @Query("query") String query, @Query("category_group_code") String groupCode, @Query("page") int page);
 
     @GET("v2/local/search/keyword.json")
     Call<PlaceResponse> getPlacesByKeywordAndLocation(@Header("Authorization") String key, @Query("query") String query, @Query("x") double longitude, @Query("y") double latitude,
-                                                      @Query("radius") int radius);
+                                                      @Query("radius") int radius, @Query("page") int page);
 
     @GET("v2/local/search/keyword.json")
     Call<PlaceResponse> getPlacesByAllCondition(@Header("Authorization") String key, @Query("query") String query, @Query("x") double longitude, @Query("y") double latitude,
-                                                @Query("category_group_code") String groupCode, @Query("radius") int radius);
+                                                @Query("category_group_code") String groupCode, @Query("radius") int radius, @Query("page") int page);
 }

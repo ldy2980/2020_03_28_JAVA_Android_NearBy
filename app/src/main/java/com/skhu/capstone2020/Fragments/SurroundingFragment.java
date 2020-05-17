@@ -24,8 +24,8 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.skhu.capstone2020.Adapter.PlacesListAdapter;
-import com.skhu.capstone2020.Model.Place;
-import com.skhu.capstone2020.Model.PlaceResponse;
+import com.skhu.capstone2020.Model.PlaceResponse.Place;
+import com.skhu.capstone2020.Model.PlaceResponse.PlaceResponse;
 import com.skhu.capstone2020.R;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 

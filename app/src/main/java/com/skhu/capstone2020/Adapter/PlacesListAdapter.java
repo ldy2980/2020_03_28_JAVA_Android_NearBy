@@ -2,7 +2,6 @@ package com.skhu.capstone2020.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skhu.capstone2020.Model.Place;
+import com.skhu.capstone2020.Model.PlaceResponse.Place;
 import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
 

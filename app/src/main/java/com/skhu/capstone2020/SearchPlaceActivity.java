@@ -29,11 +29,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.skhu.capstone2020.Adapter.PlacesListAdapter;
-import com.skhu.capstone2020.Model.Address;
-import com.skhu.capstone2020.Model.AddressResponse;
-import com.skhu.capstone2020.Model.Place;
-import com.skhu.capstone2020.Model.PlaceResponse;
+import com.skhu.capstone2020.Model.AddressResponse.Address;
+import com.skhu.capstone2020.Model.AddressResponse.AddressResponse;
+import com.skhu.capstone2020.Model.PlaceResponse.Place;
+import com.skhu.capstone2020.Model.PlaceResponse.PlaceResponse;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
 
 import org.jetbrains.annotations.NotNull;
@@ -56,11 +57,13 @@ public class SearchPlaceActivity extends AppCompatActivity {
     private TextView place_category_all, place_category_cafe, place_category_restaurant_pub, place_category_culture, place_category_market, place_category_accommodation;
     private CheckBox place_search_check_my_location;
     private EditText place_search_input;
+    private SpinKitView place_search_spinKitView;
 
     private int[] categoryIds = {R.id.place_category_all, R.id.place_category_cafe, R.id.place_category_restaurant_pub,
             R.id.place_category_culture, R.id.place_category_market, R.id.place_category_accommodation};
     private List<String> categoryCodeList = new ArrayList<>();
     private String keyword;
+    private int page;
 
     private RecyclerView place_search_recycler;
     private PlacesListAdapter adapter;
@@ -79,6 +82,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_place);
 
+        place_search_spinKitView = findViewById(R.id.place_search_spinKitView);
         place_search_no_result = findViewById(R.id.place_search_no_result);
         place_search_no_result_text = findViewById(R.id.place_search_no_result_text);
 
@@ -113,19 +117,26 @@ public class SearchPlaceActivity extends AppCompatActivity {
                     InputMethodManager immHide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     if (immHide != null)
                         immHide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    placeList.clear();
-                    keyword = place_search_input.getText().toString();
-                    place_search_input.setText("");
-                    place_search_input.clearFocus();
+
+                    placeList.clear();                                                              //
+                    keyword = place_search_input.getText().toString();                              //
+                    place_search_input.setText("");                                                 //
+                    place_search_input.clearFocus();                                                // 검색어와 현재 설정된 요소들 모두 초기화
+
+                    grid_container.setVisibility(View.GONE);                                        //
+                    place_search_my_location.setVisibility(View.GONE);                              //
+                    place_search_toggle_btn.setImageResource(R.drawable.ic_arrow_down);             // 카테고리 선택 영역 닫기
+
+                    page = 1;
 
                     if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
                         for (String categoryCode : categoryCodeList) {
-                            getPlaceListByKeywordAndCategory(keyword, categoryCode);                // 카테고리로 필터링했을 경우
+                            getPlaceListByKeywordAndCategory(keyword, categoryCode, page);                // 카테고리로 필터링했을 경우
                         }
                     } else if (categoryCodeList.size() == 0 && place_search_check_my_location.isChecked()) {
-                        getPlaceListByKeywordAndLocation(keyword, currentLocation);                 // 현재 위치에서 검색할 경우
+                        getPlaceListByKeywordAndLocation(keyword, currentLocation, page);                 // 현재 위치에서 검색할 경우
                     } else {
-                        getPlaceListByKeyword(keyword);                                             // 키워드만 입력했을 경우
+                        getPlaceListByKeyword(keyword, page);                                             // 키워드만 입력했을 경우
                     }
                 }
             }
@@ -161,18 +172,24 @@ public class SearchPlaceActivity extends AppCompatActivity {
                     if (immHide != null)
                         immHide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-                    placeList.clear();
-                    keyword = place_search_input.getText().toString();
-                    place_search_input.setText("");
-                    place_search_input.clearFocus();
+                    placeList.clear();                                                              //
+                    keyword = place_search_input.getText().toString();                              //
+                    place_search_input.setText("");                                                 //
+                    place_search_input.clearFocus();                                                // 검색어와 현재 설정된 요소들 모두 초기화
+
+                    grid_container.setVisibility(View.GONE);                                        //
+                    place_search_my_location.setVisibility(View.GONE);                              //
+                    place_search_toggle_btn.setImageResource(R.drawable.ic_arrow_down);             // 카테고리 선택 영역 닫기
+
+                    page = 1;
 
                     if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
                         for (String categoryCode : categoryCodeList)
-                            getPlaceListByKeywordAndCategory(keyword, categoryCode);                // 카테고리로 필터링했을 경우
+                            getPlaceListByKeywordAndCategory(keyword, categoryCode, page);                // 카테고리로 필터링했을 경우
                     } else if (categoryCodeList.size() == 0 && place_search_check_my_location.isChecked()) {
-                        getPlaceListByKeywordAndLocation(keyword, currentLocation);                 // 현재 위치에서 검색할 경우
+                        getPlaceListByKeywordAndLocation(keyword, currentLocation, page);                 // 현재 위치에서 검색할 경우
                     } else {
-                        getPlaceListByKeyword(keyword);                                             // 키워드만 입력했을 경우
+                        getPlaceListByKeyword(keyword, page);                                       // 키워드만 입력했을 경우
                     }
                 }
                 return true;
@@ -291,13 +308,14 @@ public class SearchPlaceActivity extends AppCompatActivity {
         place_category_accommodation.setBackgroundColor(ContextCompat.getColor(SearchPlaceActivity.this, R.color.lightBlue));
     }
 
-    private void getPlaceListByKeyword(String keyword) {                                            // 장소 목록 가져오기(키워드)
+    private void getPlaceListByKeyword(String keyword, int page) {                                  // 장소 목록 가져오기(키워드)
+        place_search_spinKitView.setVisibility(View.VISIBLE);
         retrofit = new Retrofit.Builder()
                 .baseUrl(KakaoLocalApi.base)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(KakaoLocalApi.class);
-        api.getPlacesByKeyword(KakaoLocalApi.key, keyword)
+        api.getPlacesByKeyword(KakaoLocalApi.key, keyword, page)
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
@@ -308,17 +326,38 @@ public class SearchPlaceActivity extends AppCompatActivity {
                         }
                         placeResponse = response.body();
                         if (placeResponse != null) {
-                            Log.d("Test", "placeResponse is not null" + ", " + placeResponse.getPlaceList().size());
-                            if (placeResponse.getPlaceList().size() != 0) {                         // 검색 결과가 있을 때만 리사이클러뷰에 표시
+                            Log.d("Test", "Total page count of placeResponse" + ", " + placeResponse.getMeta().getPageableCount());
+                            Log.d("Test", "Current page: " + page);
+                            Log.d("Test", "is end of the page?: " + placeResponse.getMeta().isEnd());
+                            if (placeResponse.getPlaceList().size() == 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 없을 경우 "결과 없음" 표시 후 종료
+                                Log.d("Test", "result is empty");
+                                adapter.notifyDataSetChanged();
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                place_search_no_result.setVisibility(View.VISIBLE);
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                setDefaultBackgroundColor();
+                            } else if (placeResponse.getPlaceList().size() != 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 한 페이지(15개 이하)일 경우 검색결과 목록 출력 후 종료
+                                Log.d("Test", "result is 15 or less");
                                 placeList.addAll(placeResponse.getPlaceList());
                                 adapter.notifyDataSetChanged();
                                 place_search_no_result.setVisibility(View.INVISIBLE);
                                 place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
                                 place_search_recycler.setVisibility(View.VISIBLE);
-                            } else {
-                                place_search_no_result.setVisibility(View.VISIBLE);                 // 검색 결과가 없을 경우 "결과 없음" 표시
-                                place_search_no_result_text.setVisibility(View.VISIBLE);
-                                place_search_recycler.setVisibility(View.INVISIBLE);
+                                setDefaultBackgroundColor();
+                            } else {                                                                // 검색결과가 2페이지 이상일 경우
+                                Log.d("Test", "result is more than 15");
+                                placeList.addAll(placeResponse.getPlaceList());
+                                if (page <= 5)                                                     // 현재 페이지가 5페이지 이하면 재귀호출
+                                    getPlaceListByKeyword(keyword, page + 1);
+                                else {                                                              // 5페이지면 검색결과 목록 출력 후 종료
+                                    adapter.notifyDataSetChanged();
+                                    place_search_no_result.setVisibility(View.INVISIBLE);
+                                    place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                    place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                    place_search_recycler.setVisibility(View.VISIBLE);
+                                    setDefaultBackgroundColor();
+                                }
                             }
                         }
                     }
@@ -330,14 +369,14 @@ public class SearchPlaceActivity extends AppCompatActivity {
                 });
     }
 
-    private void getPlaceListByKeywordAndCategory(String keyword, String categoryCode) {            // 장소 목록 가져오기(키워드, 카테고리)
+    private void getPlaceListByKeywordAndCategory(String keyword, String categoryCode, int page) {            // 장소 목록 가져오기(키워드, 카테고리)
         Log.d("Test", "getPlaceListKeywordAndCategory");
         retrofit = new Retrofit.Builder()
                 .baseUrl(KakaoLocalApi.base)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(KakaoLocalApi.class);
-        api.getPlacesByKeywordAndCategory(KakaoLocalApi.key, keyword, categoryCode)
+        api.getPlacesByKeywordAndCategory(KakaoLocalApi.key, keyword, categoryCode, page)
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
@@ -348,16 +387,41 @@ public class SearchPlaceActivity extends AppCompatActivity {
                         }
                         placeResponse = response.body();
                         if (placeResponse != null) {
-                            if (placeResponse.getPlaceList().size() != 0) {                         // 검색 결과가 있을 때만 리사이클러뷰에 표시
+                            Log.d("Test", "Total page count of placeResponse" + ", " + placeResponse.getMeta().getPageableCount());
+                            Log.d("Test", "Current page: " + page);
+                            Log.d("Test", "is end of the page?: " + placeResponse.getMeta().isEnd());
+                            if (placeResponse.getPlaceList().size() == 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 없을 경우 "결과 없음" 표시 후 종료
+                                Log.d("Test", "result is empty");
+                                adapter.notifyDataSetChanged();
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                place_search_no_result.setVisibility(View.VISIBLE);
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                categoryCodeList.clear();
+                                setDefaultBackgroundColor();
+                            } else if (placeResponse.getPlaceList().size() != 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 한 페이지(15개 이하)일 경우 검색결과 목록 출력 후 종료
+                                Log.d("Test", "result is 15 or less");
                                 placeList.addAll(placeResponse.getPlaceList());
                                 adapter.notifyDataSetChanged();
                                 place_search_no_result.setVisibility(View.INVISIBLE);
                                 place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
                                 place_search_recycler.setVisibility(View.VISIBLE);
-                            } else {
-                                place_search_no_result.setVisibility(View.VISIBLE);                 // 검색 결과가 없을 경우 "결과 없음" 표시
-                                place_search_no_result_text.setVisibility(View.VISIBLE);
-                                place_search_recycler.setVisibility(View.INVISIBLE);
+                                categoryCodeList.clear();
+                                setDefaultBackgroundColor();
+                            } else {                                                                // 검색결과가 2페이지 이상일 경우
+                                Log.d("Test", "result is more than 15");
+                                placeList.addAll(placeResponse.getPlaceList());
+                                if (page <= 5)                                                     // 현재 페이지가 5페이지 이하면 재귀호출
+                                    getPlaceListByKeywordAndCategory(keyword, categoryCode, page + 1);
+                                else {                                                              // 5페이지면 검색결과 목록 출력 후 종료
+                                    adapter.notifyDataSetChanged();
+                                    place_search_no_result.setVisibility(View.INVISIBLE);
+                                    place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                    place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                    place_search_recycler.setVisibility(View.VISIBLE);
+                                    categoryCodeList.clear();
+                                    setDefaultBackgroundColor();
+                                }
                             }
                         }
                     }
@@ -370,14 +434,14 @@ public class SearchPlaceActivity extends AppCompatActivity {
                 });
     }
 
-    private void getPlaceListByKeywordAndLocation(String keyword, Location currentLocation) {       // 장소 목록 가져오기(키워드, 현재 위치)
+    private void getPlaceListByKeywordAndLocation(String keyword, Location currentLocation, int page) {       // 장소 목록 가져오기(키워드, 현재 위치)
         Log.d("Test", "getPlaceListByKeywordAndLocation");
         retrofit = new Retrofit.Builder()
                 .baseUrl(KakaoLocalApi.base)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(KakaoLocalApi.class);
-        api.getPlacesByKeywordAndLocation(KakaoLocalApi.key, keyword, currentLocation.getLongitude(), currentLocation.getLatitude(), KakaoLocalApi.radius)
+        api.getPlacesByKeywordAndLocation(KakaoLocalApi.key, keyword, currentLocation.getLongitude(), currentLocation.getLatitude(), KakaoLocalApi.radius, page)
                 .enqueue(new Callback<PlaceResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
@@ -388,16 +452,41 @@ public class SearchPlaceActivity extends AppCompatActivity {
                         }
                         placeResponse = response.body();
                         if (placeResponse != null) {
-                            if (placeResponse.getPlaceList().size() != 0) {                         // 검색 결과가 있을 때만 리사이클러뷰에 표시
+                            Log.d("Test", "Total page count of placeResponse" + ", " + placeResponse.getMeta().getPageableCount());
+                            Log.d("Test", "Current page: " + page);
+                            Log.d("Test", "is end of the page?: " + placeResponse.getMeta().isEnd());
+                            if (placeResponse.getPlaceList().size() == 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 없을 경우 "결과 없음" 표시 후 종료
+                                Log.d("Test", "result is empty");
+                                adapter.notifyDataSetChanged();
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                place_search_no_result.setVisibility(View.VISIBLE);
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                place_search_check_my_location.setChecked(false);
+                                setDefaultBackgroundColor();
+                            } else if (placeResponse.getPlaceList().size() != 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 한 페이지(15개 이하)일 경우 검색결과 목록 출력 후 종료
+                                Log.d("Test", "result is 15 or less");
                                 placeList.addAll(placeResponse.getPlaceList());
                                 adapter.notifyDataSetChanged();
                                 place_search_no_result.setVisibility(View.INVISIBLE);
                                 place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
                                 place_search_recycler.setVisibility(View.VISIBLE);
-                            } else {
-                                place_search_no_result.setVisibility(View.VISIBLE);                 // 검색 결과가 없을 경우 "결과 없음" 표시
-                                place_search_no_result_text.setVisibility(View.VISIBLE);
-                                place_search_recycler.setVisibility(View.INVISIBLE);
+                                place_search_check_my_location.setChecked(false);
+                                setDefaultBackgroundColor();
+                            } else {                                                                // 검색결과가 2페이지 이상일 경우
+                                Log.d("Test", "result is more than 15");
+                                placeList.addAll(placeResponse.getPlaceList());
+                                if (page <= 5)                                                      // 현재 페이지가 5페이지 이하면 재귀호출
+                                    getPlaceListByKeywordAndLocation(keyword, currentLocation, page + 1);
+                                else {                                                              // 5페이지면 검색결과 목록 출력 후 종료
+                                    adapter.notifyDataSetChanged();
+                                    place_search_no_result.setVisibility(View.INVISIBLE);
+                                    place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                    place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                    place_search_recycler.setVisibility(View.VISIBLE);
+                                    place_search_check_my_location.setChecked(false);
+                                    setDefaultBackgroundColor();
+                                }
                             }
                         }
                     }

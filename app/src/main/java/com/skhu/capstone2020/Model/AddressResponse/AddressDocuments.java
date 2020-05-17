@@ -1,4 +1,4 @@
-package com.skhu.capstone2020.Model;
+package com.skhu.capstone2020.Model.AddressResponse;
 
 import com.google.gson.annotations.SerializedName;
 
