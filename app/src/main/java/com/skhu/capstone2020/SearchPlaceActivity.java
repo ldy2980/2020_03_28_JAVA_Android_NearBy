@@ -129,14 +129,16 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
                     page = 1;
 
-                    if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
-                        for (String categoryCode : categoryCodeList) {
+                    if (categoryCodeList.size() > 0 && place_search_check_my_location.isChecked()) {
+                        for (String categoryCode : categoryCodeList)
+                            getPlaceListByAllCondition(keyword, categoryCode, currentLocation, page);     // 카테고리 선택 후 현재 위치에서 검색할 경우
+                    } else if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
+                        for (String categoryCode : categoryCodeList)
                             getPlaceListByKeywordAndCategory(keyword, categoryCode, page);                // 카테고리로 필터링했을 경우
-                        }
                     } else if (categoryCodeList.size() == 0 && place_search_check_my_location.isChecked()) {
                         getPlaceListByKeywordAndLocation(keyword, currentLocation, page);                 // 현재 위치에서 검색할 경우
                     } else {
-                        getPlaceListByKeyword(keyword, page);                                             // 키워드만 입력했을 경우
+                        getPlaceListByKeyword(keyword, page);                                       // 키워드만 입력했을 경우
                     }
                 }
             }
@@ -183,7 +185,10 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
                     page = 1;
 
-                    if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
+                    if (categoryCodeList.size() > 0 && place_search_check_my_location.isChecked()) {
+                        for (String categoryCode : categoryCodeList)
+                            getPlaceListByAllCondition(keyword, categoryCode, currentLocation, page);     // 카테고리 선택 후 현재 위치에서 검색할 경우
+                    } else if (categoryCodeList.size() > 0 && !(place_search_check_my_location.isChecked())) {
                         for (String categoryCode : categoryCodeList)
                             getPlaceListByKeywordAndCategory(keyword, categoryCode, page);                // 카테고리로 필터링했을 경우
                     } else if (categoryCodeList.size() == 0 && place_search_check_my_location.isChecked()) {
@@ -494,6 +499,74 @@ public class SearchPlaceActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
                         Log.d("Test", "onFailure in getPlaceByKeywordAndLocation");
+                        Toast.makeText(SearchPlaceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void getPlaceListByAllCondition(String keyword, String categoryCode, Location currentLocation, int page) {
+        Log.d("Test", "getPlaceListByAllCondition");
+        retrofit = new Retrofit.Builder()
+                .baseUrl(KakaoLocalApi.base)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(KakaoLocalApi.class);
+        api.getPlacesByAllCondition(KakaoLocalApi.key, keyword, currentLocation.getLongitude(), currentLocation.getLatitude(), categoryCode, KakaoLocalApi.radius, page)
+                .enqueue(new Callback<PlaceResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
+                        Log.d("Test", "onResponse in getPlaceListByAllCondition" + ", " + response.message());
+                        if (!(response.isSuccessful())) {
+                            Toast.makeText(SearchPlaceActivity.this, response.code() + ", " + response.message(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        placeResponse = response.body();
+                        if (placeResponse != null) {
+                            Log.d("Test", "Total page count of placeResponse" + ", " + placeResponse.getMeta().getPageableCount());
+                            Log.d("Test", "Current page: " + page);
+                            Log.d("Test", "is end of the page?: " + placeResponse.getMeta().isEnd());
+                            if (placeResponse.getPlaceList().size() == 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 없을 경우 "결과 없음" 표시 후 종료
+                                Log.d("Test", "result is empty");
+                                adapter.notifyDataSetChanged();
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                place_search_no_result.setVisibility(View.VISIBLE);
+                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                place_search_check_my_location.setChecked(false);
+                                categoryCodeList.clear();
+                                setDefaultBackgroundColor();
+                            } else if (placeResponse.getPlaceList().size() != 0 && placeResponse.getMeta().isEnd()) {  // 검색결과가 한 페이지(15개 이하)일 경우 검색결과 목록 출력 후 종료
+                                Log.d("Test", "result is 15 or less");
+                                placeList.addAll(placeResponse.getPlaceList());
+                                adapter.notifyDataSetChanged();
+                                place_search_no_result.setVisibility(View.INVISIBLE);
+                                place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                place_search_recycler.setVisibility(View.VISIBLE);
+                                place_search_check_my_location.setChecked(false);
+                                categoryCodeList.clear();
+                                setDefaultBackgroundColor();
+                            } else {                                                                // 검색결과가 2페이지 이상일 경우
+                                Log.d("Test", "result is more than 15");
+                                placeList.addAll(placeResponse.getPlaceList());
+                                if (page <= 5)                                                      // 현재 페이지가 5페이지 이하면 재귀호출
+                                    getPlaceListByAllCondition(keyword, categoryCode, currentLocation, page + 1);
+                                else {                                                              // 5페이지면 검색결과 목록 출력 후 종료
+                                    adapter.notifyDataSetChanged();
+                                    place_search_no_result.setVisibility(View.INVISIBLE);
+                                    place_search_no_result_text.setVisibility(View.INVISIBLE);
+                                    place_search_spinKitView.setVisibility(View.INVISIBLE);
+                                    place_search_recycler.setVisibility(View.VISIBLE);
+                                    place_search_check_my_location.setChecked(false);
+                                    categoryCodeList.clear();
+                                    setDefaultBackgroundColor();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
+                        Log.d("Test", "onFailure in getPlaceListByAllCondition");
                         Toast.makeText(SearchPlaceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
