@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/select_user_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="10dp"
+        android:layout_marginStart="23dp"
+        android:background="@drawable/user_image_background"
+        android:padding="9.5dp"
+        android:src="@drawable/default_user_photo"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/select_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@id/select_user_photo"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="유저 이름"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/select_user_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="23dp"
+        android:clickable="false"
+        android:src="@drawable/ic_check_disabled"
+        tools:ignore="ContentDescription" />
+
+</RelativeLayout>
