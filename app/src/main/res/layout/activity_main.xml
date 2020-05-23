@@ -113,7 +113,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_chat_white"
+                android:src="@drawable/ic_group_white"
                 tools:ignore="ContentDescription" />
 
         </LinearLayout>

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/mapo_peacefull"
-            android:text="유저 선택"
+            android:text="그룹 멤버 선택"
             android:textColor="@color/darkBlue"
             android:textSize="18sp" />
 

@@ -1,8 +1,9 @@
 package com.skhu.capstone2020.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class GroupInfo {
+public class GroupInfo implements Serializable {
     private String masterId;
     private String groupName;
     private String groupId;

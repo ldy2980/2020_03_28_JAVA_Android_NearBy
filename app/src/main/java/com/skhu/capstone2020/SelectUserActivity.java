@@ -1,5 +1,6 @@
 package com.skhu.capstone2020;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,11 +29,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.skhu.capstone2020.Adapter.ViewHolder.SelectUserViewHolder;
+import com.skhu.capstone2020.Custom.CustomProgressDialog;
 import com.skhu.capstone2020.Interface.RecyclerItemClickListener;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.Member;
+import com.skhu.capstone2020.Model.UserGroupInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -163,24 +169,28 @@ public class SelectUserActivity extends AppCompatActivity {
 
     private void createGroup() {
         Log.d("Test", "createGroup");
+
+        final CustomProgressDialog dialog = new CustomProgressDialog(SelectUserActivity.this);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
+        dialog.setCancelable(false);
+        dialog.show();               // CustomProgressDialog 시작
+
+        Collections.shuffle(memberList); //
         CollectionReference groupReference = FirebaseFirestore.getInstance()
                 .collection("Groups");
         String groupId = groupReference.document().getId();                                         // 그룹 ID 생성
 
         int count = memberList.size();          //
         String masterId = currentUser.getUid(); //
-        String lastMessage = "";       // 그룹 인원 수, 방장 ID, 마지막 메세지 생성
+        String lastMessage = "";                // 그룹 인원 수, 방장 ID, 마지막 메세지 생성
 
-/*        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd hh:mm a");*/
-        String lastMessageTime = "";                               // 마지막 메세지의 시간 정보
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm");
+        String lastMessageTime = format.format(date);                               // 마지막 메세지의 시간 정보
 
         StringBuilder groupName = new StringBuilder();                                              // 그룹 이름 생성
         for (int i = 0; i < memberList.size(); ++i) {
             Log.d("Test", "groupName loop");
-            if (memberList.get(i).getId().equals(currentUser.getUid()))
-                continue;
-
             if (i == memberList.size() - 1)
                 groupName.append(memberList.get(i).getName());
             else
@@ -190,16 +200,17 @@ public class SelectUserActivity extends AppCompatActivity {
         Log.d("Test", "escape to groupName loop");
 
         GroupInfo groupInfo = new GroupInfo(masterId, groupName.toString(), groupId, lastMessage, lastMessageTime, count, memberList);  // 그룹 정보 객체 생성
+        UserGroupInfo userGroupInfo = new UserGroupInfo(groupInfo.getGroupId());
         Log.d("Test", "success to create groupInfo");
 
-        for (int i = 0; i < memberList.size(); ++i) {
+        for (int i = 0; i < memberList.size(); ++i) {                                               // 멤버 유저의 Document에 그룹 ID 저장
             Log.d("Test", "memberList loop");
             FirebaseFirestore.getInstance()
                     .collection("Users")
                     .document(memberList.get(i).getId())
-                    .collection("Groups")
-                    .document(groupId)
-                    .set(groupInfo);
+                    .collection("GroupIds")
+                    .document(userGroupInfo.getGroupId())
+                    .set(userGroupInfo);
         }
 
         groupReference.document(groupId).set(groupInfo)                                             // 그룹 정보를 DB에 저장
@@ -207,6 +218,10 @@ public class SelectUserActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Test", "success to crete group");
+                        Intent intent = new Intent(SelectUserActivity.this, GroupActivity.class);
+                        intent.putExtra("groupInfo", groupInfo);
+                        startActivity(intent);
+                        dialog.dismiss();       // CustomProgressDialog 종료
                         finish();
                         overridePendingTransition(0, 0);
                     }
@@ -215,6 +230,7 @@ public class SelectUserActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("Test", "onFailure");
+                        dialog.dismiss();       // ''
                     }
                 });
     }

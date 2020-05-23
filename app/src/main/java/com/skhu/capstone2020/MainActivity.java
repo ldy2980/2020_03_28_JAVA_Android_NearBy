@@ -196,9 +196,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_groups:
                     if (hasFocus) {
                         transaction.replace(R.id.fragment_container, new GroupsFragment()).commitAllowingStateLoss();
-                        btn_chats.setImageResource(R.drawable.ic_chat_black);
+                        btn_chats.setImageResource(R.drawable.ic_group_black);
                     } else {
-                        btn_chats.setImageResource(R.drawable.ic_chat_white);
+                        btn_chats.setImageResource(R.drawable.ic_group_white);
                     }
                     break;
             }

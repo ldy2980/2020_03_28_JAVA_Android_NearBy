@@ -1,6 +1,8 @@
 package com.skhu.capstone2020.Model;
 
-public class Member {
+import java.io.Serializable;
+
+public class Member implements Serializable {
     private String id;
     private String name;
     private String imageUrl;
