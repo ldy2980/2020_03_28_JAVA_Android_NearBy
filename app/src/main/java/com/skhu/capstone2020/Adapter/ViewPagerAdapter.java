@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.skhu.capstone2020.Fragments.ChatFragment;
 import com.skhu.capstone2020.Fragments.DestinationFragment;
+import com.skhu.capstone2020.Fragments.MemberFragment;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.User;
 
@@ -31,6 +32,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new DestinationFragment(currentUser, groupInfo);
             case 1:
+                return new MemberFragment(groupInfo.getMemberList());
+            case 2:
                 return new ChatFragment(groupInfo);
         }
         return null;
@@ -38,6 +41,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }

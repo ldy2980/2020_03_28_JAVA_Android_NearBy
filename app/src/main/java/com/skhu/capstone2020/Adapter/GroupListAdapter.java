@@ -17,12 +17,16 @@ import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.Member;
 import com.skhu.capstone2020.R;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ViewHolder> {
     private List<GroupInfo> groupInfoList;
     private Context context;
+
+    private PrettyTime time = new PrettyTime();
 
     public GroupListAdapter(List<GroupInfo> groupInfoList, Context context) {
         this.groupInfoList = groupInfoList;
@@ -43,7 +47,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             holder.group_name.setText(groupInfo.getGroupName());
             holder.group_count.setTextColor(groupInfo.getCount());
             holder.member_last_message.setText(groupInfo.getLastMessage());
-            holder.member_last_message_time.setText(groupInfo.getLastMessageTime());
+            holder.member_last_message_time.setText(time.format(groupInfo.getLastMessageTime()));
 
             List<Member> memberList = groupInfo.getMemberList();
             List<ImageView> imageViewList = holder.getImageViewList();

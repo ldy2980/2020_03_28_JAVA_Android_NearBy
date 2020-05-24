@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/snow">
+
+    <TextView
+        android:id="@+id/chat_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/message_right_background"
+        android:fontFamily="@font/mapo_peacefull"
+        android:paddingStart="12dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
+        android:text="내가 보낸 메세지"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/chat_item_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/message_user_image_container_background"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/chat_user_image"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="2.5dp"
+            android:background="@drawable/message_user_image_background"
+            android:padding="6dp"
+            android:src="@drawable/default_user_photo"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

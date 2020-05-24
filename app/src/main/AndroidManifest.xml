@@ -19,12 +19,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".GroupActivity"></activity>
-        <activity android:name=".SelectUserActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="bd97169bbcb001a23368a7ed262a107c" />
+
+        <activity
+            android:name=".GroupActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".SelectUserActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name=".MapViewActivity"

@@ -8,6 +8,11 @@
         android:title="@string/destination" />
 
     <item
+        android:id="@+id/nav_members"
+        android:icon="@drawable/ic_members"
+        android:title="@string/members" />
+
+    <item
         android:id="@+id/nav_chat"
         android:icon="@drawable/ic_chat"
         android:title="@string/chat" />

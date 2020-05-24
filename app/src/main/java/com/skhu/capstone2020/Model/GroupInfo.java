@@ -1,6 +1,7 @@
 package com.skhu.capstone2020.Model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class GroupInfo implements Serializable {
@@ -8,14 +9,14 @@ public class GroupInfo implements Serializable {
     private String groupName;
     private String groupId;
     private String lastMessage;
-    private String lastMessageTime;
+    private Date lastMessageTime;
     private int count;
     private List<Member> memberList;
 
     public GroupInfo() {
     }
 
-    public GroupInfo(String masterId, String groupName, String groupId, String lastMessage, String lastMessageTime, int count, List<Member> memberList) {
+    public GroupInfo(String masterId, String groupName, String groupId, String lastMessage, Date lastMessageTime, int count, List<Member> memberList) {
         this.masterId = masterId;
         this.groupName = groupName;
         this.groupId = groupId;
@@ -57,11 +58,11 @@ public class GroupInfo implements Serializable {
         this.lastMessage = lastMessage;
     }
 
-    public String getLastMessageTime() {
+    public Date getLastMessageTime() {
         return lastMessageTime;
     }
 
-    public void setLastMessageTime(String lastMessageTime) {
+    public void setLastMessageTime(Date lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
     }
 

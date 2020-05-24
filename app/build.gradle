@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'org.ocpsoft.prettytime:prettytime:4.0.4.Final'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

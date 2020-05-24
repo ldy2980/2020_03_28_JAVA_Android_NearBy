@@ -35,7 +35,6 @@ import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.Member;
 import com.skhu.capstone2020.Model.UserGroupInfo;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -106,6 +105,18 @@ public class SelectUserActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.startListening();
     }
 
     private void loadFriends() {
@@ -184,9 +195,10 @@ public class SelectUserActivity extends AppCompatActivity {
         String masterId = currentUser.getUid(); //
         String lastMessage = "";                // 그룹 인원 수, 방장 ID, 마지막 메세지 생성
 
-        Date date = new Date();
+        Date lastMessageTime = new Date();
+/*        Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm");
-        String lastMessageTime = format.format(date);                               // 마지막 메세지의 시간 정보
+        String lastMessageTime = format.format(date);                               // 마지막 메세지의 시간 정보*/
 
         StringBuilder groupName = new StringBuilder();                                              // 그룹 이름 생성
         for (int i = 0; i < memberList.size(); ++i) {

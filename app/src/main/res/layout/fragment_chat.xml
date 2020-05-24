@@ -1,13 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/snow">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/chat_input_container" />
+
+    <FrameLayout
+        android:id="@+id/chat_input_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Chat Fragment" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:background="@color/snow"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="UselessParent">
+
+            <EditText
+                android:id="@+id/chat_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-10dp"
+                android:autofillHints="검색"
+                android:background="@drawable/text_input"
+                android:fontFamily="@font/mapo_peacefull"
+                android:hint="메시지 입력"
+                android:imeOptions="actionSend"
+                android:inputType="text"
+                android:paddingStart="45dp"
+                android:paddingEnd="1dp"
+                android:paddingBottom="7dp"
+                android:singleLine="true"
+                android:textColor="@color/eastBay"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="27dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="33dp"
+                android:layout_marginEnd="99dp"
+                android:background="@color/ice" />
+
+            <ImageView
+                android:id="@+id/btn_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginVertical="20dp"
+                android:layout_marginEnd="28dp"
+                android:clickable="false"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="14dp"
+                android:src="@drawable/ic_send_ice"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
 
 </RelativeLayout>

@@ -12,12 +12,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.skhu.capstone2020.Adapter.ViewPagerAdapter;
 import com.skhu.capstone2020.Model.GroupInfo;
+import com.skhu.capstone2020.Model.Member;
 import com.skhu.capstone2020.Model.User;
 
+import java.util.List;
 import java.util.Objects;
 
 public class GroupActivity extends AppCompatActivity {
@@ -38,11 +41,10 @@ public class GroupActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
 
-        GroupInfo groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");               // 그룹 정보 객체 가져오기
+        GroupInfo groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");     // 그룹 정보 객체 가져오기
         Log.d("Test", "group ID: " + groupInfo.getGroupId());
+        Log.d("Test", "group member list: " + groupInfo.getMemberList());
 
-        group_toolbar_title = findViewById(R.id.group_toolbar_title);
-        group_toolbar_title.setText(groupInfo.getGroupName());                                      // 그룹 이름 표시
 
         FirebaseFirestore.getInstance()
                 .collection("Users")
@@ -53,8 +55,12 @@ public class GroupActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists())
                             currentUser = documentSnapshot.toObject(User.class);                    // 현재 유저 정보 가져오기
+                        updateMemberInfo(currentUser, groupInfo);                                   // 멤버 정보 업데이트
                     }
                 });
+
+        group_toolbar_title = findViewById(R.id.group_toolbar_title);
+        group_toolbar_title.setText(groupInfo.getGroupName());                                      // 그룹 이름 표시
 
         group_frag_container = findViewById(R.id.group_frag_container);
         group_bottom_navigation = findViewById(R.id.group_bottom_navigation);
@@ -63,8 +69,11 @@ public class GroupActivity extends AppCompatActivity {
                 case R.id.nav_destination:
                     group_frag_container.setCurrentItem(0);
                     break;
-                case R.id.nav_chat:
+                case R.id.nav_members:
                     group_frag_container.setCurrentItem(1);
+                    break;
+                case R.id.nav_chat:
+                    group_frag_container.setCurrentItem(2);
                     break;
             }
             return false;
@@ -84,6 +93,31 @@ public class GroupActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void updateMemberInfo(User currentUser, GroupInfo groupInfo) {
+        DocumentReference reference = FirebaseFirestore.getInstance().collection("Groups").document(groupInfo.getGroupId());
+        reference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    int index = 0;
+                    GroupInfo info = documentSnapshot.toObject(GroupInfo.class);
+                    if (info != null) {
+                        List<Member> memberList = info.getMemberList();
+                        for (int i = 0; i < memberList.size(); ++i) {
+                            if (currentUser.getId().equals(memberList.get(i).getId())) {
+                                index = i;
+                            }
+                        }
+                        Member member = new Member(currentUser.getId(), currentUser.getName(), currentUser.getImageUrl());
+                        memberList.remove(index);
+                        memberList.add(member);
+                        reference.update("memberList", memberList);
+                    }
+                }
             }
         });
     }
