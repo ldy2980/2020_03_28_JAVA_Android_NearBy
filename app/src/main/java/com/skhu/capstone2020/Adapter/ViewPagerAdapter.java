@@ -32,7 +32,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new DestinationFragment(currentUser, groupInfo);
             case 1:
-                return new MemberFragment(groupInfo.getMemberList());
+                return new MemberFragment(groupInfo.getMemberList(), groupInfo);
             case 2:
                 return new ChatFragment(groupInfo);
         }

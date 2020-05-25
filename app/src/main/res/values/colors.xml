@@ -10,6 +10,7 @@
     <color name="ice">#F0F3F4</color>
     <color name="tiara">#C8D1D3</color>
     <color name="eastBay">#454F63</color>
+    <color name="toreaBay">#0C1B9D</color>
     <color name="drab">#324755</color>
     <color name="grey">#a0a0a0</color>
     <color name="slateGrey">#78849E</color>
@@ -17,6 +18,7 @@
     <color name="bermudaGrey">#6E8CA0</color>
     <color name="cyan">#3ACCE1</color>
     <color name="sage">#87BCBF</color>
+    <color name="greyishBlue">#E0E2F3</color>
     <color name="darkBlue">#2A2E43</color>
     <color name="dodgerBlue">#3497FD</color>
     <color name="royalBlue">#5773FF</color>

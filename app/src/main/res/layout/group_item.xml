@@ -11,7 +11,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="13dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:cardElevation="1dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,8 +28,8 @@
 
                 <ImageView
                     android:id="@+id/member_image1"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:layout_margin="1dp"
                     android:background="@drawable/member_image_background"
                     android:padding="5dp"
@@ -38,8 +38,8 @@
 
                 <ImageView
                     android:id="@+id/member_image2"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:layout_margin="1dp"
                     android:layout_toEndOf="@id/member_image1"
                     android:background="@drawable/member_image_background"
@@ -49,8 +49,8 @@
 
                 <ImageView
                     android:id="@+id/member_image3"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:layout_below="@id/member_image1"
                     android:layout_margin="1dp"
                     android:background="@drawable/member_image_background"
@@ -60,8 +60,8 @@
 
                 <ImageView
                     android:id="@+id/member_image4"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:layout_below="@id/member_image2"
                     android:layout_margin="1dp"
                     android:layout_toEndOf="@id/member_image3"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="23dp"
-                android:layout_marginEnd="14dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="@font/bm_hanna"
                 android:text="시간"
                 android:textColor="@color/grey"
