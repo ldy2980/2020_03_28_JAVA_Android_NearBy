@@ -7,7 +7,7 @@
         android:width="73dp"
         android:height="28dp" />
 
-    <solid android:color="@color/cyan" />
+    <solid android:color="@color/skyBlue" />
 
     <!--stroke
         android:width="2dp"

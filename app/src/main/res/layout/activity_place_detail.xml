@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".PlaceDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -39,6 +38,24 @@
     <WebView
         android:id="@+id/placeDetail_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/placeDetail_btn_setDestination"
+        android:layout_below="@id/placeDetail_toolbar" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/placeDetail_btn_setDestination"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/skyBlue"
+        android:fontFamily="@font/mapo_peacefull"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="16dp"
+        android:text="목적지로 설정"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+</RelativeLayout>

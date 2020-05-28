@@ -25,6 +25,8 @@ import com.skhu.capstone2020.Model.RequestNotification;
 import com.skhu.capstone2020.Model.User;
 import com.skhu.capstone2020.R;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.List;
 
 public class NotificationsListAdapter extends RecyclerView.Adapter<NotificationsListAdapter.ViewHolder> {
@@ -34,6 +36,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     private Context mContext;
 
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+    private PrettyTime prettyTime = new PrettyTime();
 
     public NotificationsListAdapter(List<Notification> notificationsList, Context mContext) {
         this.notificationsList = notificationsList;
@@ -58,7 +62,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
 
             if (notification instanceof RequestNotification) {
                 final RequestNotification requestNotification = (RequestNotification) notification;
-                holder.request_time.setText(requestNotification.getTime());
+                holder.request_time.setText(prettyTime.format(requestNotification.getTime()));
                 holder.request_userName.setText(requestNotification.getUserName());
                 holder.request_user_status_message.setText(requestNotification.getUserStatusMessage());
 

@@ -260,7 +260,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="invisible"
-            app:SpinKit_Color="@color/cyan" />
+            app:SpinKit_Color="@color/skyBlue" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

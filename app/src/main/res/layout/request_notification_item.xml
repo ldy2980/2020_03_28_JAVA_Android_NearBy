@@ -40,7 +40,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/bm_hanna"
-            android:text="MM/dd a hh시 mm분"
+            android:text="시간 표시"
             android:textSize="12sp" />
 
         <ImageView
@@ -102,7 +102,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="23dp"
             android:layout_marginEnd="17dp"
-            android:background="@drawable/round_button_sage"
+            android:background="@drawable/round_button_skyblue_low_rounding"
             android:padding="11dp"
             android:src="@drawable/ic_check"
             tools:ignore="ContentDescription" />

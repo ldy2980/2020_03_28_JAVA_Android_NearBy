@@ -45,6 +45,8 @@ public class GroupActivity extends AppCompatActivity {
         Log.d("Test", "group ID: " + groupInfo.getGroupId());
         Log.d("Test", "group member list: " + groupInfo.getMemberList());
 
+        group_frag_container = findViewById(R.id.group_frag_container);
+        group_bottom_navigation = findViewById(R.id.group_bottom_navigation);
 
         FirebaseFirestore.getInstance()
                 .collection("Users")
@@ -56,14 +58,14 @@ public class GroupActivity extends AppCompatActivity {
                         if (documentSnapshot.exists())
                             currentUser = documentSnapshot.toObject(User.class);                    // 현재 유저 정보 가져오기
                         updateMemberInfo(currentUser, groupInfo);                                   // 멤버 정보 업데이트
+                        adapter = new ViewPagerAdapter(getSupportFragmentManager(), group_bottom_navigation.getMaxItemCount(), currentUser, groupInfo);
+                        group_frag_container.setAdapter(adapter);
                     }
                 });
 
         group_toolbar_title = findViewById(R.id.group_toolbar_title);
         group_toolbar_title.setText(groupInfo.getGroupName());                                      // 그룹 이름 표시
 
-        group_frag_container = findViewById(R.id.group_frag_container);
-        group_bottom_navigation = findViewById(R.id.group_bottom_navigation);
         group_bottom_navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {                                                             // BottomNavigationView 설정
                 case R.id.nav_destination:
@@ -79,8 +81,8 @@ public class GroupActivity extends AppCompatActivity {
             return false;
         });
 
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), group_bottom_navigation.getMaxItemCount(), currentUser, groupInfo);
-        group_frag_container.setAdapter(adapter);
+        //adapter = new ViewPagerAdapter(getSupportFragmentManager(), group_bottom_navigation.getMaxItemCount(), currentUser, groupInfo);
+        //group_frag_container.setAdapter(adapter);
         group_frag_container.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {         // ViewPager 설정
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

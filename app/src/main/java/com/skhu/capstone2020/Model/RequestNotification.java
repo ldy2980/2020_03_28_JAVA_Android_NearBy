@@ -1,15 +1,17 @@
 package com.skhu.capstone2020.Model;
 
+import java.util.Date;
+
 public class RequestNotification extends Notification {
     private String userName;
     private String userImageUrl;
     private String userStatusMessage;
-    private String time;
+    private Date time;
 
     public RequestNotification() {
     }
 
-    public RequestNotification(String userId, String userName, String userImageUrl, String userStatusMessage, String time) {
+    public RequestNotification(String userId, String userName, String userImageUrl, String userStatusMessage, Date time) {
         super(userId, 0);
         this.userName = userName;
         this.userImageUrl = userImageUrl;
@@ -41,11 +43,11 @@ public class RequestNotification extends Notification {
         this.userStatusMessage = userStatusMessage;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 }

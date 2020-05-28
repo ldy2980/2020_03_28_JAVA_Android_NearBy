@@ -108,7 +108,7 @@
             android:layout_marginStart="10dp"
             android:fontFamily="@font/mapo_peacefull"
             android:text="@string/login"
-            android:textColor="@color/cyan"
+            android:textColor="@color/skyBlue"
             android:textSize="16sp" />
 
     </LinearLayout>

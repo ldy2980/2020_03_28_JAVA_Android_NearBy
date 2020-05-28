@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/white</item>
-        <item name="colorAccent">@color/sage</item>
+        <item name="colorAccent">@color/skyBlue</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
@@ -22,7 +22,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/darkBlue</item>
-        <item name="colorAccent">@color/cyan</item>
+        <item name="colorAccent">@color/skyBlue</item>
     </style>
 
 </resources>

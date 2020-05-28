@@ -21,7 +21,6 @@ import com.skhu.capstone2020.Model.RequestNotification;
 import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Notification.OreoNotification;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
@@ -65,9 +64,9 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String title = "알림";
         String body = "새 친구 요청이 있습니다.";
 
-        Date date = new Date();
+/*        Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("a hh:mm:ss");
-        String currentTime = format.format(date);
+        String currentTime = format.format(date);*/
 
         Intent intent = new Intent(this, NotificationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -77,8 +76,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         Notification.Builder builder = oreoNotification.getRequestNotification(title, body, pendingIntent, defaultSound);
         oreoNotification.getManager().notify(0, builder.build());
 
-        SimpleDateFormat requestFormat = new SimpleDateFormat("MM/dd a hh:mm");
-        String requestTime = requestFormat.format(date);
+        Date requestTime = new Date();
         RequestNotification requestNotification = new RequestNotification(userId, userName, userImage, userStatusMessage, requestTime);
         addRequestNotification(requestNotification);
     }

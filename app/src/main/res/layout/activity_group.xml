@@ -10,9 +10,11 @@
         android:id="@+id/group_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:background="@color/white"
-        android:elevation="4dp"
-        android:padding="5dp">
+        android:elevation="5dp"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/group_toolbar_title"
@@ -40,7 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:elevation="4dp"
+        android:elevation="5dp"
+        android:padding="6dp"
         app:itemIconSize="28dp"
         app:itemIconTint="@drawable/nav_icon_selector"
         app:itemTextColor="@drawable/nav_icon_selector"

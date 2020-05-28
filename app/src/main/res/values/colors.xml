@@ -12,11 +12,13 @@
     <color name="eastBay">#454F63</color>
     <color name="toreaBay">#0C1B9D</color>
     <color name="drab">#324755</color>
-    <color name="grey">#a0a0a0</color>
+    <color name="grey">#c8c8c8</color>
     <color name="slateGrey">#78849E</color>
-    <color name="lightGrey">#FAFAFA</color>
+    <color name="lightGrey">#ededed</color>
     <color name="bermudaGrey">#6E8CA0</color>
     <color name="cyan">#3ACCE1</color>
+    <color name="lightCyan">#4bbfd0</color>
+    <color name="skyBlue">#6BA5F2</color>
     <color name="sage">#87BCBF</color>
     <color name="greyishBlue">#E0E2F3</color>
     <color name="darkBlue">#2A2E43</color>
@@ -27,6 +29,7 @@
     <color name="lightBlue">#544aff</color>
     <color name="azureRadiance">#0278f2</color>
     <color name="pickledBlueWood">#334856</color>
+    <color name="wedgeWood">#395f93</color>
     <color name="mediumOrchid">#C840E9</color>
     <color name="rust">#c55b2c</color>
     <color name="green">#289c28</color>

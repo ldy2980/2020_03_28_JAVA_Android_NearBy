@@ -17,7 +17,7 @@
             android:layout_marginStart="13dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="4dp"
-            android:src="@drawable/ic_main_logo_cyan"
+            android:src="@drawable/ic_main_logo_skyblue"
             tools:ignore="ContentDescription" />
 
         <TextView
