@@ -33,6 +33,7 @@ import com.skhu.capstone2020.Fragments.SurroundingFragment;
 import com.skhu.capstone2020.Model.Notification;
 import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Model.User;
+import com.skhu.capstone2020.Service.TrackingService;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragment_container = findViewById(R.id.fragment_container);
+
+        startTrackingService();
 
         updateToken();
         updateFriendsInfo();
@@ -273,5 +276,11 @@ public class MainActivity extends AppCompatActivity {
                                 .set(token);
                     }
                 });
+    }
+
+    private void startTrackingService() {
+        Log.d("Test", "startTrackingService in MainActivity");
+        Intent intent = new Intent(MainActivity.this, TrackingService.class);
+        startService(intent);
     }
 }

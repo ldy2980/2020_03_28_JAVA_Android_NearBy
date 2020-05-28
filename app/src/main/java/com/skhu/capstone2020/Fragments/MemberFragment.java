@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skhu.capstone2020.MemberAdapter;
+import com.skhu.capstone2020.Adapter.MemberAdapter;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.Member;
 import com.skhu.capstone2020.R;
