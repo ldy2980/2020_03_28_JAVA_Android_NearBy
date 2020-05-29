@@ -2,7 +2,9 @@ package com.skhu.capstone2020.Model.PlaceResponse;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable {
     @SerializedName("id")
     private String placeId;
 

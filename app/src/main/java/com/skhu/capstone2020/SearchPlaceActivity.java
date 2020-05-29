@@ -1,6 +1,7 @@
 package com.skhu.capstone2020;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -33,6 +34,7 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import com.skhu.capstone2020.Adapter.PlacesListAdapter;
 import com.skhu.capstone2020.Model.AddressResponse.Address;
 import com.skhu.capstone2020.Model.AddressResponse.AddressResponse;
+import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.PlaceResponse.Place;
 import com.skhu.capstone2020.Model.PlaceResponse.PlaceResponse;
 import com.skhu.capstone2020.REST_API.KakaoLocalApi;
@@ -77,10 +79,19 @@ public class SearchPlaceActivity extends AppCompatActivity {
     private KakaoLocalApi api;
     private AddressResponse addressResponse;
 
+    private GroupInfo groupInfo;
+
+    @SuppressLint("StaticFieldLeak")
+    public static SearchPlaceActivity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_place);
+
+        activity = SearchPlaceActivity.this;
+
+        groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");               // 그룹 정보 가져오기
 
         place_search_spinKitView = findViewById(R.id.place_search_spinKitView);
         place_search_no_result = findViewById(R.id.place_search_no_result);
@@ -224,8 +235,14 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
         place_search_recycler = findViewById(R.id.place_search_recycler);
         place_search_recycler.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PlacesListAdapter(placeList, SearchPlaceActivity.this);
-        place_search_recycler.setAdapter(adapter);                                                  // 리사이클러뷰와 어댑터 연결
+
+        if (groupInfo == null)              // 그룹 정보의 유무에 따라 각각 다른 어댑터 생성자 사용
+            adapter = new PlacesListAdapter(placeList, SearchPlaceActivity.this);
+        else
+            adapter = new PlacesListAdapter(placeList, SearchPlaceActivity.this, groupInfo);
+
+
+        place_search_recycler.setAdapter(adapter);                  // 리사이클러뷰와 어댑터 연결
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -529,8 +546,8 @@ public class SearchPlaceActivity extends AppCompatActivity {
                                 Log.d("Test", "result is empty");
                                 adapter.notifyDataSetChanged();
                                 place_search_spinKitView.setVisibility(View.INVISIBLE);
-                                place_search_no_result.setVisibility(View.VISIBLE);
-                                place_search_no_result_text.setVisibility(View.VISIBLE);
+                                //place_search_no_result.setVisibility(View.VISIBLE);
+                                //place_search_no_result_text.setVisibility(View.VISIBLE);
                                 place_search_check_my_location.setChecked(false);
                                 categoryCodeList.clear();
                                 setDefaultBackgroundColor();

@@ -212,7 +212,7 @@ public class SelectUserActivity extends AppCompatActivity {
         Log.d("Test", "escape to groupName loop");
 
         GroupInfo groupInfo = new GroupInfo(masterId, groupName.toString(), groupId, lastMessage, lastMessageTime, count, memberList);  // 그룹 정보 객체 생성
-        UserGroupInfo userGroupInfo = new UserGroupInfo(groupInfo.getGroupId());
+        UserGroupInfo userGroupInfo = new UserGroupInfo(groupInfo.getGroupId(), masterId);
         Log.d("Test", "success to create groupInfo");
 
         for (int i = 0; i < memberList.size(); ++i) {                                               // 멤버 유저의 Document에 그룹 ID 저장

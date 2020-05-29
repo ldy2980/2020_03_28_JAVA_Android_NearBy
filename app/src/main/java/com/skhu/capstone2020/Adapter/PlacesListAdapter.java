@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.PlaceResponse.Place;
 import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
@@ -21,10 +22,17 @@ import java.util.List;
 public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.ViewHolder> {
     private List<Place> placeList;
     private Context context;
+    private GroupInfo groupInfo;
 
     public PlacesListAdapter(List<Place> placeList, Context context) {
         this.placeList = placeList;
         this.context = context;
+    }
+
+    public PlacesListAdapter(List<Place> placeList, Context context, GroupInfo groupInfo) {
+        this.placeList = placeList;
+        this.context = context;
+        this.groupInfo = groupInfo;
     }
 
     @NonNull
@@ -124,6 +132,11 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
         public void onClick(View view) {                                                            // 상세 정보 페이지 화면으로 이동
             Place place = placeList.get(getAdapterPosition());
             Intent intent = new Intent(view.getContext(), PlaceDetailActivity.class);
+            intent.putExtra("place", place);
+
+            if (groupInfo != null)
+                intent.putExtra("groupInfo", groupInfo);                                     // 그룹 정보 객체가 존재할 경우 상세정보 액티비티에 넘김
+
             intent.putExtra("url", place.getUrl());
             intent.putExtra("placeName", place.getPlaceName());
             view.getContext().startActivity(intent);
