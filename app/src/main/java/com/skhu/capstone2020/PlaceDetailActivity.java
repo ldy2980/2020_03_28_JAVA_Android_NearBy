@@ -23,13 +23,28 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.skhu.capstone2020.Custom.CustomDestinationDialog;
+import com.skhu.capstone2020.Custom.CustomProgressDialog;
+import com.skhu.capstone2020.Model.DestinationData;
 import com.skhu.capstone2020.Model.GroupInfo;
+import com.skhu.capstone2020.Model.GroupSender;
+import com.skhu.capstone2020.Model.Member;
 import com.skhu.capstone2020.Model.PlaceResponse.Place;
+import com.skhu.capstone2020.Model.Token;
 import com.skhu.capstone2020.Model.UserGroupInfo;
+import com.skhu.capstone2020.REST_API.FCMApiService;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaceDetailActivity extends AppCompatActivity {
     ImageView placeDetail_back;
@@ -48,6 +63,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
     CollectionReference groupsReference = FirebaseFirestore.getInstance().collection("Groups");
 
     CustomDestinationDialog dialog;
+    CustomProgressDialog progressDialog;
+
+    Retrofit retrofit;
+    FCMApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +77,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
         place = (Place) getIntent().getSerializableExtra("place");                           // 장소 정보 객체 가져오기
         url = getIntent().getStringExtra("url");
         placeName = getIntent().getStringExtra("placeName");
+
+        progressDialog = new CustomProgressDialog(PlaceDetailActivity.this);
+        Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawable(null);
+        progressDialog.setCancelable(false);
 
         Toolbar toolbar = findViewById(R.id.placeDetail_toolbar);
         setSupportActionBar(toolbar);
@@ -201,6 +224,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
     View.OnClickListener okListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            progressDialog.show();
+
             SearchPlaceActivity activity = SearchPlaceActivity.activity;
             FirebaseFirestore.getInstance()
                     .collection("Groups")
@@ -211,8 +236,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            sendNotification(groupInfo);
                             dialog.dismiss();
                             Toast.makeText(PlaceDetailActivity.this, "목적지 설정 완료.", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                             activity.finish();
                             finish();
                         }
@@ -226,4 +253,53 @@ public class PlaceDetailActivity extends AppCompatActivity {
             dialog.dismiss();
         }
     };
+
+    private void sendNotification(GroupInfo groupInfo) {
+        Log.d("Test", "sendNotification");
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(FCMApiService.class);
+        List<Member> memberList = groupInfo.getMemberList();
+
+        for (int i = 0; i < memberList.size(); ++i) {
+            int finalI = i;
+            FirebaseFirestore.getInstance()
+                    .collection("Tokens")
+                    .document(memberList.get(i).getId())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Token token = documentSnapshot.toObject(Token.class);
+                            if (token != null && !memberList.get(finalI).getId().equals(currentUser.getUid())) {
+                                Log.d("Test", "member ID: " + memberList.get(finalI).getId());
+                                DestinationData destinationData =
+                                        new DestinationData(groupInfo.getMasterId(), groupInfo.getGroupId(), groupInfo.getGroupName(), place.getPlaceId(), place.getPlaceName(), memberList.get(finalI).getId());
+                                GroupSender groupSender = new GroupSender(destinationData, token.getToken());
+
+                                apiService.sendDestinationNotification(groupSender)
+                                        .enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                                                Log.d("Test", "onResponse in sendNotification");
+                                                if (!response.isSuccessful()) {
+                                                    Log.d("Test", "response: " + response.code() + ", " + response.message());
+                                                    return;
+                                                }
+                                                Log.d("Test", "response: " + response.code() + ", " + response.message());
+                                            }
+
+                                            @Override
+                                            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                                                Log.d("Test", "onFailure in sendNotification");
+                                                Toast.makeText(PlaceDetailActivity.this, "전송 실패", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                            }
+                        }
+                    });
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package com.skhu.capstone2020;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +28,8 @@ public class GroupActivity extends AppCompatActivity {
     private BottomNavigationView group_bottom_navigation;
     private TextView group_toolbar_title;
 
+    private GroupInfo groupInfo;
+
     private User currentUser;
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -37,34 +38,64 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
+        groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");     // 그룹 정보 객체 가져오기
+        String groupId = getIntent().getStringExtra("groupId");
+        if (groupInfo == null && groupId != null) {                         // 그룹 정보 객체가 null이면 DB에서 가져와 할당
+            FirebaseFirestore.getInstance()
+                    .collection("Groups")
+                    .document(groupId)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot != null)
+                                groupInfo = documentSnapshot.toObject(GroupInfo.class);
+
+                            FirebaseFirestore.getInstance()
+                                    .collection("Users")
+                                    .document(firebaseUser.getUid())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            if (documentSnapshot.exists())
+                                                currentUser = documentSnapshot.toObject(User.class);                    // 현재 유저 정보 가져오기
+
+                                            updateMemberInfo(currentUser, groupInfo);                                   // 멤버 정보 업데이트
+                                            adapter = new ViewPagerAdapter(getSupportFragmentManager(), group_bottom_navigation.getMaxItemCount(), currentUser, groupInfo);
+                                            group_frag_container.setAdapter(adapter);
+
+                                            group_toolbar_title = findViewById(R.id.group_toolbar_title);
+                                            group_toolbar_title.setText(groupInfo.getGroupName());      // 그룹 이름 표시
+                                        }
+                                    });
+                        }
+                    });
+        } else {                                                     // 그룹 정보 객체가 null이 아닌 경우
+            FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(firebaseUser.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists())
+                                currentUser = documentSnapshot.toObject(User.class);                    // 현재 유저 정보 가져오기
+                            updateMemberInfo(currentUser, groupInfo);                                   // 멤버 정보 업데이트
+                            adapter = new ViewPagerAdapter(getSupportFragmentManager(), group_bottom_navigation.getMaxItemCount(), currentUser, groupInfo);
+                            group_frag_container.setAdapter(adapter);
+                        }
+                    });
+            group_toolbar_title = findViewById(R.id.group_toolbar_title);
+            group_toolbar_title.setText(groupInfo.getGroupName());       // 그룹 이름 표시
+        }
+
         Toolbar toolbar = findViewById(R.id.group_toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
 
-        GroupInfo groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");     // 그룹 정보 객체 가져오기
-        Log.d("Test", "group ID: " + groupInfo.getGroupId());
-        Log.d("Test", "group member list: " + groupInfo.getMemberList());
-
         group_frag_container = findViewById(R.id.group_frag_container);
         group_bottom_navigation = findViewById(R.id.group_bottom_navigation);
-
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(firebaseUser.getUid())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists())
-                            currentUser = documentSnapshot.toObject(User.class);                    // 현재 유저 정보 가져오기
-                        updateMemberInfo(currentUser, groupInfo);                                   // 멤버 정보 업데이트
-                        adapter = new ViewPagerAdapter(getSupportFragmentManager(), group_bottom_navigation.getMaxItemCount(), currentUser, groupInfo);
-                        group_frag_container.setAdapter(adapter);
-                    }
-                });
-
-        group_toolbar_title = findViewById(R.id.group_toolbar_title);
-        group_toolbar_title.setText(groupInfo.getGroupName());                                      // 그룹 이름 표시
 
         group_bottom_navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {                                                             // BottomNavigationView 설정

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/set_destination_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="7dp"
+        android:src="@drawable/ic_destination"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/destination_group_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_toEndOf="@+id/set_destination_icon"
+        android:fontFamily="@font/bm_hanna"
+        android:text="그룹 이름 표시"
+        android:textColor="@color/bermudaGrey"
+        android:textSize="13sp"
+        tools:ignore="RelativeOverlap" />
+
+    <TextView
+        android:id="@+id/set_destination_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/bm_hanna"
+        android:text="시간 표시"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/set_destination_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/set_destination_icon"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="설정된 목적지: "
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/set_destination_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/set_destination_icon"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginBottom="16dp"
+        android:layout_toEndOf="@id/set_destination_text"
+        android:fontFamily="@font/jsdongkang_regular"
+        android:text="장소 이름 표시"
+        android:textColor="@color/skyBlue"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/set_destination_cancel"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/set_destination_icon"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/round_button_east_bay"
+        android:padding="11dp"
+        android:src="@drawable/ic_cancel"
+        tools:ignore="ContentDescription" />
+
+</RelativeLayout>

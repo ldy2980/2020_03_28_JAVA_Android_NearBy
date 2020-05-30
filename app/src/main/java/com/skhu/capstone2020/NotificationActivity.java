@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.skhu.capstone2020.Adapter.NotificationsListAdapter;
+import com.skhu.capstone2020.Model.DestinationNotification;
 import com.skhu.capstone2020.Model.Notification;
 import com.skhu.capstone2020.Model.RequestNotification;
 
@@ -105,8 +106,9 @@ public class NotificationActivity extends AppCompatActivity {
                                 if (notification.getNotificationType() == 0) {
                                     RequestNotification requestNotification = snapshot.toObject(RequestNotification.class);
                                     notificationList.add(requestNotification);
-                                } else {
-                                    // 목적지 설정 알림 객체일 때 동작할 코드
+                                } else if (notification.getNotificationType() == 1) {
+                                    DestinationNotification destinationNotification = snapshot.toObject(DestinationNotification.class);
+                                    notificationList.add(destinationNotification);
                                 }
                             }
                             adapter.notifyDataSetChanged();
@@ -136,8 +138,15 @@ public class NotificationActivity extends AppCompatActivity {
                                             .collection("Notifications")
                                             .document(requestNotification.getId())
                                             .set(requestNotification);
-                                } else {
-                                    // 목적지 설정 알림객체일 때 동작할 코드
+                                } else if (notification.getNotificationType() == 1) {
+                                    DestinationNotification destinationNotification = snapshot.toObject(DestinationNotification.class);
+                                    destinationNotification.setSeen(true);
+                                    FirebaseFirestore.getInstance()
+                                            .collection("Users")
+                                            .document(currentUser.getUid())
+                                            .collection("Notifications")
+                                            .document(destinationNotification.getId())
+                                            .set(destinationNotification);
                                 }
                             }
                         }
