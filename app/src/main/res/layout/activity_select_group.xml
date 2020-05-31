@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectGroupActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/select_group_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/select_group_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toolbar_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="그룹 선택"
+            android:textColor="@color/darkBlue"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/select_group_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="11dp"
+            android:enabled="false"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="@string/ok"
+            android:textColor="@color/ice"
+            android:textSize="18sp"
+            tools:ignore="RelativeOverlap" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/select_group_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/select_group_toolbar"
+        android:background="@color/snow" />
+
+</RelativeLayout>

@@ -130,6 +130,13 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_scale_in, R.anim.anim_slide_out_top);
+    }
+
     private void updateMemberInfo(User currentUser, GroupInfo groupInfo) {
         DocumentReference reference = FirebaseFirestore.getInstance().collection("Groups").document(groupInfo.getGroupId());
         reference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

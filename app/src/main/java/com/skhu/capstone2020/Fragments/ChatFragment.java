@@ -87,7 +87,7 @@ public class ChatFragment extends Fragment {
                 .collection("Groups")
                 .document(groupInfo.getGroupId())
                 .collection("Chats")
-                .orderBy("timeStamp", Query.Direction.ASCENDING);                             // 채팅 데이터를 읽어오는 쿼리
+                .orderBy("timeStamp", Query.Direction.ASCENDING);      // 채팅 데이터를 읽어오는 쿼리
 
         FirestoreRecyclerOptions<Chat> options = new FirestoreRecyclerOptions.Builder<Chat>().setQuery(query, Chat.class).build();
         adapter = new ChatAdapter(options, groupInfo.getGroupId(), getContext());

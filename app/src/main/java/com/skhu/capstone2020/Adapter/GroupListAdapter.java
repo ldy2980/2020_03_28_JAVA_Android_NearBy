@@ -1,5 +1,6 @@
 package com.skhu.capstone2020.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -25,12 +26,14 @@ import java.util.List;
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ViewHolder> {
     private List<GroupInfo> groupInfoList;
     private Context context;
+    private Activity activity;
 
     private PrettyTime time = new PrettyTime();
 
-    public GroupListAdapter(List<GroupInfo> groupInfoList, Context context) {
+    public GroupListAdapter(List<GroupInfo> groupInfoList, Context context, Activity activity) {
         this.groupInfoList = groupInfoList;
         this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -105,6 +108,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             Intent intent = new Intent(context, GroupActivity.class);
             intent.putExtra("groupInfo", groupInfo);
             view.getContext().startActivity(intent);
+            activity.overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
         }
     }
 }

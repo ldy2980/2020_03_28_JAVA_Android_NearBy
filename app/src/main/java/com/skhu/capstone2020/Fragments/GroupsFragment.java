@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.skhu.capstone2020.Adapter.GroupListAdapter;
 import com.skhu.capstone2020.Model.GroupInfo;
@@ -108,6 +109,7 @@ public class GroupsFragment extends Fragment {
         Log.d("Test", "loadGroups");
         FirebaseFirestore.getInstance()
                 .collection("Groups")
+                .orderBy("lastMessageTime", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -124,7 +126,7 @@ public class GroupsFragment extends Fragment {
                             }
 
                             Log.d("Test", "myGroupInfoList Size: " + myGroupInfoList.size());
-                            adapter = new GroupListAdapter(myGroupInfoList, getContext());
+                            adapter = new GroupListAdapter(myGroupInfoList, getContext(), getActivity());
                             group_recycler.setAdapter(adapter);
                             group_fragment_spinKitView.setVisibility(View.INVISIBLE);
                             group_recycler.setVisibility(View.VISIBLE);

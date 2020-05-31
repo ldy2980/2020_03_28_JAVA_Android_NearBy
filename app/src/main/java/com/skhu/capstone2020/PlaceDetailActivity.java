@@ -1,5 +1,7 @@
 package com.skhu.capstone2020;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,10 +70,15 @@ public class PlaceDetailActivity extends AppCompatActivity {
     Retrofit retrofit;
     FCMApiService apiService;
 
+    @SuppressLint("StaticFieldLeak")
+    public static PlaceDetailActivity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_detail);
+
+        activity = PlaceDetailActivity.this;
 
         groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");               // 그룹 정보 객체 가져오기
         place = (Place) getIntent().getSerializableExtra("place");                           // 장소 정보 객체 가져오기
@@ -86,7 +93,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
 
-        dialog = new CustomDestinationDialog(PlaceDetailActivity.this, okListener, cancelListener);
+        dialog = new CustomDestinationDialog(PlaceDetailActivity.this, okListener, cancelListener);     // 커스텀 다이얼로그 설정
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -102,15 +109,17 @@ public class PlaceDetailActivity extends AppCompatActivity {
         });
 
         btn_setDestination = findViewById(R.id.placeDetail_btn_setDestination);            // 목적지 설정 버튼
-
         btn_setDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("Test", "onClick in PlaceDetail");
-                if (groupInfo != null && place.getUrl() != null) {
+                if (groupInfo != null && place.getUrl() != null) {  // 그룹 화면에서 넘어왔을 경우
                     dialog.show();
-                } else {
-                    // 추가 예정
+                } else {            // 메인화면에서 넘어왔을 경우
+                    Intent intent = new Intent(PlaceDetailActivity.this, SelectGroupActivity.class);
+                    intent.putExtra("place", place);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                 }
             }
         });
@@ -140,21 +149,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
                                                         placeDetail_view.setVisibility(View.VISIBLE);
                                                     } else {
                                                         setDestinationButton();
-/*                                                        btn_setDestination.setVisibility(View.VISIBLE);
-                                                        placeDetail_spinKitView.setVisibility(View.INVISIBLE);
-                                                        placeDetail_view.setVisibility(View.VISIBLE);*/
                                                     }
                                                 }
                                             });
                             }
-/*                            if (btn_setDestination.getVisibility() == View.VISIBLE) {
-                                Log.d("Test", "DestButton is visible");
-                                setDestinationButton();
-                            } else {
-                                Log.d("Test", "DestButton isn't visible");
-                                placeDetail_spinKitView.setVisibility(View.INVISIBLE);
-                                placeDetail_view.setVisibility(View.VISIBLE);
-                            }*/
                         }
                     }
                 });
@@ -236,7 +234,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            sendNotification(groupInfo);
+                            sendNotification(groupInfo);        // DB에 목적지 정보 저장 후 멤버들에게 푸시 알림 전송
                             dialog.dismiss();
                             Toast.makeText(PlaceDetailActivity.this, "목적지 설정 완료.", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();

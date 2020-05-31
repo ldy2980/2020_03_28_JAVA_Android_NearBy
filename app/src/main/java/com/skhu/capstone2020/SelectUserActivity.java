@@ -196,9 +196,6 @@ public class SelectUserActivity extends AppCompatActivity {
         String lastMessage = "";                // 그룹 인원 수, 방장 ID, 마지막 메세지 생성
 
         Date lastMessageTime = new Date();
-/*        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm");
-        String lastMessageTime = format.format(date);                               // 마지막 메세지의 시간 정보*/
 
         StringBuilder groupName = new StringBuilder();                                              // 그룹 이름 생성
         for (int i = 0; i < memberList.size(); ++i) {
