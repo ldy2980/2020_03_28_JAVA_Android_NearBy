@@ -1,5 +1,6 @@
 package com.skhu.capstone2020;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -26,7 +27,8 @@ public class GroupActivity extends AppCompatActivity {
     private ViewPager group_frag_container;
     private ViewPagerAdapter adapter;
     private BottomNavigationView group_bottom_navigation;
-    private TextView group_toolbar_title;
+    @SuppressLint("StaticFieldLeak")
+    public static TextView group_toolbar_title;
 
     private GroupInfo groupInfo;
 

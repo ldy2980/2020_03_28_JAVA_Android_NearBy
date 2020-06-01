@@ -47,7 +47,7 @@
         app:itemIconSize="28dp"
         app:itemIconTint="@drawable/nav_icon_selector"
         app:itemTextColor="@drawable/nav_icon_selector"
-        app:labelVisibilityMode="unlabeled"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_main" />
 
 </RelativeLayout>
