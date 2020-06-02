@@ -1,6 +1,7 @@
 package com.skhu.capstone2020.Fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +12,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -26,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.skhu.capstone2020.Custom.CustomCancelDestinationDialog;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.PlaceResponse.Place;
 import com.skhu.capstone2020.Model.User;
@@ -45,17 +49,21 @@ public class DestinationFragment extends Fragment {
     private GroupInfo groupInfo;
 
     private RelativeLayout layout_no_destination, layout_set_destination;
-
     private SpinKitView destination_spinKitView;
     private Button btn_search_destination;
-    private ImageView destination_image, destination_category;
-    private TextView destination_place_name;
-    private TextView destination_place_address;
-    private Button destination_detail_btn;
+    private ImageView destination_image;
+    private ImageButton btn_cancel_destination;
+    private TextView destination_place_name, destination_place_address, destination_group_category, destination_category;
+    private CardView destination_cardView;
     private WebView webView;
     private WebSettings mWebSettings;
     private String imageSource;
     private String parsedUrl;
+    private String destinationId;
+
+    private CustomCancelDestinationDialog dialog;
+
+    public static boolean isJustSetDestination = false;
 
     public DestinationFragment(User currentUser, GroupInfo groupInfo) {
         this.currentUser = currentUser;
@@ -65,15 +73,30 @@ public class DestinationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("Test", "onCreateView");
+        Log.d("Test", "onCreateView in DestinationFragment");
         View view = inflater.inflate(R.layout.fragment_destination, container, false);
 
+        destination_cardView = view.findViewById(R.id.destination_cardView);
         destination_spinKitView = view.findViewById(R.id.destination_spinKitView);
         destination_place_name = view.findViewById(R.id.destination_place_name);
         destination_place_address = view.findViewById(R.id.destination_place_address);
+        destination_group_category = view.findViewById(R.id.destination_group_category);
         destination_category = view.findViewById(R.id.destination_category);
         destination_image = view.findViewById(R.id.destination_image);
         destination_image.setClipToOutline(true);
+
+        dialog = new CustomCancelDestinationDialog(Objects.requireNonNull(getContext()), okListener, cancelListener);   // 목적지 취소 다이얼로그 설정
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        btn_cancel_destination = view.findViewById(R.id.btn_cancel_destination);        // 설정된 목적지 취소
+        btn_cancel_destination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Test", "onClick in btn_cancel_destination");
+                dialog.show();
+            }
+        });
 
         webView = view.findViewById(R.id.destination_web_view);
         mWebSettings = webView.getSettings(); //세부 세팅 등록
@@ -105,8 +128,6 @@ public class DestinationFragment extends Fragment {
                 }, 1000);
             }
         });
-
-        destination_detail_btn = view.findViewById(R.id.destination_detail_btn);
 
         btn_search_destination = view.findViewById(R.id.btn_search_destination);
         btn_search_destination.setOnClickListener(new View.OnClickListener() {
@@ -148,20 +169,26 @@ public class DestinationFragment extends Fragment {
                                 if (place != null && place.getUrl() != null) {
                                     destination_place_name.setText(place.getPlaceName());
                                     destination_place_address.setText(place.getAddress());
-                                    setCategoryIcon(place);
-                                    destination_detail_btn.setOnClickListener(new View.OnClickListener() {
+                                    destinationId = place.getPlaceId();
+
+                                    if (!place.getGroupCategory().equals(""))
+                                        destination_group_category.setText(place.getGroupCategory());
+                                    else
+                                        destination_group_category.setVisibility(View.GONE);
+
+                                    destination_category.setText(place.getCategory());
+                                    destination_cardView.setOnClickListener(new View.OnClickListener() {  // 카드뷰 터치 시 상세정보 화면으로 이동
                                         @Override
                                         public void onClick(View view) {
-                                            Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
+                                            Intent intent = new Intent(getContext(), PlaceDetailActivity.class);
                                             intent.putExtra("placeName", place.getPlaceName());
                                             intent.putExtra("url", place.getUrl());
-                                            Objects.requireNonNull(getActivity()).startActivity(intent);
+                                            startActivity(intent);
                                         }
                                     });
                                     webView.loadUrl(place.getUrl());
                                 }
                             }
-
                         }
                     }
                 });
@@ -169,85 +196,48 @@ public class DestinationFragment extends Fragment {
         return view;
     }
 
-/*    @Override
+    @Override
     public void onResume() {
+        Log.d("Test", "onResume in DestinationFragment");
         super.onResume();
-        Log.d("Test", "onResume");
-        //layout_no_destination.setVisibility(View.INVISIBLE);
-        //destination_spinKitView.setVisibility(View.VISIBLE);
-        FirebaseFirestore.getInstance()
-                .collection("Groups")
-                .document(groupInfo.getGroupId())
-                .collection("Destination")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (queryDocumentSnapshots.isEmpty()) {                                     // 목적지가 설정되어있지 않을 경우
-                            destination_spinKitView.setVisibility(View.INVISIBLE);
-                            layout_no_destination.setVisibility(View.VISIBLE);
-                            if (currentUser.getId().equals(groupInfo.getMasterId()))
-                                btn_search_destination.setVisibility(View.VISIBLE);         // 마스터일 경우 장소 검색 버튼 보이기
-                            else
-                                btn_search_destination.setVisibility(View.GONE);            // 마스터가 아닐 경우 버튼 숨기기
-                        } else {
-                            destination_image.setPadding(0, 0, 0, 0);
-                            destination_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {          // 목적지가 설정되어있는 경우
-                                Log.d("Test", "Destination is available");
-                                Place place = snapshot.toObject(Place.class);
-                                if (place != null && place.getUrl() != null)
-                                    webView.loadUrl(place.getUrl());
-                            }
-                        }
-                    }
-                });
-    }*/
-
-    private void setCategoryIcon(Place place) {
-        switch (place.getCategoryCode()) {
-            case "FD6":
-                destination_category.setImageResource(R.drawable.ic_category_restaurant);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_restaurant_background));
-                break;
-            case "CS2":
-            case "MT1":
-                destination_category.setImageResource(R.drawable.ic_category_market);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_market_background));
-                break;
-            case "CE7":
-                destination_category.setImageResource(R.drawable.ic_category_cafe);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_cafe_background));
-                break;
-            case "PM9":
-                destination_category.setImageResource(R.drawable.ic_category_pharmacy);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_pharmacy_background));
-                break;
-            case "BK9":
-                destination_category.setImageResource(R.drawable.ic_category_bank);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_bank_background));
-                break;
-            case "SW8":
-                destination_category.setImageResource(R.drawable.ic_category_subway_station);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_subway_station));
-                break;
-            case "HP8":
-                destination_category.setImageResource(R.drawable.ic_category_hospital);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_hospital_background));
-                break;
-            case "CT1":
-                destination_category.setImageResource(R.drawable.ic_category_culture);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_culture_background));
-                break;
-            case "AD5":
-                destination_category.setImageResource(R.drawable.ic_category_accommodation);
-                destination_category.setBackground(ActivityCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.category_accommodation_background));
-                break;
-            default:
-                //destination_category.setVisibility(View.INVISIBLE);
-                break;
+        if (isJustSetDestination) {
+            Log.d("Test", "static value is true");
+            assert getFragmentManager() != null;
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(DestinationFragment.this).attach(DestinationFragment.this).commit();
+            isJustSetDestination = false;
         }
     }
+
+    private View.OnClickListener okListener = new View.OnClickListener() {          // 설정된 목적지 삭제시 동작
+        @Override
+        public void onClick(View view) {
+            FirebaseFirestore.getInstance()
+                    .collection("Groups")
+                    .document(groupInfo.getGroupId())
+                    .collection("Destination")
+                    .document(destinationId)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            isJustSetDestination = false;
+                            assert getFragmentManager() != null;
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.detach(DestinationFragment.this).attach(DestinationFragment.this).commit();
+                            dialog.dismiss();
+                        }
+                    });
+
+        }
+    };
+
+    private View.OnClickListener cancelListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            dialog.dismiss();
+        }
+    };
 
     public class MyJavascriptInterface {
         @JavascriptInterface
@@ -272,22 +262,17 @@ public class DestinationFragment extends Fragment {
                 @Override
                 public void run() {
                     Log.d("Test", "Run");
-                    try {
-                        while (true) {
-                            Thread.sleep(1000);
-                            Log.d("Test", "In while");
-                            if (parsedUrl != null) {
-                                Glide.with(Objects.requireNonNull(getActivity()))
-                                        .load(parsedUrl)
-                                        .into(destination_image);
-                                destination_spinKitView.setVisibility(View.INVISIBLE);
-                                layout_no_destination.setVisibility(View.INVISIBLE);
-                                layout_set_destination.setVisibility(View.VISIBLE);
-                                break;
-                            }
+                    while (true) {
+                        Log.d("Test", "In while");
+                        if (parsedUrl != null) {
+                            Glide.with(Objects.requireNonNull(getActivity()))
+                                    .load(parsedUrl)
+                                    .into(destination_image);
+                            destination_spinKitView.setVisibility(View.INVISIBLE);
+                            layout_no_destination.setVisibility(View.INVISIBLE);
+                            layout_set_destination.setVisibility(View.VISIBLE);
+                            break;
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             });

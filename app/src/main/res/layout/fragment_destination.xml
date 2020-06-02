@@ -73,11 +73,11 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/destination_cardView"
-            android:layout_width="350dp"
-            android:layout_height="250dp"
+            android:layout_width="362dp"
+            android:layout_height="272dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="21dp"
-            android:elevation="3dp"
+            android:layout_marginTop="20dp"
+            android:elevation="4dp"
             app:cardCornerRadius="16dp">
 
             <RelativeLayout
@@ -87,8 +87,10 @@
 
                 <ImageView
                     android:id="@+id/destination_image"
-                    android:layout_width="350dp"
-                    android:layout_height="170dp"
+                    android:layout_width="320dp"
+                    android:layout_height="140dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="17dp"
                     android:background="@drawable/place_image_background"
                     android:padding="20dp"
                     android:src="@drawable/ic_default_place_image"
@@ -99,8 +101,8 @@
                     android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/destination_image"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="11dp"
                     android:fontFamily="@font/mapo_peacefull"
                     android:singleLine="true"
                     android:text="장소 이름 표시"
@@ -112,44 +114,68 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/destination_place_name"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="30dp"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/bm_hanna"
                     android:text="장소 주소 표시"
                     android:textColor="@color/slateGrey"
                     android:textSize="15sp" />
 
-                <ImageView
+                <TextView
+                    android:id="@+id/destination_group_category"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/destination_place_address"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="27dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/destination_sub_text_background"
+                    android:fontFamily="@font/bm_hanna"
+                    android:paddingHorizontal="11dp"
+                    android:paddingVertical="6dp"
+                    android:singleLine="true"
+                    android:text="그룹 카테고리"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:id="@+id/destination_category"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_below="@id/destination_image"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="13dp"
-                    android:background="@drawable/category_default_image_background"
-                    android:padding="11dp"
-                    android:src="@drawable/ic_category_default"
-                    tools:ignore="ContentDescription" />
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/destination_place_address"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@id/destination_group_category"
+                    android:background="@drawable/destination_sub_text_background"
+                    android:fontFamily="@font/bm_hanna"
+                    android:paddingHorizontal="11dp"
+                    android:paddingVertical="6dp"
+                    android:singleLine="true"
+                    android:text="카테고리"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/destination_detail_btn"
-            android:layout_width="350dp"
+        <ImageButton
+            android:id="@+id/btn_cancel_destination"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/destination_cardView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/round_button_skyblue"
-            android:elevation="3dp"
-            android:fontFamily="@font/mapo_peacefull"
-            android:text="상세 정보"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/btn_cancel_destination_background"
+            android:elevation="4dp"
+            android:padding="17dp"
+            android:src="@drawable/ic_cancel_large"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 

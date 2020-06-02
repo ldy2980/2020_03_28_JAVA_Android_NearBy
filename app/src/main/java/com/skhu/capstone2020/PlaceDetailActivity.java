@@ -26,12 +26,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.skhu.capstone2020.Custom.CustomDestinationDialog;
 import com.skhu.capstone2020.Custom.CustomProgressDialog;
+import com.skhu.capstone2020.Fragments.DestinationFragment;
 import com.skhu.capstone2020.Model.DestinationData;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.GroupSender;
 import com.skhu.capstone2020.Model.Member;
 import com.skhu.capstone2020.Model.PlaceResponse.Place;
 import com.skhu.capstone2020.Model.Token;
+import com.skhu.capstone2020.Model.User;
 import com.skhu.capstone2020.Model.UserGroupInfo;
 import com.skhu.capstone2020.REST_API.FCMApiService;
 
@@ -59,6 +61,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     String url, placeName;
 
+    User loggedUser;
     GroupInfo groupInfo;
     Place place;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -79,6 +82,18 @@ public class PlaceDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_detail);
 
         activity = PlaceDetailActivity.this;
+
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {           // 현재 유저정보 가져오기
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot != null)
+                            loggedUser = documentSnapshot.toObject(User.class);
+                    }
+                });
 
         groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");               // 그룹 정보 객체 가져오기
         place = (Place) getIntent().getSerializableExtra("place");                           // 장소 정보 객체 가져오기
@@ -223,7 +238,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             progressDialog.show();
-
             SearchPlaceActivity activity = SearchPlaceActivity.activity;
             FirebaseFirestore.getInstance()
                     .collection("Groups")
@@ -237,6 +251,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                             sendNotification(groupInfo);        // DB에 목적지 정보 저장 후 멤버들에게 푸시 알림 전송
                             dialog.dismiss();
                             Toast.makeText(PlaceDetailActivity.this, "목적지 설정 완료.", Toast.LENGTH_LONG).show();
+                            DestinationFragment.isJustSetDestination = true;
                             progressDialog.dismiss();
                             activity.finish();
                             finish();

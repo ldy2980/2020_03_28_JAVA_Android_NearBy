@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/group_name"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="9dp"
                 android:layout_toEndOf="@id/member_image_container"
                 android:fontFamily="@font/jsdongkang_regular"
                 android:singleLine="true"

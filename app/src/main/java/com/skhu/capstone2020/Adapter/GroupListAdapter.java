@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.skhu.capstone2020.Fragments.DestinationFragment;
 import com.skhu.capstone2020.GroupActivity;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.Member;
@@ -107,6 +108,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             GroupInfo groupInfo = groupInfoList.get(getAdapterPosition());
             Intent intent = new Intent(context, GroupActivity.class);
             intent.putExtra("groupInfo", groupInfo);
+            DestinationFragment.isJustSetDestination = false;
             view.getContext().startActivity(intent);
             activity.overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
         }

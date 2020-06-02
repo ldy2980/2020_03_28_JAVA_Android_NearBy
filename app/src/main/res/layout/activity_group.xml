@@ -24,7 +24,8 @@
             android:fontFamily="@font/mapo_peacefull"
             android:text="그룹 이름 표시"
             android:textColor="@color/darkBlue"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
 
