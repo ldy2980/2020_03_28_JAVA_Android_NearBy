@@ -89,7 +89,14 @@ public class DestinationFragment extends Fragment {
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        btn_cancel_destination = view.findViewById(R.id.btn_cancel_destination);        // 설정된 목적지 취소
+        btn_cancel_destination = view.findViewById(R.id.btn_cancel_destination);        // 설정된 목적지 취소 버튼
+
+        if (currentUser.getId().equals(groupInfo.getMasterId())) {
+            btn_cancel_destination.setVisibility(View.VISIBLE);     // 현재 유저가 그룹의 마스터유저일 경우 삭제 버튼 보이기
+        } else {
+            btn_cancel_destination.setVisibility(View.INVISIBLE);       // 마스터유저가 아닐 경우 삭제 버튼 숨기기
+        }
+
         btn_cancel_destination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

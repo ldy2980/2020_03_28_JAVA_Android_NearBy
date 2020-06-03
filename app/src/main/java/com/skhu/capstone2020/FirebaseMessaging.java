@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -20,12 +22,18 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.skhu.capstone2020.Model.DestinationNotification;
 import com.skhu.capstone2020.Model.RequestNotification;
 import com.skhu.capstone2020.Model.Token;
+import com.skhu.capstone2020.Model.UserOptions;
 import com.skhu.capstone2020.Notification.OreoNotification;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    DocumentReference userOptionReference = FirebaseFirestore.getInstance()
+            .collection("UserOptions")
+            .document(Objects.requireNonNull(currentUser).getUid());
+    UserOptions currentUserOption;
 
     @Override
     public void onNewToken(@NonNull String s) {
@@ -49,14 +57,30 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.d("Test", "onMessageReceived");
         String receiverId = remoteMessage.getData().get("receiverId");
-        Log.d("Test", "getData(): " + receiverId);
-
         String memberId = remoteMessage.getData().get("memberId");
 
-        if (currentUser != null && receiverId != null && receiverId.equals(currentUser.getUid())) {     // 친구 요청일 경우
-            sendRequestNotification(remoteMessage);
-        } else if (currentUser != null && memberId != null && memberId.equals(currentUser.getUid())) {  // 목적지 설정 알림일 경우
-            sendDestinationNotification(remoteMessage);
+        userOptionReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                currentUserOption = documentSnapshot.toObject(UserOptions.class);    // 현재 유저의 앱 설정 정보 객체 가져오기
+                checkUser(remoteMessage, receiverId, memberId);     // 현재 유저 & 설정 정보 확인 후 푸시 알림 보내기
+            }
+        });
+    }
+
+    public void checkUser(RemoteMessage remoteMessage, String receiverId, String memberId) {
+        if (currentUserOption.isAllowFriendRequest() &&     // 친구 요청 수신 설정이 되어있는지 확인
+                currentUser != null &&
+                receiverId != null &&
+                receiverId.equals(currentUser.getUid())) {
+
+            sendRequestNotification(remoteMessage);     // 친구 요청 보내기
+
+        } else if (currentUser != null &&
+                memberId != null &&
+                memberId.equals(currentUser.getUid())) {
+
+            sendDestinationNotification(remoteMessage);     // 목적지 설정 알림 보내기
         }
     }
 
@@ -69,13 +93,15 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String title = "알림";
         String body = "새 친구 요청이 있습니다.";
 
-        Intent intent = new Intent(this, NotificationActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (currentUserOption.isAllowNotification()) {
+            Intent intent = new Intent(this, NotificationActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+            Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        OreoNotification oreoNotification = new OreoNotification(this);
-        Notification.Builder builder = oreoNotification.getRequestNotification(title, body, pendingIntent, defaultSound);
-        oreoNotification.getManager().notify(0, builder.build());
+            OreoNotification oreoNotification = new OreoNotification(this);     // 알림 객체 생성
+            Notification.Builder builder = oreoNotification.getRequestNotification(title, body, pendingIntent, defaultSound);
+            oreoNotification.getManager().notify(0, builder.build());
+        }
 
         Date requestTime = new Date();
         RequestNotification requestNotification = new RequestNotification(userId, userName, userImage, userStatusMessage, requestTime);
@@ -101,13 +127,15 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String placeName = remoteMessage.getData().get("placeName");
         String body = "목적지가 설정되었습니다.";
 
-        Intent intent = new Intent(this, NotificationActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (currentUserOption.isAllowNotification()) {      // 푸시 알림 수신 설정이 되어있는지 확인
+            Intent intent = new Intent(this, NotificationActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+            Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        OreoNotification oreoNotification = new OreoNotification(this);
-        Notification.Builder builder = oreoNotification.getRequestNotification(groupName, body, pendingIntent, defaultSound);
-        oreoNotification.getManager().notify(0, builder.build());
+            OreoNotification oreoNotification = new OreoNotification(this);
+            Notification.Builder builder = oreoNotification.getRequestNotification(groupName, body, pendingIntent, defaultSound);
+            oreoNotification.getManager().notify(0, builder.build());
+        }
 
         DestinationNotification destinationNotification = new DestinationNotification(groupId, groupName, placeId, placeName, masterId, new Date());
         addDestinationNotification(destinationNotification);
