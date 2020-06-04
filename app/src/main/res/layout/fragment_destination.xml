@@ -94,7 +94,7 @@
         android:id="@+id/set_destination"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <WebView
             android:id="@+id/destination_web_view"
@@ -106,7 +106,7 @@
             android:layout_width="362dp"
             android:layout_height="272dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="18dp"
             android:elevation="4dp"
             app:cardCornerRadius="16dp">
 
@@ -199,7 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/destination_cardView"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="19dp"
             android:fontFamily="@font/bm_hanna"
             android:text="참여 중인 멤버"
             android:textColor="@color/slateGrey"
