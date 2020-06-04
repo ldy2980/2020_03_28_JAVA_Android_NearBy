@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:background="@color/white"
         android:elevation="5dp"
-        android:padding="8dp">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/group_toolbar_title"
@@ -44,7 +44,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:elevation="5dp"
-        android:padding="6dp"
+        android:padding="1dp"
         app:itemIconSize="28dp"
         app:itemIconTint="@drawable/nav_icon_selector"
         app:itemTextColor="@drawable/nav_icon_selector"

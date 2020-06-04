@@ -93,7 +93,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String title = "알림";
         String body = "새 친구 요청이 있습니다.";
 
-        if (currentUserOption.isAllowNotification()) {
+        if (currentUserOption.isAllowNotification()) {  // 푸시 알림 수신 설정이 되어있는지 확인
             Intent intent = new Intent(this, NotificationActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
             Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

@@ -22,14 +22,20 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.skhu.capstone2020.Adapter.MemberTrackingAdapter;
 import com.skhu.capstone2020.Custom.CustomCancelDestinationDialog;
+import com.skhu.capstone2020.MapViewActivity;
 import com.skhu.capstone2020.Model.GroupInfo;
 import com.skhu.capstone2020.Model.PlaceResponse.Place;
 import com.skhu.capstone2020.Model.User;
@@ -42,17 +48,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class DestinationFragment extends Fragment {
     private User currentUser;
     private GroupInfo groupInfo;
 
-    private RelativeLayout layout_no_destination, layout_set_destination;
+    private RelativeLayout layout_no_destination, layout_set_destination, layout_already_meeting;
     private SpinKitView destination_spinKitView;
     private Button btn_search_destination;
     private ImageView destination_image;
-    private ImageButton btn_cancel_destination;
+    private ImageButton btn_cancel_destination, btn_gps_tracking;
     private TextView destination_place_name, destination_place_address, destination_group_category, destination_category;
     private CardView destination_cardView;
     private WebView webView;
@@ -61,7 +69,14 @@ public class DestinationFragment extends Fragment {
     private String parsedUrl;
     private String destinationId;
 
+    private List<String> groupIdList = new ArrayList<>();
+    private CollectionReference reference = FirebaseFirestore.getInstance()
+            .collection("Users");
+
     private CustomCancelDestinationDialog dialog;
+
+    private RecyclerView destination_member_recycler;
+    private MemberTrackingAdapter adapter;
 
     public static boolean isJustSetDestination = false;
 
@@ -75,6 +90,11 @@ public class DestinationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d("Test", "onCreateView in DestinationFragment");
         View view = inflater.inflate(R.layout.fragment_destination, container, false);
+
+        Log.d("Test", "groupIdList: " + groupIdList.size());
+
+        layout_set_destination = view.findViewById(R.id.set_destination);
+        layout_no_destination = view.findViewById(R.id.no_destination);
 
         destination_cardView = view.findViewById(R.id.destination_cardView);
         destination_spinKitView = view.findViewById(R.id.destination_spinKitView);
@@ -99,9 +119,21 @@ public class DestinationFragment extends Fragment {
 
         btn_cancel_destination.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {            // 목적지 취소 버튼 클릭 시
                 Log.d("Test", "onClick in btn_cancel_destination");
                 dialog.show();
+            }
+        });
+
+        btn_gps_tracking = view.findViewById(R.id.btn_gps_tracking);    // 멤버 위치 확인 버튼
+        btn_gps_tracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MapViewActivity.class);
+                intent.putExtra("groupInfo", groupInfo);
+                intent.putExtra("currentUser", currentUser);
+                startActivity(intent);                                      // 멤버 위치 확인 액티비티로 이동
+                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
             }
         });
 
@@ -147,8 +179,12 @@ public class DestinationFragment extends Fragment {
             }
         });
 
-        layout_set_destination = view.findViewById(R.id.set_destination);
-        layout_no_destination = view.findViewById(R.id.no_destination);
+        destination_member_recycler = view.findViewById(R.id.destination_member_recycler);  // 멤버 리사이클러뷰
+        destination_member_recycler.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL));
+        destination_member_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new MemberTrackingAdapter(getContext(), groupInfo);   //
+        destination_member_recycler.setAdapter(adapter);                // 어댑터 생성 후 리사이클러뷰에 연결
+
         FirebaseFirestore.getInstance()
                 .collection("Groups")
                 .document(groupInfo.getGroupId())

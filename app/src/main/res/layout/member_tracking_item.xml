@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/member_tracking_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="16dp"
+        android:layout_marginStart="23dp"
+        android:background="@drawable/user_image_background"
+        android:padding="9.5dp"
+        android:src="@drawable/default_user_photo"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/member_tracking_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="17dp"
+        android:layout_toEndOf="@id/member_tracking_photo"
+        android:fontFamily="@font/mapo_peacefull"
+        android:text="유저 이름"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/member_tracking_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/member_tracking_name"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@id/member_tracking_photo"
+        android:fontFamily="@font/bm_hanna"
+        android:text="도착 예상 시간 표시"
+        android:textColor="@color/slateGrey"
+        android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/member_tracking_no_tracking"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="16dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/ic_no_tracking"
+        android:visibility="invisible"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/member_tracking_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="16dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/jsdongkang_regular"
+        android:text="32m"
+        android:textAlignment="center"
+        android:textColor="@color/skyBlue"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+</RelativeLayout>
