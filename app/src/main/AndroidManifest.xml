@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        
+
         <activity
             android:name=".SelectGroupActivity"
             android:screenOrientation="portrait"
@@ -40,6 +40,7 @@
         <activity
             android:name=".MapViewActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/mapViewTheme"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".SearchPlaceActivity"

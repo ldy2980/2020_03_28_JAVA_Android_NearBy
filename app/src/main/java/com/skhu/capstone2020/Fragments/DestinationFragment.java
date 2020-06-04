@@ -42,6 +42,7 @@ import com.skhu.capstone2020.Model.User;
 import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
 import com.skhu.capstone2020.SearchPlaceActivity;
+import com.skt.Tmap.TMapTapi;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -91,7 +92,8 @@ public class DestinationFragment extends Fragment {
         Log.d("Test", "onCreateView in DestinationFragment");
         View view = inflater.inflate(R.layout.fragment_destination, container, false);
 
-        Log.d("Test", "groupIdList: " + groupIdList.size());
+        TMapTapi tMapTapi = new TMapTapi(getContext());                           // TMap api key 인증
+        tMapTapi.setSKTMapAuthentication("l7xxb40611a0458e46c9b3d18b565b1e701c");
 
         layout_set_destination = view.findViewById(R.id.set_destination);
         layout_no_destination = view.findViewById(R.id.no_destination);
