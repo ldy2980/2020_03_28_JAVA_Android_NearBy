@@ -227,7 +227,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
                             @Override
                             public void onSuccess(Void aVoid) {
                                 notificationsList.remove(getAdapterPosition());
-                                notifyItemRemoved(getAdapterPosition());
+                                //notifyItemRemoved(getAdapterPosition());
+                                notifyDataSetChanged();
                             }
                         });
             }

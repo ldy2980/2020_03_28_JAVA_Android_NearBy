@@ -205,8 +205,8 @@ public class DestinationFragment extends Fragment {
                                 btn_search_destination.setVisibility(View.GONE);            // 마스터가 아닐 경우 버튼 숨기기
 
                         } else {
-                            destination_image.setPadding(0, 0, 0, 0);
-                            destination_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+/*                            destination_image.setPadding(0, 0, 0, 0);
+                            destination_image.setScaleType(ImageView.ScaleType.CENTER_CROP);*/
 
                             for (DocumentSnapshot snapshot : queryDocumentSnapshots) {          // 목적지가 설정되어있는 경우
                                 Log.d("Test", "Destination is available");
@@ -310,9 +310,16 @@ public class DestinationFragment extends Fragment {
                     while (true) {
                         Log.d("Test", "In while");
                         if (parsedUrl != null) {
+                            destination_image.setPadding(0, 0, 0, 0);
+                            destination_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             Glide.with(Objects.requireNonNull(getActivity()))
                                     .load(parsedUrl)
                                     .into(destination_image);
+                            destination_spinKitView.setVisibility(View.INVISIBLE);
+                            layout_no_destination.setVisibility(View.INVISIBLE);
+                            layout_set_destination.setVisibility(View.VISIBLE);
+                            break;
+                        } else {
                             destination_spinKitView.setVisibility(View.INVISIBLE);
                             layout_no_destination.setVisibility(View.INVISIBLE);
                             layout_set_destination.setVisibility(View.VISIBLE);
