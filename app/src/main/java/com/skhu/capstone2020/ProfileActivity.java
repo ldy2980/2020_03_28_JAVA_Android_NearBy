@@ -50,6 +50,7 @@ import java.util.Objects;
 public class ProfileActivity extends AppCompatActivity {
     FrameLayout profile_image_container, status_message_container;
     TextView btn_logout, profile_userName, profile_userEmail, status_message_textView;
+    TextView user_friends_container, user_friends, user_group_container, user_group, user_notification_container, user_notification;
     ImageView profile_image, profile_back, status_message_imageView;
     EditText edit_statusMessage;
     Switch switch_push, switch_friendRequest, switch_sharedLocation;

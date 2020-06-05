@@ -47,6 +47,8 @@ public class MemberTrackingAdapter extends RecyclerView.Adapter<MemberTrackingAd
     private TMapData tMapData = new TMapData();
     private TMapPoint destination_point;
 
+    private String totalTime;
+
     public MemberTrackingAdapter(Context context, Activity activity, GroupInfo groupInfo) {     // 목적지 설정이 되어있지 않을 때의 생성자
         this.context = context;
         this.activity = activity;
@@ -132,10 +134,25 @@ public class MemberTrackingAdapter extends RecyclerView.Adapter<MemberTrackingAd
                                                         Element root = document.getDocumentElement();
 
                                                         NodeList Dis = root.getElementsByTagName("tmap:totalDistance");
-                                                        String totalDistance = Dis.item(0).getChildNodes().item(0).getNodeValue() + "m";  // 총 거리 정보 (m)
+                                                        int iTotalDistance = Integer.parseInt(Dis.item(0).getChildNodes().item(0).getNodeValue());  // 총 거리 정보 (m)
+                                                        String totalDistance;
+                                                        if (iTotalDistance > 1000) {
+                                                            int km;
+                                                            km = iTotalDistance / 1000;
+                                                            totalDistance = km + "km";
+                                                        } else {
+                                                            totalDistance = iTotalDistance + "m";
+                                                        }
 
                                                         NodeList time = root.getElementsByTagName("tmap:totalTime");
-                                                        String totalTime = time.item(0).getChildNodes().item(0).getNodeValue();    // 총 소요시간 정보 (second)
+                                                        int iTotalTime = Integer.parseInt(time.item(0).getChildNodes().item(0).getNodeValue());  // 총 소요시간 정보 (second)
+                                                        int h = iTotalTime / 3600;
+                                                        int m = iTotalTime % 3600 / 60;
+
+                                                        if (h <= 0)
+                                                            totalTime = m + "분";
+                                                        else
+                                                            totalTime = h + "시간 " + m + "분";
 
                                                         activity.runOnUiThread(new Runnable() {
                                                             @Override
@@ -155,10 +172,25 @@ public class MemberTrackingAdapter extends RecyclerView.Adapter<MemberTrackingAd
                                                         Element root = document.getDocumentElement();
 
                                                         NodeList Dis = root.getElementsByTagName("tmap:totalDistance");
-                                                        String totalDistance = Dis.item(0).getChildNodes().item(0).getNodeValue() + "m";  // 총 거리 정보 (m)
+                                                        int iTotalDistance = Integer.parseInt(Dis.item(0).getChildNodes().item(0).getNodeValue());  // 총 거리 정보 (m)
+                                                        String totalDistance;
+                                                        if (iTotalDistance > 1000) {
+                                                            int km;
+                                                            km = iTotalDistance / 1000;
+                                                            totalDistance = km + "km";
+                                                        } else {
+                                                            totalDistance = iTotalDistance + "m";
+                                                        }
 
                                                         NodeList time = root.getElementsByTagName("tmap:totalTime");
-                                                        String totalTime = time.item(0).getChildNodes().item(0).getNodeValue();     // 총 소요시간 정보 (second)
+                                                        int iTotalTime = Integer.parseInt(time.item(0).getChildNodes().item(0).getNodeValue());  // 총 소요시간 정보 (second)
+                                                        int h = iTotalTime / 3600;
+                                                        int m = iTotalTime % 3600 / 60;
+
+                                                        if (h <= 0)
+                                                            totalTime = m + "분";
+                                                        else
+                                                            totalTime = h + "시간 " + m + "분";
 
                                                         activity.runOnUiThread(new Runnable() {
                                                             @Override

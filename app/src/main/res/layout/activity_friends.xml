@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/snow"
     tools:context=".FriendsActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -42,9 +42,10 @@
             android:id="@+id/friends_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
-            android:background="@color/white"
-            android:visibility="invisible"/>
+            android:background="@color/snow"
+            android:clipToPadding="false"
+            android:paddingTop="11dp"
+            android:visibility="invisible" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/friends_spinKitView"
@@ -62,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="34dp"
+        android:layout_marginEnd="25dp"
         android:layout_marginBottom="49dp"
         android:background="@drawable/btn_add_friend_background"
         android:elevation="4dp"

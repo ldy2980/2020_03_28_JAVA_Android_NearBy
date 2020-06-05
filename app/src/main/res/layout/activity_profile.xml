@@ -65,6 +65,7 @@
                     android:background="@drawable/profile_image_background"
                     android:contentDescription="@string/profileImage"
                     android:padding="9dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/default_user_photo" />
 
                 <ImageView
@@ -169,6 +170,7 @@
             android:orientation="horizontal">
 
             <RelativeLayout
+                android:id="@+id/user_friends_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -206,6 +208,7 @@
                 android:background="@color/snow" />
 
             <RelativeLayout
+                android:id="@+id/user_group_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -243,6 +246,7 @@
                 android:background="@color/snow" />
 
             <RelativeLayout
+                android:id="@+id/user_notification_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

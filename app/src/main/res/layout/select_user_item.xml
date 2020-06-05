@@ -13,6 +13,7 @@
         android:layout_marginStart="23dp"
         android:background="@drawable/user_image_background"
         android:padding="9.5dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/default_user_photo"
         tools:ignore="ContentDescription" />
 
