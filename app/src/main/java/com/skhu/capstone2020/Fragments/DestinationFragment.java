@@ -184,8 +184,8 @@ public class DestinationFragment extends Fragment {
         destination_member_recycler = view.findViewById(R.id.destination_member_recycler);  // 멤버 리사이클러뷰
         destination_member_recycler.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL));
         destination_member_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MemberTrackingAdapter(getContext(), groupInfo);   //
-        destination_member_recycler.setAdapter(adapter);                // 어댑터 생성 후 리사이클러뷰에 연결
+/*        adapter = new MemberTrackingAdapter(getContext(), groupInfo);   //
+        destination_member_recycler.setAdapter(adapter);                // 어댑터 생성 후 리사이클러뷰에 연결*/
 
         FirebaseFirestore.getInstance()
                 .collection("Groups")
@@ -195,7 +195,7 @@ public class DestinationFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (queryDocumentSnapshots.isEmpty()) {                                     // 목적지가 설정되어있지 않을 경우
+                        if (queryDocumentSnapshots.isEmpty()) {             // 목적지가 설정되어있지 않을 경우
                             destination_spinKitView.setVisibility(View.INVISIBLE);
                             layout_no_destination.setVisibility(View.VISIBLE);
 
@@ -204,11 +204,12 @@ public class DestinationFragment extends Fragment {
                             else
                                 btn_search_destination.setVisibility(View.GONE);            // 마스터가 아닐 경우 버튼 숨기기
 
-                        } else {
-/*                            destination_image.setPadding(0, 0, 0, 0);
-                            destination_image.setScaleType(ImageView.ScaleType.CENTER_CROP);*/
+                            adapter = new MemberTrackingAdapter(getContext(), getActivity(), groupInfo);   //
+                            destination_member_recycler.setAdapter(adapter);                // 어댑터 생성 후 리사이클러뷰에 연결
 
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {          // 목적지가 설정되어있는 경우
+                        } else {
+
+                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {     // 목적지가 설정되어있는 경우
                                 Log.d("Test", "Destination is available");
                                 Place place = snapshot.toObject(Place.class);
                                 if (place != null && place.getUrl() != null) {
@@ -220,6 +221,9 @@ public class DestinationFragment extends Fragment {
                                         destination_group_category.setText(place.getGroupCategory());
                                     else
                                         destination_group_category.setVisibility(View.GONE);
+
+                                    adapter = new MemberTrackingAdapter(getContext(), getActivity(), groupInfo, place);   //
+                                    destination_member_recycler.setAdapter(adapter);                       // 어댑터 생성 후 리사이클러뷰에 연결
 
                                     destination_category.setText(place.getCategory());
                                     destination_cardView.setOnClickListener(new View.OnClickListener() {  // 카드뷰 터치 시 상세정보 화면으로 이동

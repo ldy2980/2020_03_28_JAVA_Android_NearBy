@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/select_member_container"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/select_member_container_background">
+
+        <View
+            android:id="@+id/stroke_view"
+            android:layout_width="407dp"
+            android:layout_height="8dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/select_member_container_stroke_background" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/select_member_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/stroke_view" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
