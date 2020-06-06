@@ -38,7 +38,7 @@ public class TrackingService extends Service implements LocationListener {
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {    // 권한 체크
             Toast.makeText(this, "Permission not granted", Toast.LENGTH_LONG).show();
         } else {
             currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -46,7 +46,7 @@ public class TrackingService extends Service implements LocationListener {
                 Log.d("Test", "GPS_PROVIDER in TrackingService");
                 geoFirestore.setLocation(currentUser.getUid(), new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()));
             } else {
-                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);       // GPS 정보가 없다면 NETWORK 정보 할당
                 if (currentLocation != null) {
                     Log.d("Test", "NETWORK_PROVIDER in TrackingService");
                     geoFirestore.setLocation(currentUser.getUid(), new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()));
@@ -73,10 +73,10 @@ public class TrackingService extends Service implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {      // 현재 유저의 위치가 변경되었을 때 호출
         Log.d("Test", "onLocationChanged in TrackingService");
         if (location != null)
-            geoFirestore.setLocation(currentUser.getUid(), new GeoPoint(location.getLatitude(), location.getLongitude()));
+            geoFirestore.setLocation(currentUser.getUid(), new GeoPoint(location.getLatitude(), location.getLongitude()));  // 위치 정보를 DB에 저장
         else
             Log.d("Test", "location is null");
     }

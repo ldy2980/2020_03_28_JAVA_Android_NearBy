@@ -40,7 +40,7 @@
         android:layout_marginTop="3dp"
         android:layout_toEndOf="@id/member_tracking_photo"
         android:fontFamily="@font/bm_hanna"
-        android:text="불러오는 중..."
+        android:text="로딩 중..."
         android:textColor="@color/slateGrey"
         android:textSize="13sp" />
 
@@ -65,7 +65,7 @@
         android:layout_marginVertical="16dp"
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/jsdongkang_regular"
-        android:text="불러오는 중..."
+        android:text="로딩 중..."
         android:textAlignment="center"
         android:textColor="@color/skyBlue"
         android:textSize="15sp"

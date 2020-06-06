@@ -98,7 +98,8 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
                     holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_accommodation_background));
                     break;
                 default:
-                    holder.place_category_icon.setVisibility(View.INVISIBLE);
+                    holder.place_category_icon.setImageResource(R.drawable.ic_category_default);
+                    holder.place_category_icon.setBackground(ActivityCompat.getDrawable(context, R.drawable.category_default_image_background));
                     break;
             }
         }

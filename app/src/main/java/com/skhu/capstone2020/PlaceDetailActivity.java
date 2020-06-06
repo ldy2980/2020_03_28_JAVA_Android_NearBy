@@ -10,13 +10,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,7 +53,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PlaceDetailActivity extends AppCompatActivity {
     ImageView placeDetail_back;
     TextView placeDetail_name;
-    SpinKitView placeDetail_spinKitView;
+    RelativeLayout placeDetail_spinKitView;
     TextView btn_setDestination;
 
     WebView placeDetail_view;
@@ -66,6 +66,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     Place place;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     CollectionReference groupsReference = FirebaseFirestore.getInstance().collection("Groups");
+    List<GroupInfo> groupInfoList = new ArrayList<>();
 
     CustomDestinationDialog dialog;
     CustomProgressDialog progressDialog;
@@ -123,12 +124,24 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
 
+        FirebaseFirestore.getInstance()
+                .collection("Groups")
+                .whereEqualTo("masterId", currentUser.getUid())     // 현재 유저가 마스터인 그룹이 존재하는지 확인하는 쿼리
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.d("Test", "사이즈: " + queryDocumentSnapshots.size());
+                        checkGroups(queryDocumentSnapshots);    // 쿼리문 수행 후 얻은 그룹 정보들 확인
+                    }
+                });
+
         btn_setDestination = findViewById(R.id.placeDetail_btn_setDestination);            // 목적지 설정 버튼
         btn_setDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("Test", "onClick in PlaceDetail");
-                if (groupInfo != null && place.getUrl() != null) {  // 그룹 화면에서 넘어왔을 경우
+                if (groupInfo != null) {  // 그룹 화면에서 넘어왔을 경우
                     dialog.show();
                 } else {            // 메인화면에서 넘어왔을 경우
                     Intent intent = new Intent(PlaceDetailActivity.this, SelectGroupActivity.class);
@@ -138,39 +151,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(currentUser.getUid())
-                .collection("GroupIds")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                UserGroupInfo userGroupInfo = snapshot.toObject(UserGroupInfo.class);
-                                if (userGroupInfo != null)
-                                    groupsReference
-                                            .document(userGroupInfo.getGroupId())
-                                            .collection("Destination")
-                                            .get()
-                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                    if (!queryDocumentSnapshots.isEmpty()) {        // 특정 그룹에 이미 목적지가 설정되어 있다면 버튼 없애기
-                                                        btn_setDestination.setVisibility(View.GONE);
-                                                        placeDetail_spinKitView.setVisibility(View.INVISIBLE);
-                                                        placeDetail_view.setVisibility(View.VISIBLE);
-                                                    } else {
-                                                        setDestinationButton();
-                                                    }
-                                                }
-                                            });
-                            }
-                        }
-                    }
-                });
 
         placeDetail_name = findViewById(R.id.placeDetail_name);
         placeDetail_name.setText(placeName);
@@ -202,36 +182,40 @@ public class PlaceDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setDestinationButton() {
-        Log.d("Test", "setDestinationButton");
-        List<UserGroupInfo> userGroupInfoList = new ArrayList<>();
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(currentUser.getUid())
-                .collection("GroupIds")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                UserGroupInfo userGroupInfo = snapshot.toObject(UserGroupInfo.class);
-                                if (userGroupInfo != null && userGroupInfo.getMasterId().equals(currentUser.getUid()))  // 현재 유저의 그룹 중 자신이 마스터인 그룹이 있는지 확인
-                                    userGroupInfoList.add(userGroupInfo);
-                            }
+    private void checkGroups(QuerySnapshot queryDocumentSnapshots) {
+        Log.d("Test", "checkGroups");
+        if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {      // 현재 유저가 마스터인 그룹이 있는 경우
+            Log.d("Test", "for문 진입");
 
-                            if (userGroupInfoList.size() != 0) {    // 현재 유저가 마스터인 그룹이 하나라도 있다면 목적지 설정 버튼 활성화
-                                placeDetail_spinKitView.setVisibility(View.INVISIBLE);
-                                placeDetail_view.setVisibility(View.VISIBLE);
-                                btn_setDestination.setVisibility(View.VISIBLE);
-                            } else {
-                                placeDetail_spinKitView.setVisibility(View.INVISIBLE);
-                                placeDetail_view.setVisibility(View.VISIBLE);
-                                btn_setDestination.setVisibility(View.GONE);    // 마스터인 그룹이 없다면 버튼 없애기
+            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                UserGroupInfo userGroupInfo = snapshot.toObject(UserGroupInfo.class);
+                groupsReference
+                        .document(userGroupInfo.getGroupId())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot != null) {
+                                    Log.d("Test", "그룹 정보 가져옴");
+                                    GroupInfo groupInfo = documentSnapshot.toObject(GroupInfo.class);
+                                    if (groupInfo != null && groupInfo.isSetDestination()) {        // 현재 유저가 마스터인 그룹 중 목적지가 설정된 그룹이 있다면 목적지 설정 버튼 숨기기
+                                        Log.d("Test", "목적지 설정됨");
+                                        btn_setDestination.setVisibility(View.GONE);
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+                        });
+            }
+
+        } else {
+            Log.d("Test", "현재 유저가 마스터인 그룹 없음");
+            btn_setDestination.setVisibility(View.GONE);    // 현재 유저가 마스터인 그룹이 하나도 없다면 버튼 숨기기
+            placeDetail_spinKitView.setVisibility(View.INVISIBLE);
+            placeDetail_view.setVisibility(View.VISIBLE);
+        }
+
+        placeDetail_spinKitView.setVisibility(View.INVISIBLE);
+        placeDetail_view.setVisibility(View.VISIBLE);
     }
 
     View.OnClickListener okListener = new View.OnClickListener() {
@@ -257,6 +241,11 @@ public class PlaceDetailActivity extends AppCompatActivity {
                             finish();
                         }
                     });
+
+            FirebaseFirestore.getInstance()
+                    .collection("Groups")
+                    .document(groupInfo.getGroupId())
+                    .update("setDestination", true);          // 목적지 설정 여부 true로 변경
         }
     };
 

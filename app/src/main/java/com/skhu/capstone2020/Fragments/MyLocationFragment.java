@@ -157,6 +157,7 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                                         place.getAddress().trim().equals(marker.getSnippet().trim())) {
                                     Log.d("Test", "matched");
                                     Intent intent = new Intent(getContext(), PlaceDetailActivity.class);
+                                    intent.putExtra("place", place);
                                     intent.putExtra("url", place.getUrl());
                                     intent.putExtra("placeName", place.getPlaceName());
                                     startActivity(intent);

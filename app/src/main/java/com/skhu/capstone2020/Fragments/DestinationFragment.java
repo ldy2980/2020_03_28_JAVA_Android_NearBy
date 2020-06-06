@@ -128,16 +128,6 @@ public class DestinationFragment extends Fragment {
         });
 
         btn_gps_tracking = view.findViewById(R.id.btn_gps_tracking);    // 멤버 위치 확인 버튼
-        btn_gps_tracking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), MapViewActivity.class);
-                intent.putExtra("groupInfo", groupInfo);
-                intent.putExtra("currentUser", currentUser);
-                startActivity(intent);                                      // 멤버 위치 확인 액티비티로 이동
-                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
-            }
-        });
 
         webView = view.findViewById(R.id.destination_web_view);
         mWebSettings = webView.getSettings(); //세부 세팅 등록
@@ -225,11 +215,24 @@ public class DestinationFragment extends Fragment {
                                     adapter = new MemberTrackingAdapter(getContext(), getActivity(), groupInfo, place);   //
                                     destination_member_recycler.setAdapter(adapter);                       // 어댑터 생성 후 리사이클러뷰에 연결
 
+                                    btn_gps_tracking.setOnClickListener(new View.OnClickListener() {    // 멤버 위치 확인 버튼
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(getContext(), MapViewActivity.class);
+                                            intent.putExtra("groupInfo", groupInfo);
+                                            intent.putExtra("currentUser", currentUser);
+                                            intent.putExtra("destinationInfo", place);
+                                            startActivity(intent);                    // 멤버 위치 확인 액티비티로 이동
+                                            Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
+                                        }
+                                    });
+
                                     destination_category.setText(place.getCategory());
                                     destination_cardView.setOnClickListener(new View.OnClickListener() {  // 카드뷰 터치 시 상세정보 화면으로 이동
                                         @Override
                                         public void onClick(View view) {
                                             Intent intent = new Intent(getContext(), PlaceDetailActivity.class);
+                                            intent.putExtra("groupInfo", groupInfo);
                                             intent.putExtra("placeName", place.getPlaceName());
                                             intent.putExtra("url", place.getUrl());
                                             startActivity(intent);
@@ -238,6 +241,7 @@ public class DestinationFragment extends Fragment {
                                     webView.loadUrl(place.getUrl());
                                 }
                             }
+
                         }
                     }
                 });
@@ -278,6 +282,10 @@ public class DestinationFragment extends Fragment {
                         }
                     });
 
+            FirebaseFirestore.getInstance()
+                    .collection("Groups")
+                    .document(groupInfo.getGroupId())
+                    .update("setDestination", false);
         }
     };
 

@@ -12,6 +12,7 @@ public class GroupInfo implements Serializable {
     private Date lastMessageTime;
     private int count;
     private List<Member> memberList;
+    private boolean setDestination = false;
 
     public GroupInfo() {
     }
@@ -80,5 +81,13 @@ public class GroupInfo implements Serializable {
 
     public void setMemberList(List<Member> memberList) {
         this.memberList = memberList;
+    }
+
+    public boolean isSetDestination() {
+        return setDestination;
+    }
+
+    public void setSetDestination(boolean setDestination) {
+        this.setDestination = setDestination;
     }
 }

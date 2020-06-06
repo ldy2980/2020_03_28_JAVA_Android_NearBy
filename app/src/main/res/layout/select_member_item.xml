@@ -51,7 +51,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="2dp"
                 android:fontFamily="@font/bm_hanna"
-                android:text="35분 소요"
+                android:text="로딩 중..."
                 android:textAlignment="center"
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
@@ -64,7 +64,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="1dp"
                 android:fontFamily="@font/bm_hanna"
-                android:text="124m"
+                android:text="로딩 중..."
                 android:textAlignment="center"
                 android:textColor="@color/slateGrey"
                 android:textSize="12sp" />

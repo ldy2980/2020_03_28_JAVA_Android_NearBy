@@ -190,6 +190,11 @@ public class SelectGroupActivity extends AppCompatActivity {
                                 overridePendingTransition(R.anim.anim_slide_in_top, R.anim.anim_scale_out);
                             }
                         });
+
+                FirebaseFirestore.getInstance()
+                        .collection("Groups")
+                        .document(groupInfo.getGroupId())
+                        .update("setDestination", true);          // 목적지 설정 여부 true로 변경
             }
         }, new View.OnClickListener() {
             @Override

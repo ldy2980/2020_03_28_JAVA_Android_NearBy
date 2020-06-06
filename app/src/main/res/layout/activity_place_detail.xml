@@ -1,71 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlaceDetailActivity">
 
-    <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/placeDetail_spinKitView"
-        style="@style/SpinKitView.Wave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="visible"
-        app:SpinKit_Color="@color/skyBlue" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/placeDetail_toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="4dp"
-        android:padding="5dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/placeDetail_back"
-            android:layout_width="wrap_content"
+        <!--        <com.github.ybq.android.spinkit.SpinKitView
+                    android:id="@+id/placeDetail_spinKitView"
+                    style="@style/SpinKitView.Wave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible"
+                    app:SpinKit_Color="@color/skyBlue" />-->
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/placeDetail_toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_toolbar_back"
-            tools:ignore="ContentDescription" />
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/placeDetail_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_toolbar_back"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/placeDetail_name"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/mapo_peacefull"
+                android:singleLine="true"
+                android:text="장소 상세 정보"
+                android:textAlignment="center"
+                android:textColor="@color/darkBlue"
+                android:textSize="18sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <WebView
+            android:id="@+id/placeDetail_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/placeDetail_btn_setDestination"
+            android:layout_below="@id/placeDetail_toolbar"
+            android:visibility="invisible" />
 
         <TextView
-            android:id="@+id/placeDetail_name"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/placeDetail_btn_setDestination"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/skyBlue"
             android:fontFamily="@font/mapo_peacefull"
-            android:singleLine="true"
-            android:text="장소 상세 정보"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="16dp"
+            android:text="목적지로 설정"
             android:textAlignment="center"
-            android:textColor="@color/darkBlue"
-            android:textSize="18sp" />
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
-    </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
 
-    <WebView
-        android:id="@+id/placeDetail_view"
+    <RelativeLayout
+        android:id="@+id/placeDetail_spinKitView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/placeDetail_btn_setDestination"
-        android:layout_below="@id/placeDetail_toolbar"
-        android:visibility="invisible" />
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/placeDetail_btn_setDestination"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/skyBlue"
-        android:fontFamily="@font/mapo_peacefull"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="16dp"
-        android:text="목적지로 설정"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            app:SpinKit_Color="@color/skyBlue" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="8dp"
+    app:cardCornerRadius="13dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/callOut_balloon_category"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/category_default_image_background"
+            android:padding="12dp"
+            android:src="@drawable/ic_category_default"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/callOut_balloon_placeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/callOut_balloon_category"
+            android:fontFamily="@font/jsdongkang_regular"
+            android:text="목적지 이름 표시"
+            android:textColor="@color/darkBlue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/callOut_balloon_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/callOut_balloon_placeName"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@id/callOut_balloon_category"
+            android:fontFamily="@font/bm_hanna"
+            android:text="목적지 주소 표시"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

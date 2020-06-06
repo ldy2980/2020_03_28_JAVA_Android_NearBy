@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,442 +7,463 @@
     android:background="@color/white"
     tools:context=".ProfileActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/profile_toolbar"
+    <RelativeLayout
+        android:id="@+id/profile_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="4dp"
-        android:padding="5dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/profile_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_toolbar_back"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/mapo_peacefull"
-            android:text="@string/profileSetting"
-            android:textColor="@color/darkBlue"
-            android:textSize="18sp" />
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/profile_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginHorizontal="33dp"
-        android:layout_marginTop="105dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp">
-
-        <RelativeLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/profile_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:padding="5dp">
 
-            <FrameLayout
-                android:id="@+id/profile_image_container"
+            <ImageView
+                android:id="@+id/profile_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="20dp"
-                tools:ignore="UselessParent">
+                android:src="@drawable/ic_toolbar_back"
+                tools:ignore="ContentDescription" />
 
-                <ImageView
-                    android:id="@+id/edit_profile_image"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:background="@drawable/profile_image_background"
-                    android:contentDescription="@string/profileImage"
-                    android:padding="9dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/default_user_photo" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/mapo_peacefull"
+                android:text="@string/profileSetting"
+                android:textColor="@color/darkBlue"
+                android:textSize="18sp" />
 
-                <ImageView
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="33dp"
+            android:layout_marginTop="105dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:id="@+id/profile_image_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:background="@drawable/user_image_edit"
-                    android:contentDescription="@string/editIcon"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_edit" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="20dp"
+                    tools:ignore="UselessParent">
 
-            </FrameLayout>
+                    <ImageView
+                        android:id="@+id/edit_profile_image"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:background="@drawable/profile_image_background"
+                        android:contentDescription="@string/profileImage"
+                        android:padding="9dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_user_photo" />
 
-            <TextView
-                android:id="@+id/profile_userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="26.5dp"
-                android:layout_toEndOf="@id/profile_image_container"
-                android:fontFamily="@font/jsdongkang_regular"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/user_image_edit"
+                        android:contentDescription="@string/editIcon"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_edit" />
 
-            <TextView
-                android:id="@+id/profile_userEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_userName"
-                android:layout_marginStart="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@id/profile_image_container"
-                android:fontFamily="@font/jsdongkang_regular"
-                android:textSize="13sp" />
-
-            <FrameLayout
-                android:id="@+id/status_message_container"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_userEmail"
-                android:layout_marginStart="-2dp"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@id/profile_image_container"
-                android:background="@drawable/status_message_edit">
+                </FrameLayout>
 
                 <TextView
-                    android:id="@+id/status_message_text_view"
-                    android:layout_width="160dp"
+                    android:id="@+id/profile_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26.5dp"
+                    android:layout_toEndOf="@id/profile_image_container"
+                    android:fontFamily="@font/jsdongkang_regular"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/profile_userEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profile_userName"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_toEndOf="@id/profile_image_container"
+                    android:fontFamily="@font/jsdongkang_regular"
+                    android:textSize="13sp" />
+
+                <FrameLayout
+                    android:id="@+id/status_message_container"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profile_userEmail"
+                    android:layout_marginStart="-2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/profile_image_container"
+                    android:background="@drawable/status_message_edit">
+
+                    <TextView
+                        android:id="@+id/status_message_text_view"
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:enabled="true"
+                        android:padding="4dp"
+                        android:singleLine="true"
+                        android:textSize="12sp"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/status_message_image_view"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="end|center_vertical"
+                        android:paddingStart="1dp"
+                        android:paddingTop="1.5dp"
+                        android:paddingEnd="6dp"
+                        android:src="@drawable/ic_edit"
+                        android:visibility="visible"
+                        tools:ignore="ContentDescription" />
+
+                    <EditText
+                        android:id="@+id/edit_status_message"
+                        android:layout_width="160dp"
+                        android:layout_height="35dp"
+                        android:autofillHints="상태 메세지 입력"
+                        android:backgroundTint="@color/black"
+                        android:enabled="false"
+                        android:fontFamily="@font/jsdongkang_regular"
+                        android:hint="상태메세지 표시"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_container"
+            android:layout_marginHorizontal="33dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/white"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/user_friends_container"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:enabled="true"
-                    android:padding="4dp"
-                    android:singleLine="true"
-                    android:textSize="12sp"
-                    android:visibility="visible" />
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_weight="1">
 
-                <ImageView
-                    android:id="@+id/status_message_image_view"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="end|center_vertical"
-                    android:paddingStart="1dp"
-                    android:paddingTop="1.5dp"
-                    android:paddingEnd="6dp"
-                    android:src="@drawable/ic_edit"
-                    android:visibility="visible"
-                    tools:ignore="ContentDescription" />
+                    <TextView
+                        android:id="@+id/user_friends"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/slateGrey"
+                        android:textSize="23sp" />
 
-                <EditText
-                    android:id="@+id/edit_status_message"
-                    android:layout_width="160dp"
-                    android:layout_height="35dp"
-                    android:autofillHints="상태 메세지 입력"
-                    android:backgroundTint="@color/black"
-                    android:enabled="false"
-                    android:fontFamily="@font/jsdongkang_regular"
-                    android:hint="상태메세지 표시"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/user_friends"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginBottom="3dp"
+                        android:fontFamily="@font/mapo_peacefull"
+                        android:text="@string/friends"
+                        android:textColor="@color/eastBay"
+                        android:textSize="14sp" />
+                </RelativeLayout>
 
-            </FrameLayout>
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@color/snow" />
 
-        </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/user_group_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_weight="1">
 
-    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/user_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/slateGrey"
+                        android:textSize="23sp" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/user_info"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/user_group"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginBottom="3dp"
+                        android:fontFamily="@font/mapo_peacefull"
+                        android:text="참여 그룹"
+                        android:textColor="@color/eastBay"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@color/snow" />
+
+                <RelativeLayout
+                    android:id="@+id/user_notification_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/user_notification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/slateGrey"
+                        android:textSize="23sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/user_notification"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginBottom="3dp"
+                        android:fontFamily="@font/mapo_peacefull"
+                        android:text="@string/notification"
+                        android:textColor="@color/eastBay"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profile_cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_logout"
+            android:layout_below="@id/user_info"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="33dp"
+            android:layout_marginBottom="54dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/setting_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="25dp"
+                        android:fontFamily="@font/bm_hanna"
+                        android:text="@string/allowPush"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="18sp"
+                        tools:ignore="RelativeOverlap" />
+
+                    <Switch
+                        android:id="@+id/switch_push"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="3dp"
+                        android:checked="true"
+                        android:switchMinWidth="15dp"
+                        android:thumb="@drawable/switch_thumb"
+                        android:thumbTextPadding="15dp"
+                        android:track="@drawable/switch_track_selector" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:background="@color/snow" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_container2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="25dp"
+                        android:fontFamily="@font/bm_hanna"
+                        android:text="@string/allowRequest"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="18sp"
+                        tools:ignore="RelativeOverlap" />
+
+                    <Switch
+                        android:id="@+id/switch_friendRequest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="3dp"
+                        android:checked="true"
+                        android:switchMinWidth="15dp"
+                        android:thumb="@drawable/switch_thumb"
+                        android:thumbTextPadding="15dp"
+                        android:track="@drawable/switch_track_selector" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:background="@color/snow" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_container3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="25dp"
+                        android:fontFamily="@font/bm_hanna"
+                        android:text="@string/allowLocation"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="18sp"
+                        tools:ignore="RelativeOverlap" />
+
+                    <Switch
+                        android:id="@+id/switch_shareLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="3dp"
+                        android:checked="true"
+                        android:switchMinWidth="15dp"
+                        android:thumb="@drawable/switch_thumb"
+                        android:thumbTextPadding="15dp"
+                        android:track="@drawable/switch_track_selector" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:background="@color/snow" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/btn_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/logout_button"
+            android:paddingTop="15.5dp"
+            android:text="@string/logout"
+            android:textAlignment="center"
+            android:textColor="@color/pickledBlueWood" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/profile_spinKitView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/profile_container"
-        android:layout_marginHorizontal="33dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="match_parent"
         android:background="@color/white"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp">
+        android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            app:SpinKit_Color="@color/skyBlue" />
 
-            <RelativeLayout
-                android:id="@+id/user_friends_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginVertical="15dp"
-                android:layout_marginStart="25dp"
-                android:layout_weight="1">
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/user_friends"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="0"
-                    android:textColor="@color/slateGrey"
-                    android:textSize="23sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/user_friends"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-2dp"
-                    android:layout_marginBottom="3dp"
-                    android:fontFamily="@font/mapo_peacefull"
-                    android:text="@string/friends"
-                    android:textColor="@color/eastBay"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="15dp"
-                android:layout_marginStart="25dp"
-                android:background="@color/snow" />
-
-            <RelativeLayout
-                android:id="@+id/user_group_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginVertical="15dp"
-                android:layout_marginStart="25dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/user_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="0"
-                    android:textColor="@color/slateGrey"
-                    android:textSize="23sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/user_group"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-2dp"
-                    android:layout_marginBottom="3dp"
-                    android:fontFamily="@font/mapo_peacefull"
-                    android:text="참여 그룹"
-                    android:textColor="@color/eastBay"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="15dp"
-                android:layout_marginStart="25dp"
-                android:background="@color/snow" />
-
-            <RelativeLayout
-                android:id="@+id/user_notification_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginVertical="15dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/user_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="0"
-                    android:textColor="@color/slateGrey"
-                    android:textSize="23sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/user_notification"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-2dp"
-                    android:layout_marginBottom="3dp"
-                    android:fontFamily="@font/mapo_peacefull"
-                    android:text="@string/notification"
-                    android:textColor="@color/eastBay"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/profile_cardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_logout"
-        android:layout_below="@id/user_info"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="33dp"
-        android:layout_marginBottom="54dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/setting_container"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="25dp"
-                    android:fontFamily="@font/bm_hanna"
-                    android:text="@string/allowPush"
-                    android:textColor="@color/darkBlue"
-                    android:textSize="18sp"
-                    tools:ignore="RelativeOverlap" />
-
-                <Switch
-                    android:id="@+id/switch_push"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="3dp"
-                    android:checked="true"
-                    android:switchMinWidth="15dp"
-                    android:thumb="@drawable/switch_thumb"
-                    android:thumbTextPadding="15dp"
-                    android:track="@drawable/switch_track_selector" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="11dp"
-                android:background="@color/snow" />
-
-            <RelativeLayout
-                android:id="@+id/setting_container2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="25dp"
-                    android:fontFamily="@font/bm_hanna"
-                    android:text="@string/allowRequest"
-                    android:textColor="@color/darkBlue"
-                    android:textSize="18sp"
-                    tools:ignore="RelativeOverlap" />
-
-                <Switch
-                    android:id="@+id/switch_friendRequest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="3dp"
-                    android:checked="true"
-                    android:switchMinWidth="15dp"
-                    android:thumb="@drawable/switch_thumb"
-                    android:thumbTextPadding="15dp"
-                    android:track="@drawable/switch_track_selector" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="11dp"
-                android:background="@color/snow" />
-
-            <RelativeLayout
-                android:id="@+id/setting_container3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="25dp"
-                    android:fontFamily="@font/bm_hanna"
-                    android:text="@string/allowLocation"
-                    android:textColor="@color/darkBlue"
-                    android:textSize="18sp"
-                    tools:ignore="RelativeOverlap" />
-
-                <Switch
-                    android:id="@+id/switch_shareLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="3dp"
-                    android:checked="true"
-                    android:switchMinWidth="15dp"
-                    android:thumb="@drawable/switch_thumb"
-                    android:thumbTextPadding="15dp"
-                    android:track="@drawable/switch_track_selector" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="11dp"
-                android:background="@color/snow" />
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/logout_button"
-        android:paddingTop="15.5dp"
-        android:text="@string/logout"
-        android:textAlignment="center"
-        android:textColor="@color/pickledBlueWood" />
-
-</RelativeLayout>
+</FrameLayout>

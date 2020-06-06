@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +36,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -55,21 +58,50 @@ public class ProfileActivity extends AppCompatActivity {
     EditText edit_statusMessage;
     Switch switch_push, switch_friendRequest, switch_sharedLocation;
 
+    RelativeLayout profile_spinKitView;
+
     public static int REQUEST_TAKE_ALBUM = 1;
     private StorageReference storageReference;
     private Uri imageUri = null;
     private StorageTask<UploadTask.TaskSnapshot> uploadTask;
 
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private CollectionReference friendsReference;
+    private CollectionReference groupsReference;
+    private CollectionReference notificationReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        profile_spinKitView = findViewById(R.id.profile_spinKitView);   // 로딩화면
+
         Toolbar toolbar = findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
+
+        if (firebaseUser != null) {
+            friendsReference = FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(firebaseUser.getUid())
+                    .collection("Friends");
+
+            groupsReference = FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(firebaseUser.getUid())
+                    .collection("GroupIds");
+
+            notificationReference = FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(firebaseUser.getUid())
+                    .collection("Notifications");
+        }
+
+        user_friends = findViewById(R.id.user_friends);
+        user_group = findViewById(R.id.user_group);
+        user_notification = findViewById(R.id.user_notification);
+        getInfoCount();
 
         profile_image_container = findViewById(R.id.profile_image_container);
         profile_image_container.setOnClickListener(new View.OnClickListener() {                     // 프로필 이미지 변경
@@ -142,7 +174,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         profile_userName = findViewById(R.id.profile_userName);
         profile_userEmail = findViewById(R.id.profile_userEmail);
-        setUserInfo();                                                                              // 현재 유저정보 설정
 
         btn_logout = findViewById(R.id.btn_logout);                                                 // 로그아웃 버튼 클릭
         btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +193,8 @@ public class ProfileActivity extends AppCompatActivity {
         switch_push.setOnCheckedChangeListener(listener);
         switch_friendRequest.setOnCheckedChangeListener(listener);
         switch_sharedLocation.setOnCheckedChangeListener(listener);
+
+        setUserInfo();        // 현재 유저정보 설정
     }
 
     @Override
@@ -195,6 +228,44 @@ public class ProfileActivity extends AppCompatActivity {
                 uploadImage();
             }
         }
+    }
+
+    private void getInfoCount() {
+        friendsReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.size() != 0)
+                            user_friends.setText(String.valueOf(queryDocumentSnapshots.size()));
+                        else
+                            user_friends.setText("0");
+                    }
+                });
+
+        groupsReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.size() != 0)
+                            user_group.setText(String.valueOf(queryDocumentSnapshots.size()));
+                        else
+                            user_group.setText("0");
+                    }
+                });
+
+        notificationReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.size() != 0)
+                            user_notification.setText(String.valueOf(queryDocumentSnapshots.size()));
+                        else
+                            user_notification.setText("0");
+                    }
+                });
     }
 
     public void editStatusMessage(String statusMessage) {                                           // 변경된 상태메세지 DB에 업데이트
@@ -243,10 +314,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void setUserInfo() {
-        final CustomProgressDialog dialog = new CustomProgressDialog(ProfileActivity.this);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
-        dialog.setCancelable(false);
-        dialog.show();
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .document(firebaseUser.getUid())
@@ -266,9 +333,12 @@ public class ProfileActivity extends AppCompatActivity {
                                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                                     .skipMemoryCache(true)
                                     .into(profile_image);
+
+                            profile_spinKitView.setVisibility(View.GONE);
                         }
                     }
                 });
+
         FirebaseFirestore.getInstance()
                 .collection("UserOptions")
                 .document(firebaseUser.getUid())
@@ -290,7 +360,6 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 });
-        dialog.dismiss();
     }
 
     public void settingImage() {
