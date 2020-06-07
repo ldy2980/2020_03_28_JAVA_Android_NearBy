@@ -74,11 +74,11 @@ public class TrackingService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {      // 현재 유저의 위치가 변경되었을 때 호출
-        Log.d("Test", "onLocationChanged in TrackingService");
+        Log.d("Test", "위치 변경됨 in TrackingService");
         if (location != null)
             geoFirestore.setLocation(currentUser.getUid(), new GeoPoint(location.getLatitude(), location.getLongitude()));  // 위치 정보를 DB에 저장
         else
-            Log.d("Test", "location is null");
+            Log.d("Test", "위치 정보 찾을 수 없음. location is null");
     }
 
     @Override

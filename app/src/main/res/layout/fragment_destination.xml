@@ -104,9 +104,9 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/destination_cardView"
             android:layout_width="362dp"
-            android:layout_height="268dp"
+            android:layout_height="260dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:elevation="4dp"
             app:cardCornerRadius="16dp">
 
@@ -120,7 +120,7 @@
                     android:layout_width="328dp"
                     android:layout_height="140dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="11dp"
                     android:background="@drawable/place_image_background"
                     android:padding="20dp"
                     android:src="@drawable/ic_default_place_image"
@@ -199,7 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/destination_cardView"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/bm_hanna"
             android:text="참여 중인 멤버"
             android:textColor="@color/slateGrey"
@@ -209,7 +209,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/destination_member_cardView"
             android:layout_width="362dp"
-            android:layout_height="280dp"
+            android:layout_height="260dp"
             android:layout_below="@id/destination_member_text"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="3dp"

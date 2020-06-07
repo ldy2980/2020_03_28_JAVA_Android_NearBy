@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
         android:background="@color/ice"
-        android:elevation="8dp"
+        android:elevation="10dp"
         app:cardCornerRadius="13dp">
 
         <RelativeLayout
@@ -57,7 +57,8 @@
     <RelativeLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/ice" />
 
     <RelativeLayout
         android:id="@+id/select_member_container"
@@ -80,5 +81,44 @@
             android:layout_below="@id/stroke_view" />
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/btn_map_view_circle"
+        android:layout_width="83dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/btn_map_view_my_location"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/btn_map_view_background"
+        android:elevation="10dp"
+        android:padding="14dp"
+        android:src="@drawable/ic_circle"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/btn_map_view_my_location"
+        android:layout_width="83dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/btn_map_view_destination"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/btn_map_view_background"
+        android:elevation="10dp"
+        android:padding="14dp"
+        android:src="@drawable/ic_my_location"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/btn_map_view_destination"
+        android:layout_width="83dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/select_member_container"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_map_view_background"
+        android:elevation="10dp"
+        android:padding="14dp"
+        android:src="@drawable/ic_destination_dark_blue"
+        tools:ignore="ContentDescription" />
 
 </RelativeLayout>
