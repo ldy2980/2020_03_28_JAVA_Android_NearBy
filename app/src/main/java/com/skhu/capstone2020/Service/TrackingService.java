@@ -15,19 +15,41 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.skhu.capstone2020.Model.GroupInfo;
+import com.skhu.capstone2020.Model.Member;
+import com.skhu.capstone2020.Model.PlaceResponse.Place;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
+import org.imperiumlabs.geofirestore.GeoQuery;
 import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener;
 import org.jetbrains.annotations.NotNull;
 
-public class TrackingService extends Service implements LocationListener, GeoQueryEventListener {
+import java.util.List;
+
+public class TrackingService extends Service implements LocationListener {
     CollectionReference locationReference = FirebaseFirestore.getInstance().collection("Locations");
+    CollectionReference groupReference = FirebaseFirestore.getInstance().collection("Groups");
     GeoFirestore geoFirestore = new GeoFirestore(locationReference);
+
+    public static GeoQuery query500;    // 반경 500m 범위 설정 지오쿼리
+    public static GeoQuery query300;    // 반경 300m 범위 설정 지오쿼리
+    public static GeoQuery query100;    // 반경 100m 범위 설정 지오쿼리
+
+    private double range500 = 0.5;  //
+    private double range300 = 0.3;  //
+    private double range100 = 0.1;  // km 단위
+
+    public static List<Member> members;
 
     LocationManager locationManager;
     Location currentLocation;
@@ -36,10 +58,10 @@ public class TrackingService extends Service implements LocationListener, GeoQue
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("Test", "onStartCommand in TrackingService");
+        Log.d("Test", "서비스 시작");
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+/*        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {    // 권한 체크
             Toast.makeText(this, "Permission not granted", Toast.LENGTH_LONG).show();
         } else {
@@ -54,16 +76,166 @@ public class TrackingService extends Service implements LocationListener, GeoQue
                     geoFirestore.setLocation(currentUser.getUid(), new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()));
                 }
             }
+        }*/
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {    // 권한 체크
+            Toast.makeText(this, "Permission not granted", Toast.LENGTH_LONG).show();
         }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 8, 10, this);
 
-        return START_NOT_STICKY;
+        groupReference
+                .whereEqualTo("setDestination", true)   // 현재 존재하는 그룹들 중 목적지가 설정된 그룹이 있는 확인
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        Log.d("Test", "목적지 설정된 그룹 존재");
+                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0)
+                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                GroupInfo groupInfo = snapshot.toObject(GroupInfo.class);
+                                if (groupInfo != null) {
+                                    List<Member> memberList = groupInfo.getMemberList();
+                                    members = groupInfo.getMemberList();
+                                    for (int i = 0; i < memberList.size(); ++i)
+                                        if (currentUser.getUid().equals(memberList.get(i).getId())) {   // 목적지가 설정된 그룹이 현재 유저가 속해있는 그룹이라면 지오쿼리 설정
+                                            Log.d("Test", "현재 유저가 속한 그룹");
+                                            getDestinationInfo(groupInfo.getGroupId());     // 목적지 정보 객체 가져오기
+                                        }
+                                }
+                            }
+                    }
+                });
+
+        return START_REDELIVER_INTENT;
+    }
+
+    public void getDestinationInfo(String groupId) {            // 목적지 정보 객체 획득
+        Log.d("Test", "getDestinationInfo 호출됨");
+        groupReference
+                .document(groupId)
+                .collection("Destination")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0) {
+                            Place place = queryDocumentSnapshots.toObjects(Place.class).get(0);
+                            GeoPoint geoPoint = new GeoPoint(Double.parseDouble(place.getY()), Double.parseDouble(place.getX()));
+                            setGeoQuery500(geoPoint, range500); //  반경 500m 범위 설정
+                            setGeoQuery300(geoPoint, range300); //  반경 300m 범위 설정
+                            setGeoQuery100(geoPoint, range100); //  반경 100m 범위 설정
+                        }
+                    }
+                });
+    }
+
+    public void setGeoQuery500(GeoPoint geoPoint, double radius) {
+        Log.d("Test", "setGeoQuery 호출됨: " + range500);
+        query500 = geoFirestore.queryAtLocation(geoPoint, radius);      // 반경 500m 범위의 지오쿼리 설정
+        query500.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(@NotNull String documentId, @NotNull GeoPoint geoPoint) {      // 유저가 해당 범위 안에 들어오면 호출
+                Log.d("Test", "range500 onKeyEntered 호출");
+                if (!documentId.equals(currentUser.getUid()))                   //
+                    if (members != null) {                                      //
+                        for (int i = 0; i < members.size(); ++i)                //
+                            if (members.get(i).getId().equals(documentId)) {    // 범위 안에 들어온 유저가 현재 자신이 아니고 그룹에 속해있는 멤버일 경우
+                                Log.d("Test", "멤버리스트와 일치하는 유저");
+                                Log.d("Test", documentId + ", " + "(" + range500 + ")" + "범위 내 진입: " + "(" + geoPoint.getLatitude() + ", " + geoPoint.getLongitude() + ")");
+                            }
+                    } else {
+                        Log.d("Test", "멤버리스트 null");
+                    }
+            }
+
+            @Override
+            public void onKeyExited(@NotNull String s) {
+                Log.d("Test", s + ", " + range500 + " 범위 벗어남");
+            }
+
+            @Override
+            public void onKeyMoved(@NotNull String s, @NotNull GeoPoint geoPoint) {
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+            }
+
+            @Override
+            public void onGeoQueryError(@NotNull Exception e) {
+            }
+        });
+    }
+
+    public void setGeoQuery300(GeoPoint geoPoint, double radius) {
+        Log.d("Test", "setGeoQuery 호출됨: " + range300);
+        query300 = geoFirestore.queryAtLocation(geoPoint, radius);      // 반경 300m 범위의 지오쿼리 설정
+        query300.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(@NotNull String documentId, @NotNull GeoPoint geoPoint) {
+                Log.d("Test", documentId + ", " + "(" + range300 + ")" + "범위 내 진입: " + "(" + geoPoint.getLatitude() + ", " + geoPoint.getLongitude() + ")");
+            }
+
+            @Override
+            public void onKeyExited(@NotNull String s) {
+                Log.d("Test", s + ", " + range300 + " 범위 벗어남");
+            }
+
+            @Override
+            public void onKeyMoved(@NotNull String s, @NotNull GeoPoint geoPoint) {
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+            }
+
+            @Override
+            public void onGeoQueryError(@NotNull Exception e) {
+            }
+        });
+    }
+
+    public void setGeoQuery100(GeoPoint geoPoint, double radius) {
+        Log.d("Test", "setGeoQuery 호출됨: " + range100);
+        query100 = geoFirestore.queryAtLocation(geoPoint, radius);      // 반경 100m 범위의 지오쿼리 설정
+        query100.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(@NotNull String documentId, @NotNull GeoPoint geoPoint) {
+                Log.d("Test", documentId + ", " + "(" + range100 + ")" + "범위 내 진입: " + "(" + geoPoint.getLatitude() + ", " + geoPoint.getLongitude() + ")");
+            }
+
+            @Override
+            public void onKeyExited(@NotNull String s) {
+                Log.d("Test", s + ", " + range100 + " 범위 벗어남");
+            }
+
+            @Override
+            public void onKeyMoved(@NotNull String s, @NotNull GeoPoint geoPoint) {
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+            }
+
+            @Override
+            public void onGeoQueryError(@NotNull Exception e) {
+            }
+        });
+    }
+
+    public static void removeAllGeoQueries() {      // 현재 설정된 모든 지오쿼리 삭제
+        if (query500 != null & query300 != null & query100 != null) {
+            Log.d("Test", "removeAllGeoQueries 호출됨");
+            query500.removeAllListeners();
+            query300.removeAllListeners();
+            query100.removeAllListeners();
+        }
     }
 
     @Override
     public void onDestroy() {
-        Log.d("Test", "onDestroy in TrackingService");
+        Log.d("Test", "서비스 종료");
         super.onDestroy();
         //locationManager.removeUpdates(this);
     }
@@ -93,28 +265,5 @@ public class TrackingService extends Service implements LocationListener, GeoQue
 
     @Override
     public void onProviderDisabled(String s) {
-    }
-
-    @Override
-    public void onGeoQueryError(@NotNull Exception e) {
-    }
-
-    @Override
-    public void onGeoQueryReady() {
-    }
-
-    @Override
-    public void onKeyEntered(@NotNull String s, @NotNull GeoPoint geoPoint) {
-        Log.d("Test", s + "유저 " + "범위 내 진입: " + "(" + geoPoint.getLatitude() + ", " + geoPoint.getLongitude() + ")");
-    }
-
-    @Override
-    public void onKeyExited(@NotNull String s) {
-
-    }
-
-    @Override
-    public void onKeyMoved(@NotNull String s, @NotNull GeoPoint geoPoint) {
-
     }
 }

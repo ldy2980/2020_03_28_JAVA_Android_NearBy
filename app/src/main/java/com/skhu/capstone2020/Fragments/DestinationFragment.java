@@ -42,6 +42,7 @@ import com.skhu.capstone2020.Model.User;
 import com.skhu.capstone2020.PlaceDetailActivity;
 import com.skhu.capstone2020.R;
 import com.skhu.capstone2020.SearchPlaceActivity;
+import com.skhu.capstone2020.Service.TrackingService;
 import com.skt.Tmap.TMapTapi;
 
 import org.jsoup.Jsoup;
@@ -107,7 +108,34 @@ public class DestinationFragment extends Fragment {
         destination_image = view.findViewById(R.id.destination_image);
         destination_image.setClipToOutline(true);
 
-        dialog = new CustomCancelDestinationDialog(Objects.requireNonNull(getContext()), okListener, cancelListener);   // 목적지 취소 다이얼로그 설정
+        dialog = new CustomCancelDestinationDialog(Objects.requireNonNull(getContext()), new View.OnClickListener() {   // 목적지 삭제 시 사용될 다이얼로그 생성
+            @Override
+            public void onClick(View view) {        // 설정된 목적지 삭제시 동작
+                FirebaseFirestore.getInstance()
+                        .collection("Groups")
+                        .document(groupInfo.getGroupId())
+                        .collection("Destination")
+                        .document(destinationId)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                isJustSetDestination = false;
+                                assert getFragmentManager() != null;
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                ft.detach(DestinationFragment.this).attach(DestinationFragment.this).commit();  // 목적지 삭제 후 화면 새로고침
+                                dialog.dismiss();
+                            }
+                        });
+
+                FirebaseFirestore.getInstance()
+                        .collection("Groups")
+                        .document(groupInfo.getGroupId())
+                        .update("setDestination", false);       // 그룹정보의 목적지 설정여부 변수를 false로 변경
+
+                TrackingService.removeAllGeoQueries();      // 현재 목적지에 설정된 모든 지오쿼리 삭제
+            }
+        }, cancelListener);   // 목적지 취소 다이얼로그 설정
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(null);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -261,33 +289,6 @@ public class DestinationFragment extends Fragment {
             isJustSetDestination = false;
         }
     }
-
-    private View.OnClickListener okListener = new View.OnClickListener() {          // 설정된 목적지 삭제시 동작
-        @Override
-        public void onClick(View view) {
-            FirebaseFirestore.getInstance()
-                    .collection("Groups")
-                    .document(groupInfo.getGroupId())
-                    .collection("Destination")
-                    .document(destinationId)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            isJustSetDestination = false;
-                            assert getFragmentManager() != null;
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            ft.detach(DestinationFragment.this).attach(DestinationFragment.this).commit();
-                            dialog.dismiss();
-                        }
-                    });
-
-            FirebaseFirestore.getInstance()
-                    .collection("Groups")
-                    .document(groupInfo.getGroupId())
-                    .update("setDestination", false);
-        }
-    };
 
     private View.OnClickListener cancelListener = new View.OnClickListener() {
         @Override
