@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,6 +59,7 @@ public class MapViewActivity extends AppCompatActivity {
     private RecyclerView select_member_recycler;
     private TextView select_member_address;
     private ImageView btn_map_view_circle, btn_map_view_my_location, btn_map_view_destination;
+    private LinearLayout range_view;
 
     private GroupInfo groupInfo;
     private User currentUser;
@@ -87,6 +89,8 @@ public class MapViewActivity extends AppCompatActivity {
         groupInfo = (GroupInfo) getIntent().getSerializableExtra("groupInfo");  // 그룹 정보 객체 가져오기
         currentUser = (User) getIntent().getSerializableExtra("currentUser");   // 현재 유저 정보 객체 가져오기
         destinationInfo = (Place) getIntent().getSerializableExtra("destinationInfo");  // 목적지 정보 객체 가져오기
+
+        range_view = findViewById(R.id.range_view);     // 목적지를 중심으로 하는 원의 반경을 표시하는 레이아웃
 
         btn_map_view_circle = findViewById(R.id.btn_map_view_circle);   // 목적지에 원을 추가/제거 하는 버튼
         btn_map_view_my_location = findViewById(R.id.btn_map_view_my_location);     // 지도의 중심점을 내 위치로 이동시키는 버튼
@@ -119,10 +123,12 @@ public class MapViewActivity extends AppCompatActivity {
                     mapView.removeAllCircles();
                     btn_map_view_circle.setImageResource(R.drawable.ic_circle);
                     btn_map_view_circle.setBackground(ContextCompat.getDrawable(MapViewActivity.this, R.drawable.btn_map_view_background));
+                    range_view.setVisibility(View.INVISIBLE);
                 } else {
                     addCircles();       // 원이 없다면 추가
                     btn_map_view_circle.setImageResource(R.drawable.ic_circle_cancel);
                     btn_map_view_circle.setBackground(ContextCompat.getDrawable(MapViewActivity.this, R.drawable.btn_map_view_background_dark_blue));
+                    range_view.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -340,13 +346,13 @@ public class MapViewActivity extends AppCompatActivity {
 
         MapCircle circle500 = new MapCircle(MapPoint.mapPointWithGeoCoord(Double.parseDouble(destinationInfo.getY()), Double.parseDouble(destinationInfo.getX())),
                 500,
-                Color.argb(160, 107, 165, 242),
-                Color.argb(160, 107, 165, 242));        // 반경 500m의 원
+                Color.argb(160, 200, 200, 200),
+                Color.argb(160, 200, 200, 200));        // 반경 500m의 원
 
         MapCircle circle300 = new MapCircle(MapPoint.mapPointWithGeoCoord(Double.parseDouble(destinationInfo.getY()), Double.parseDouble(destinationInfo.getX())),
                 300,
-                Color.argb(144, 120, 132, 158),
-                Color.argb(144, 120, 132, 158));        // 반경 300m의 원
+                Color.argb(144, 107, 165, 242),
+                Color.argb(144, 107, 165, 242));        // 반경 300m의 원
 
         MapCircle circle100 = new MapCircle(MapPoint.mapPointWithGeoCoord(Double.parseDouble(destinationInfo.getY()), Double.parseDouble(destinationInfo.getX())),
                 100,
