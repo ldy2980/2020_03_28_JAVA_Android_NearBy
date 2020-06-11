@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        profile_spinKitView = findViewById(R.id.profile_spinKitView);   // 로딩화면
+        //profile_spinKitView = findViewById(R.id.profile_spinKitView);   // 로딩화면
 
         Toolbar toolbar = findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
@@ -314,6 +315,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void setUserInfo() {
+        Log.d("Test", "유저 정보 세팅");
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .document(firebaseUser.getUid())
@@ -334,7 +336,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     .skipMemoryCache(true)
                                     .into(profile_image);
 
-                            profile_spinKitView.setVisibility(View.GONE);
+                            //profile_spinKitView.setVisibility(View.GONE);
                         }
                     }
                 });

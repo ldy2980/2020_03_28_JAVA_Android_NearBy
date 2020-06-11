@@ -30,9 +30,9 @@ import java.util.Objects;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    DocumentReference userOptionReference = FirebaseFirestore.getInstance()
-            .collection("UserOptions")
-            .document(Objects.requireNonNull(currentUser).getUid());
+    /*    DocumentReference userOptionReference = FirebaseFirestore.getInstance()
+                .collection("UserOptions")
+                .document(Objects.requireNonNull(currentUser).getUid());*/
     UserOptions currentUserOption;
 
     @Override
@@ -55,6 +55,11 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
+        DocumentReference userOptionReference = FirebaseFirestore.getInstance()
+                .collection("UserOptions")
+                .document(Objects.requireNonNull(currentUser).getUid());
+
         Log.d("Test", "onMessageReceived");
         String receiverId = remoteMessage.getData().get("receiverId");
         String memberId = remoteMessage.getData().get("memberId");

@@ -99,49 +99,51 @@ public class TrackingService extends Service implements LocationListener {
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 8, 10, this);
 
-        userReference
-                .document(currentUser.getUid())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot != null && documentSnapshot.exists())
-                            user = documentSnapshot.toObject(User.class);       // 현재 유저 정보 객체 가져오기
-                    }
-                });
+        if (currentUser != null) {
+            userReference
+                    .document(currentUser.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot != null && documentSnapshot.exists())
+                                user = documentSnapshot.toObject(User.class);       // 현재 유저 정보 객체 가져오기
+                        }
+                    });
 
-        userOptionReference
-                .document(currentUser.getUid())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if (documentSnapshot != null && documentSnapshot.exists())
-                            currentUserOption = documentSnapshot.toObject(UserOptions.class);       // 현재 유저의 앱 설정 정보 객체 가져오기
-                    }
-                });
+            userOptionReference
+                    .document(currentUser.getUid())
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            if (documentSnapshot != null && documentSnapshot.exists())
+                                currentUserOption = documentSnapshot.toObject(UserOptions.class);       // 현재 유저의 앱 설정 정보 객체 가져오기
+                        }
+                    });
 
-        groupReference
-                .whereEqualTo("setDestination", true)   // 현재 존재하는 그룹들 중 목적지가 설정된 그룹이 있는지 확인
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        Log.d("Test", "목적지 설정된 그룹 존재");
-                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0)
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                GroupInfo groupInfo = snapshot.toObject(GroupInfo.class);
-                                if (groupInfo != null) {
-                                    List<Member> memberList = groupInfo.getMemberList();
-                                    for (int i = 0; i < memberList.size(); ++i)
-                                        if (currentUser.getUid().equals(memberList.get(i).getId())) {   // 목적지가 설정된 그룹이 현재 유저가 속해있는 그룹이라면 지오쿼리 설정
-                                            Log.d("Test", "현재 유저가 속한 그룹");
-                                            members = groupInfo.getMemberList();
-                                            currentGroupInfo = groupInfo;
-                                            getDestinationInfo(groupInfo.getGroupId());     // 목적지 정보 객체 가져오기
-                                        }
+            groupReference
+                    .whereEqualTo("setDestination", true)   // 현재 존재하는 그룹들 중 목적지가 설정된 그룹이 있는지 확인
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            Log.d("Test", "목적지 설정된 그룹 존재");
+                            if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0)
+                                for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                    GroupInfo groupInfo = snapshot.toObject(GroupInfo.class);
+                                    if (groupInfo != null) {
+                                        List<Member> memberList = groupInfo.getMemberList();
+                                        for (int i = 0; i < memberList.size(); ++i)
+                                            if (currentUser.getUid().equals(memberList.get(i).getId())) {   // 목적지가 설정된 그룹이 현재 유저가 속해있는 그룹이라면 지오쿼리 설정
+                                                Log.d("Test", "현재 유저가 속한 그룹");
+                                                members = groupInfo.getMemberList();
+                                                currentGroupInfo = groupInfo;
+                                                getDestinationInfo(groupInfo.getGroupId());     // 목적지 정보 객체 가져오기
+                                            }
+                                    }
                                 }
-                            }
-                    }
-                });
+                        }
+                    });
+        }
 
         return START_REDELIVER_INTENT;
     }
