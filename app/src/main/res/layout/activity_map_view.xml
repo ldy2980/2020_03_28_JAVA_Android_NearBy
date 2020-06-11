@@ -6,23 +6,25 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="380dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="25dp"
         android:layout_marginTop="17dp"
         android:background="@color/ice"
         android:elevation="10dp"
         app:cardCornerRadius="13dp">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/map_view_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginVertical="11dp"
                 android:layout_marginStart="15.5dp"
                 android:src="@drawable/ic_icon_back_east_bay"
                 tools:ignore="ContentDescription" />
@@ -30,9 +32,9 @@
             <View
                 android:id="@+id/select_member_address_view"
                 android:layout_width="1dp"
-                android:layout_height="23dp"
+                android:layout_height="21dp"
                 android:layout_marginStart="60dp"
-                android:layout_marginTop="16.7dp"
+                android:layout_marginTop="15.7dp"
                 android:background="@color/ice" />
 
             <TextView
@@ -40,6 +42,7 @@
                 android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginVertical="11dp"
                 android:layout_marginStart="18dp"
                 android:layout_toEndOf="@id/select_member_address_view"
                 android:fontFamily="@font/mapo_peacefull"
