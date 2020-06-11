@@ -127,7 +127,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                                                                                 return;
                                                                             }
                                                                             addressResponse = response.body();
-                                                                            if (addressResponse != null) {
+                                                                            if (addressResponse != null && addressResponse.getAddressDocuments().size() != 0) {
                                                                                 Log.d("Test", "addressResponse in MemberAdapter is not null");
                                                                                 Address address = addressResponse.getAddressDocuments().get(0).getAddress();
                                                                                 if (address != null)

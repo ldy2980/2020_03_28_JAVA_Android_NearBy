@@ -225,7 +225,7 @@ public class MapViewActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) { // 현재 유저의 위치정보를 DB에서 가져오고, 위치 변경시 실시간으로 갱신
-                        Log.d("Test", "내 위치 변경됨");
+                        //Log.d("Test", "내 위치 변경됨");
                         if (documentSnapshot != null) {
                             GeoPoint geoPoint = documentSnapshot.getGeoPoint("l");
                             if (geoPoint != null) {
