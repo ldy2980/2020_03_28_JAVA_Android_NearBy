@@ -23,6 +23,17 @@
         android:textColor="@color/white"
         android:textSize="14sp" />
 
+    <TextView
+        android:id="@+id/chat_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toStartOf="@id/chat_item"
+        android:fontFamily="@font/bm_hanna"
+        android:textSize="12sp"
+        android:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/chat_item_container"
         android:layout_width="wrap_content"

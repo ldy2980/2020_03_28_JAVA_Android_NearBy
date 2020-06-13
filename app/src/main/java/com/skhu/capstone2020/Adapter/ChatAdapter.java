@@ -21,6 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.skhu.capstone2020.Model.Chat;
 import com.skhu.capstone2020.R;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.ViewHolder> {
@@ -30,6 +34,9 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.View
     private Context context;
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private String groupId;
+
+    private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일");
+    private PrettyTime prettyTime = new PrettyTime();
 
     public ChatAdapter(@NonNull FirestoreRecyclerOptions<Chat> options, String groupId, Context context) {
         super(options);
@@ -49,6 +56,12 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.View
                     .load(model.getImageUrl())
                     .into(holder.chat_user_image);
         }
+
+        long day = (System.currentTimeMillis() - model.getTimeStamp().getTime()) / (24 * 1000 * 60 * 60);
+        if (day <= 3)
+            holder.chat_time.setText(prettyTime.format(model.getTimeStamp()));
+        else
+            holder.chat_time.setText(dayFormat.format(model.getTimeStamp()));
 
         if (position == getItemCount() - 1)
             sendLastMessageToServer(model.getMessage(), model.getTimeStamp(), groupId);
@@ -75,13 +88,14 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.View
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView chat_item, chat_userName;
+        TextView chat_item, chat_userName, chat_time;
         ImageView chat_user_image;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             chat_item = itemView.findViewById(R.id.chat_item);
             chat_userName = itemView.findViewById(R.id.chat_user_name);
+            chat_time = itemView.findViewById(R.id.chat_time);
             chat_user_image = itemView.findViewById(R.id.chat_user_image);
             chat_user_image.setClipToOutline(true);
         }
