@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -248,7 +249,7 @@ public class MapViewActivity extends AppCompatActivity {
                                 myLocationMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);  // 커스텀 이미지 사용
                                 myLocationMarker.setShowDisclosureButtonOnCalloutBalloon(false);   // 말풍선 끝부분에 꺽쇠 안보이게
 
-                                Glide.with(MapViewActivity.this)        // 유저의 이미지를 비트맵으로 변환
+                                Glide.with(getApplicationContext())        // 유저의 이미지를 비트맵으로 변환
                                         .asBitmap()
                                         .load(currentUser.getImageUrl())
                                         .apply(new RequestOptions().circleCrop())

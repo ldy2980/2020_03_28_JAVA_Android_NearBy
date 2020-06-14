@@ -107,7 +107,7 @@ public class StartActivity extends AppCompatActivity {
                 assert account != null;
                 googleLogin(account);                                                    // Google 로그인 실행
             } catch (ApiException e) {
-                Toast.makeText(StartActivity.this, "Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(StartActivity.this, e.getStatusCode()+", "+e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }

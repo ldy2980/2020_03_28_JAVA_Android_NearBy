@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "345514922546-98g61fb8fb1ohu5g5cac27am47it7o7u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skhu.capstone2020",
+            "certificate_hash": "5a52421439dc4db77dba1ad7d02efc7842f3a9e7"
+          }
+        },
+        {
           "client_id": "345514922546-d5so0aqmt0m6fnkq5216hf6k8kvqkfkt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
