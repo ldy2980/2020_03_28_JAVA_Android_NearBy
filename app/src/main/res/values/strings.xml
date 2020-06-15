@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NOTITLE</string>
+    <string name="app_name">NearBy</string>
     <string name="mapbox_access_token">pk.eyJ1IjoiY2xhbmsiLCJhIjoiY2s4bHNzcTBxMDRuNDNncG4zdzB3eW1pNyJ9.97YjwyOf7JiByL47sfeypA</string>
     <string name="getStart">시작하기</string>
     <string name="googleAccount">Google 계정</string>

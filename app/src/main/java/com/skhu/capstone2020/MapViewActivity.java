@@ -313,7 +313,7 @@ public class MapViewActivity extends AppCompatActivity {
                                                         memberMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);  // 커스텀 이미지 사용
                                                         memberMarker.setShowDisclosureButtonOnCalloutBalloon(false);   // 말풍선 끝부분에 꺽쇠 안보이게
 
-                                                        Glide.with(MapViewActivity.this)        // 멤버의 이미지를 비트맵으로 변환
+                                                        Glide.with(getApplicationContext())        // 멤버의 이미지를 비트맵으로 변환
                                                                 .asBitmap()
                                                                 .load(member.getImageUrl())
                                                                 .apply(new RequestOptions().circleCrop())
@@ -383,7 +383,7 @@ public class MapViewActivity extends AppCompatActivity {
 
                     if (!member.getImageUrl().equals("default")) {      // 멤버 프로필 이미지 로드
                         holder.select_member_image.setPadding(0, 0, 0, 0);
-                        Glide.with(MapViewActivity.this)
+                        Glide.with(getApplicationContext())
                                 .load(member.getImageUrl())
                                 .into(holder.select_member_image);
                     }

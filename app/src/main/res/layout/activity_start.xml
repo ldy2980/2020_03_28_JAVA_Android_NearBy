@@ -23,23 +23,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_main_logo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="130dp"
-                tools:ignore="ContentDescription" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="167dp"
+            android:src="@drawable/ic_main_logo_ice"
+            tools:ignore="ContentDescription" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/mapo_peacefull"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="175dp"
-                android:text="@string/app_name"
-                android:textColor="@color/ice"
-                android:textSize="60sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="232dp"
+            android:fontFamily="@font/mapo_peacefull"
+            android:text="@string/app_name"
+            android:textColor="@color/ice"
+            android:textSize="60sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,9 +57,9 @@
                 android:fontFamily="@font/mapo_peacefull"
                 android:paddingVertical="17dp"
                 android:text="@string/getStart"
-                android:textStyle="bold"
+                android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textColor="@color/white"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -72,20 +72,20 @@
                     android:id="@+id/googleAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/bm_hanna"
                     android:text="@string/googleAccount"
                     android:textColor="@color/lightGrey"
                     android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/bm_hanna"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
-                    android:text="으로 로그인"
-                    android:textSize="13sp"
                     android:fontFamily="@font/bm_hanna"
-                    android:textColor="@color/grey" />
+                    android:text="으로 로그인"
+                    android:textColor="@color/grey"
+                    android:textSize="13sp" />
 
             </LinearLayout>
 
