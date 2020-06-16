@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         btn_myLocation.setFocusableInTouchMode(true);
         btn_chats.setFocusableInTouchMode(true);
 
-        btn_surrounding.requestFocus();
+        btn_myLocation.requestFocus();
 
         btn_surrounding.setOnClickListener(onClickListener);
         btn_myLocation.setOnClickListener(onClickListener);
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, new SurroundingFragment()).commitAllowingStateLoss();  // 첫번째로 보일 프래그먼트 띄우기
+        transaction.replace(R.id.fragment_container, new MyLocationFragment()).commitAllowingStateLoss();  // 첫번째로 보일 프래그먼트 띄우기
     }
 
     @Override

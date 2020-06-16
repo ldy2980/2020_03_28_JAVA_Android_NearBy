@@ -93,7 +93,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_surrounding_black"
+                android:src="@drawable/ic_surrounding_white"
                 tools:ignore="ContentDescription" />
 
             <ImageView
@@ -103,7 +103,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_location_white"
+                android:src="@drawable/ic_location_black"
                 tools:ignore="ContentDescription" />
 
             <ImageView
