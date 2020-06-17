@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -282,55 +281,69 @@ public class MapViewActivity extends AppCompatActivity {
                             Log.d("Test", "멤버 위치정보 존재");
                             GeoPoint geoPoint = documentSnapshot.getGeoPoint("l");
 
-                            userReference
-                                    .whereEqualTo("id", documentSnapshot.getId())
+                            userOptionReference
+                                    .document(memberId)
                                     .get()
-                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {  // 매개변수로 받은 id로 DB에서 멤버 정보 가져오기
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
-                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                            if (queryDocumentSnapshots != null)
-                                                for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                                    User user = snapshot.toObject(User.class);
-                                                    if (user != null && geoPoint != null) {
-                                                        Log.d("Test", "멤버 정보 객체 생성");
-                                                        member = new Member(user.getId(), user.getName(), user.getImageUrl());  // 멤버 정보 객체 생성
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            if (documentSnapshot != null) {
+                                                UserOptions userOptions = documentSnapshot.toObject(UserOptions.class);
+                                                if (userOptions != null && userOptions.isAllowShareLocation()) {        // 멤버가 위치 공유를 허용했는지 확인
+                                                    userReference
+                                                            .whereEqualTo("id", documentSnapshot.getId())
+                                                            .get()
+                                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {  // 매개변수로 받은 id로 DB에서 멤버 정보 가져오기
+                                                                @Override
+                                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                    if (queryDocumentSnapshots != null)
+                                                                        for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                                                            User user = snapshot.toObject(User.class);
+                                                                            if (user != null && geoPoint != null) {
+                                                                                Log.d("Test", "멤버 정보 객체 생성");
+                                                                                member = new Member(user.getId(), user.getName(), user.getImageUrl());  // 멤버 정보 객체 생성
 
-                                                        if (mapView.findPOIItemByName(member.getName()) != null)
-                                                            mapView.removePOIItem(mapView.findPOIItemByName(member.getName())[0]);  // 이전 위치에 마커가 있으면 삭제
+                                                                                if (mapView.findPOIItemByName(member.getName()) != null)
+                                                                                    mapView.removePOIItem(mapView.findPOIItemByName(member.getName())[0]);  // 이전 위치에 마커가 있으면 삭제
 
-                                                        MapPOIItem memberMarker = new MapPOIItem();     // 멤버 마커 객체 생성
+                                                                                MapPOIItem memberMarker = new MapPOIItem();     // 멤버 마커 객체 생성
 
-                                                        @SuppressLint("InflateParams")
-                                                        View customMarkerBalloon = LayoutInflater.from(MapViewActivity.this).inflate(R.layout.custom_marker_balloon, null); // 커스텀 말풍선 뷰 인플레이션
-                                                        TextView currentUserName = customMarkerBalloon.findViewById(R.id.custom_marker_balloon_userName);
-                                                        currentUserName.setText(member.getName());
+                                                                                @SuppressLint("InflateParams")
+                                                                                View customMarkerBalloon = LayoutInflater.from(MapViewActivity.this).inflate(R.layout.custom_marker_balloon, null); // 커스텀 말풍선 뷰 인플레이션
+                                                                                TextView currentUserName = customMarkerBalloon.findViewById(R.id.custom_marker_balloon_userName);
+                                                                                currentUserName.setText(member.getName());
 
-                                                        memberMarker.setCustomCalloutBalloon(customMarkerBalloon);          //
-                                                        memberMarker.setCustomPressedCalloutBalloon(customMarkerBalloon);   // 마커에 커스텀 말풍선 설정
+                                                                                memberMarker.setCustomCalloutBalloon(customMarkerBalloon);          //
+                                                                                memberMarker.setCustomPressedCalloutBalloon(customMarkerBalloon);   // 마커에 커스텀 말풍선 설정
 
-                                                        memberMarker.setItemName(member.getName());    // 마커의 이름을 현재 멤버의 이름으로 설정
-                                                        memberMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(geoPoint.getLatitude(), geoPoint.getLongitude()));   // 멤버의 현재 위치로 설정
-                                                        memberMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);  // 커스텀 이미지 사용
-                                                        memberMarker.setShowDisclosureButtonOnCalloutBalloon(false);   // 말풍선 끝부분에 꺽쇠 안보이게
+                                                                                memberMarker.setItemName(member.getName());    // 마커의 이름을 현재 멤버의 이름으로 설정
+                                                                                memberMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(geoPoint.getLatitude(), geoPoint.getLongitude()));   // 멤버의 현재 위치로 설정
+                                                                                memberMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);  // 커스텀 이미지 사용
+                                                                                memberMarker.setShowDisclosureButtonOnCalloutBalloon(false);   // 말풍선 끝부분에 꺽쇠 안보이게
 
-                                                        Glide.with(getApplicationContext())        // 멤버의 이미지를 비트맵으로 변환
-                                                                .asBitmap()
-                                                                .load(member.getImageUrl())
-                                                                .apply(new RequestOptions().circleCrop())
-                                                                .into(new CustomTarget<Bitmap>(100, 100) {  // 이미지의 크기를 100X100으로 가져오기
-                                                                    @Override
-                                                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                                                        Log.d("Test", "멤버 이미지 비트맵 변환 성공");
-                                                                        memberMarker.setCustomImageBitmap(resource);    // 변환된 이미지를 마커에 적용
-                                                                        mapView.addPOIItem(memberMarker);   // 지도에 마커 추가
-                                                                    }
+                                                                                Glide.with(getApplicationContext())        // 멤버의 이미지를 비트맵으로 변환
+                                                                                        .asBitmap()
+                                                                                        .load(member.getImageUrl())
+                                                                                        .apply(new RequestOptions().circleCrop())
+                                                                                        .into(new CustomTarget<Bitmap>(100, 100) {  // 이미지의 크기를 100X100으로 가져오기
+                                                                                            @Override
+                                                                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                                                                Log.d("Test", "멤버 이미지 비트맵 변환 성공");
+                                                                                                memberMarker.setCustomImageBitmap(resource);    // 변환된 이미지를 마커에 적용
+                                                                                                mapView.addPOIItem(memberMarker);   // 지도에 마커 추가
+                                                                                            }
 
-                                                                    @Override
-                                                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                                                                    }
-                                                                });
-                                                    }
+                                                                                            @Override
+                                                                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                                                                            }
+                                                                                        });
+                                                                            }
+                                                                        }
+                                                                }
+                                                            });
                                                 }
+
+                                            }
                                         }
                                     });
 
@@ -398,6 +411,11 @@ public class MapViewActivity extends AppCompatActivity {
                                         if (options != null && !options.isAllowShareLocation()) {
                                             holder.select_member_time.setVisibility(View.INVISIBLE);
                                             holder.select_member_distance.setVisibility(View.INVISIBLE);
+                                            holder.setRecyclerItemClickListener(new RecyclerItemClickListener() {
+                                                @Override
+                                                public void onItemClickListener(View view, int position) {
+                                                }
+                                            });
 
                                         } else {
 
@@ -500,12 +518,53 @@ public class MapViewActivity extends AppCompatActivity {
                                                         }
                                                     });
 
+                                            holder.setRecyclerItemClickListener(new RecyclerItemClickListener() {       // 클릭리스너 설정
+                                                @Override
+                                                public void onItemClickListener(View view, int position) {      // 멤버 클릭 시 지도의 중심점을 해당 멤버 위치로 이동
+                                                    Log.d("Test", "멤버 클릭됨");
+                                                    locationReference
+                                                            .document(member.getId())
+                                                            .get()
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    if (documentSnapshot != null) {
+                                                                        GeoPoint geoPoint = documentSnapshot.getGeoPoint("l");
+
+                                                                        if (geoPoint != null) {
+                                                                            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(    // 지도의 중심점을 멤버의 현재 위치로 이동
+                                                                                    geoPoint.getLatitude(),
+                                                                                    geoPoint.getLongitude()),
+                                                                                    true);
+
+                                                                            MapReverseGeoCoder geoCoder = new MapReverseGeoCoder("bd97169bbcb001a23368a7ed262a107c",    // 좌표 -> 주소 변환 설정
+                                                                                    MapPoint.mapPointWithGeoCoord(geoPoint.getLatitude(), geoPoint.getLongitude()),
+                                                                                    new MapReverseGeoCoder.ReverseGeoCodingResultListener() {
+                                                                                        @Override
+                                                                                        public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
+                                                                                            select_member_address.setText(s);   // 상단에 목적지 주소 표시
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
+                                                                                            Log.d("Test", "목적지 주소 변환 실패");
+                                                                                        }
+                                                                                    }, MapViewActivity.this);
+                                                                            geoCoder.startFindingAddress();     // 선택된 멤버의 위치 좌표를 주소로 변환
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                            });
+                                                }
+                                            });
+
                                         }
                                     }
                                 }
                             });
 
-                    holder.setRecyclerItemClickListener(new RecyclerItemClickListener() {       // 클릭리스너 설정
+/*                    holder.setRecyclerItemClickListener(new RecyclerItemClickListener() {       // 클릭리스너 설정
                         @Override
                         public void onItemClickListener(View view, int position) {      // 멤버 클릭 시 지도의 중심점을 해당 멤버 위치로 이동
                             Log.d("Test", "멤버 클릭됨");
@@ -544,7 +603,7 @@ public class MapViewActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-                    });
+                    });*/
                 }
             }
 
